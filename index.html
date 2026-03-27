@@ -94,10 +94,18 @@ border-radius:10px;
 }
 
 /* COMPANIES */
-.companies img{
+.company-box{
+text-align:center;
+}
+
+.company-box img{
 width:120px;
-margin:20px;
-filter:brightness(1.2);
+filter:brightness(0) invert(1);
+transition:0.3s;
+}
+
+.company-box img:hover{
+transform:scale(1.1);
 }
 
 /* FOOTER */
@@ -133,7 +141,6 @@ position:absolute;
 top:10px;
 right:15px;
 cursor:pointer;
-font-size:18px;
 }
 
 input{
@@ -151,14 +158,7 @@ border:none;
 border-radius:25px;
 background:linear-gradient(45deg,#00c6ff,#0072ff);
 color:white;
-font-size:16px;
 cursor:pointer;
-transition:0.3s;
-}
-
-.continue-btn:hover{
-transform:scale(1.05);
-box-shadow:0 0 15px #00c6ff;
 }
 
 .skip{
@@ -196,7 +196,7 @@ color:#00c6ff;
 <!-- ABOUT -->
 <div class="section">
 <h2>About DB Solutions</h2>
-<p>We connect talent with top companies like Amazon, Wipro, Teleperformance, TaskUs and more.</p>
+<p>We connect talent with top companies like Amazon, Wipro, Accenture, TaskUs and more.</p>
 </div>
 
 <!-- HOW -->
@@ -213,18 +213,42 @@ color:#00c6ff;
 <!-- TESTIMONIAL -->
 <div class="section">
 <h2>Success Stories</h2>
-<div class="testimonial">"Got WFH job within 7 days!" - Rohit</div>
-<div class="testimonial">"Smooth process and trusted platform." - Sneha</div>
+<div class="testimonial">"Got job within 7 days!" - Rohit</div>
+<div class="testimonial">"Trusted platform." - Sneha</div>
 </div>
 
 <!-- COMPANIES -->
-<div class="section companies">
+<div class="section">
 <h2>Hiring Partners</h2>
-<img src="https://logo.clearbit.com/amazon.com">
-<img src="https://logo.clearbit.com/wipro.com">
-<img src="https://logo.clearbit.com/teleperformance.com">
-<img src="https://logo.clearbit.com/taskus.com">
-<img src="https://logo.clearbit.com/wishup.co">
+
+<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:40px;">
+
+<div class="company-box">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg">
+<p>Amazon</p>
+</div>
+
+<div class="company-box">
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Wipro_logo.svg">
+<p>Wipro</p>
+</div>
+
+<div class="company-box">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Accenture.svg">
+<p>Accenture</p>
+</div>
+
+<div class="company-box">
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/TaskUs_logo.svg">
+<p>TaskUs</p>
+</div>
+
+<div class="company-box">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Teleperformance_logo.svg">
+<p>Teleperformance</p>
+</div>
+
+</div>
 </div>
 
 <footer>
@@ -269,16 +293,13 @@ const db = getDatabase(app);
 
 signInAnonymously(auth);
 
-// popup
 window.openPopup=()=>document.getElementById("popup").style.display="flex";
 window.closePopup=()=>document.getElementById("popup").style.display="none";
 
-// outside click close
 window.onclick=function(e){
 if(e.target.id==="popup"){closePopup();}
 }
 
-// continue
 window.continueLogin=()=>{
 const name=document.getElementById("name").value;
 const email=document.getElementById("email").value;
