@@ -76,27 +76,28 @@ border-radius:15px;
 /* STATS */
 .stats{
 display:flex;
-justify-content:space-around;
+justify-content:center;
 flex-wrap:wrap;
 }
 
 .stat{
-font-size:30px;
+font-size:28px;
 margin:20px;
 }
 
 /* TESTIMONIAL */
 .testimonial{
 background:rgba(255,255,255,0.05);
-margin:20px;
+margin:15px;
 padding:20px;
 border-radius:10px;
 }
 
-/* LOGOS */
+/* COMPANIES */
 .companies img{
 width:120px;
 margin:20px;
+filter:brightness(1.2);
 }
 
 /* FOOTER */
@@ -124,6 +125,15 @@ background:#1c1c1c;
 padding:30px;
 border-radius:15px;
 text-align:center;
+position:relative;
+}
+
+.close{
+position:absolute;
+top:10px;
+right:15px;
+cursor:pointer;
+font-size:18px;
 }
 
 input{
@@ -131,6 +141,30 @@ display:block;
 margin:10px auto;
 padding:10px;
 width:250px;
+border:none;
+border-radius:5px;
+}
+
+.continue-btn{
+padding:12px 25px;
+border:none;
+border-radius:25px;
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.continue-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px #00c6ff;
+}
+
+.skip{
+margin-top:10px;
+cursor:pointer;
+color:#00c6ff;
 }
 </style>
 </head>
@@ -162,7 +196,7 @@ width:250px;
 <!-- ABOUT -->
 <div class="section">
 <h2>About DB Solutions</h2>
-<p>We connect talent with top companies like Amazon, Wipro, Accenture and more.</p>
+<p>We connect talent with top companies like Amazon, Wipro, Teleperformance, TaskUs and more.</p>
 </div>
 
 <!-- HOW -->
@@ -170,7 +204,7 @@ width:250px;
 <h2>How It Works</h2>
 <div class="cards">
 <div class="card">Sign Up</div>
-<div class="card">Profile Complete</div>
+<div class="card">Complete Profile</div>
 <div class="card">Get Job Updates</div>
 <div class="card">Get Hired</div>
 </div>
@@ -179,18 +213,18 @@ width:250px;
 <!-- TESTIMONIAL -->
 <div class="section">
 <h2>Success Stories</h2>
-<div class="testimonial">"Got WFH job within 10 days!" - Rohit</div>
-<div class="testimonial">"Best hiring platform I found." - Sneha</div>
+<div class="testimonial">"Got WFH job within 7 days!" - Rohit</div>
+<div class="testimonial">"Smooth process and trusted platform." - Sneha</div>
 </div>
 
 <!-- COMPANIES -->
 <div class="section companies">
-<h2>Our Clients</h2>
+<h2>Hiring Partners</h2>
 <img src="https://logo.clearbit.com/amazon.com">
 <img src="https://logo.clearbit.com/wipro.com">
-<img src="https://logo.clearbit.com/accenture.com">
-<img src="https://logo.clearbit.com/jio.com">
-<img src="https://logo.clearbit.com/makemytrip.com">
+<img src="https://logo.clearbit.com/teleperformance.com">
+<img src="https://logo.clearbit.com/taskus.com">
+<img src="https://logo.clearbit.com/wishup.co">
 </div>
 
 <footer>
@@ -200,11 +234,19 @@ width:250px;
 <!-- POPUP -->
 <div class="popup" id="popup">
 <div class="popup-box">
+
+<div class="close" onclick="closePopup()">❌</div>
+
 <h2>Sign Up</h2>
+
 <input id="name" placeholder="Name">
 <input id="email" placeholder="Email">
 <input id="mobile" placeholder="Mobile">
-<button onclick="continueLogin()">Continue</button>
+
+<button class="continue-btn" onclick="continueLogin()">Continue</button>
+
+<div class="skip" onclick="closePopup()">Skip for now →</div>
+
 </div>
 </div>
 
@@ -228,23 +270,30 @@ const db = getDatabase(app);
 signInAnonymously(auth);
 
 // popup
-window.openPopup = ()=> document.getElementById("popup").style.display="flex";
+window.openPopup=()=>document.getElementById("popup").style.display="flex";
+window.closePopup=()=>document.getElementById("popup").style.display="none";
 
-window.continueLogin = ()=>{
+// outside click close
+window.onclick=function(e){
+if(e.target.id==="popup"){closePopup();}
+}
+
+// continue
+window.continueLogin=()=>{
 const name=document.getElementById("name").value;
 const email=document.getElementById("email").value;
 const mobile=document.getElementById("mobile").value;
 
-if(!name||!email||!mobile){alert("Fill all");return;}
+if(!name||!email||!mobile){alert("Fill all details");return;}
 
 set(ref(db,"users/"+Date.now()),{name,email,mobile});
 
 localStorage.setItem("userName",name);
 
 window.location.href="dashboard.html";
-};
+}
 
-// ANIMATION
+// stats animation
 function animate(id,target){
 let i=0;
 let interval=setInterval(()=>{
