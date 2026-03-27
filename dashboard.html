@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DB Solutions Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+  text-align:center;
+}
+
+.container {
+  padding:40px;
+}
+
+.card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(15px);
+  border-radius:20px;
+  padding:30px;
+  margin:20px auto;
+  max-width:500px;
+}
+
+button {
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  background:#00c6ff;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+img {
+  width:100%;
+  border-radius:15px;
+  margin-top:15px;
+}
+
+.social {
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
+}
+
+.footer {
+  margin-top:40px;
+  font-size:14px;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 id="welcomeText">Welcome 👋</h1>
+
+<!-- JOB SECTION -->
+<div class="card">
+  <h2>Apply for Jobs</h2>
+
+  <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d" alt="office">
+
+  <br>
+
+  <button onclick="openWhatsapp()">Job Updates (WhatsApp)</button><br>
+  <button onclick="openForm()">Apply Now</button>
+</div>
+
+<!-- SOCIAL -->
+<div class="card">
+  <h2>Follow Us</h2>
+
+  <img src="https://images.unsplash.com/photo-1497366216548-37526070297c" alt="office">
+
+  <div class="social">
+    <button onclick="openLinkedin()">LinkedIn</button>
+    <button onclick="openFacebook()">Facebook</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Connect with DB Solutions</p>
+  <p>📞 7987107059</p>
+  <p>📧 dbsolutionmopa@zohomail.in</p>
+</div>
+
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD_Ga-Mi9EPdi9gtJWkXA7fqgea1P4OE54",
+  authDomain: "dbsolutions-career.firebaseapp.com",
+  projectId: "dbsolutions-career"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const name = user.displayName || "User";
+    document.getElementById("welcomeText").innerText = "Welcome to DB Solutions " + name + " 👋";
+  } else {
+    window.location.href = "index.html";
+  }
+});
+
+</script>
+
+<!-- LINKS -->
+<script>
+function openWhatsapp(){
+  window.open("https://whatsapp.com/channel/0029Vb0Cqmf1CYoYmdhbJd3F");
+}
+
+function openForm(){
+  window.open("https://forms.gle/XsGnnfuXWp5b59qH8");
+}
+
+function openLinkedin(){
+  window.open("https://www.linkedin.com/in/dharmesh-band-1b7b97134");
+}
+
+function openFacebook(){
+  window.open("https://www.facebook.com/share/18H9eimdbL/");
+}
+</script>
+
+</body>
+</html>
