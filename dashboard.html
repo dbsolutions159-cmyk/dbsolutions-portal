@@ -1,70 +1,208 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f2027;
-      color: white;
-      text-align: center;
-      padding: 30px;
-    }
-    .box {
-      background: #203a43;
-      padding: 30px;
-      border-radius: 15px;
-      margin: 20px auto;
-      width: 80%;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 20px;
-      background: #00c6ff;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+<title>DB Solutions Dashboard</title>
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI';
+background:#f5f7fa;
+}
+
+/* HEADER */
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 30px;
+background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo{
+font-weight:bold;
+font-size:20px;
+}
+
+.search{
+width:40%;
+padding:10px;
+border-radius:20px;
+border:1px solid #ccc;
+}
+
+.profile{
+cursor:pointer;
+}
+
+/* LAYOUT */
+.container{
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+background:#0f2027;
+color:white;
+height:100vh;
+padding:20px;
+}
+
+.sidebar h3{
+margin-bottom:20px;
+}
+
+.sidebar div{
+margin:15px 0;
+cursor:pointer;
+}
+
+/* MAIN */
+.main{
+flex:1;
+padding:30px;
+}
+
+/* CARDS */
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* JOB CARD */
+.job{
+border-bottom:1px solid #eee;
+padding:15px 0;
+}
+
+.apply-btn{
+background:#0072ff;
+color:white;
+border:none;
+padding:8px 15px;
+border-radius:20px;
+cursor:pointer;
+}
+
+/* PROFILE BOX */
+.profile-box{
+width:250px;
+background:white;
+padding:20px;
+margin:20px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.progress{
+height:10px;
+background:#eee;
+border-radius:10px;
+margin:10px 0;
+}
+
+.progress-bar{
+height:10px;
+background:#00c6ff;
+width:60%;
+border-radius:10px;
+}
+</style>
+
 </head>
 
 <body>
 
-<h1 id="welcome"></h1>
+<!-- HEADER -->
+<div class="header">
+<div class="logo">DB Solutions</div>
 
-<div class="box">
-  <h2>Apply for Job</h2>
-  <button onclick="window.open('https://forms.gle/XsGnnfuXWp5b59qH8')">
-    Apply Now
-  </button>
+<input class="search" placeholder="Search jobs here...">
 
-  <button onclick="window.open('https://whatsapp.com/channel/0029Vb0Cqmf1CYoYmdhbJd3F')">
-    Job Updates
-  </button>
+<div>
+<span id="username"></span>
+<button onclick="logout()">Logout</button>
+</div>
 </div>
 
-<div class="box">
-  <h2>Follow Us</h2>
-  <button onclick="window.open('https://www.linkedin.com/in/dharmesh-band-1b7b97134')">
-    LinkedIn
-  </button>
+<!-- BODY -->
+<div class="container">
 
-  <button onclick="window.open('https://www.facebook.com/share/18H9eimdbL/')">
-    Facebook
-  </button>
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h3>Dashboard</h3>
+<div>🏠 Home</div>
+<div>👤 My Profile</div>
+<div>📄 Applied Jobs</div>
+<div>⭐ Saved Jobs</div>
+<div>💼 Recommended</div>
+<div>⚙ Settings</div>
 </div>
 
-<div class="box">
-  <h3>Contact</h3>
-  <p>📞 7987107059</p>
-  <p>📧 dbsolutionmopa@zohomail.in</p>
+<!-- MAIN -->
+<div class="main">
+
+<!-- PROFILE COMPLETION -->
+<div class="card">
+<h2>Profile Completion</h2>
+<div class="progress">
+<div class="progress-bar"></div>
+</div>
+<p>60% Completed</p>
+<button class="apply-btn">Complete Profile</button>
+</div>
+
+<!-- JOBS -->
+<div class="card">
+<h2>Recommended Jobs</h2>
+
+<div class="job">
+<h3>Amazon - WFH Support</h3>
+<p>₹25,000 - ₹40,000 | Remote</p>
+<button class="apply-btn">Apply</button>
+</div>
+
+<div class="job">
+<h3>Wipro - Data Entry</h3>
+<p>₹18,000 - ₹30,000 | Work From Home</p>
+<button class="apply-btn">Apply</button>
+</div>
+
+<div class="job">
+<h3>Accenture - Backend Executive</h3>
+<p>₹30,000 - ₹50,000</p>
+<button class="apply-btn">Apply</button>
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT PROFILE PANEL -->
+<div class="profile-box">
+<h3>Your Profile</h3>
+<p id="nameBox"></p>
+<p>Email: User</p>
+<button class="apply-btn">Edit Profile</button>
+</div>
+
 </div>
 
 <script>
-  const name = localStorage.getItem("userName");
-  document.getElementById("welcome").innerText =
-    "Welcome to DB Solutions " + name + " 👋";
+const name = localStorage.getItem("userName") || "Candidate";
+
+document.getElementById("username").innerText = name;
+document.getElementById("nameBox").innerText = name;
+
+function logout(){
+localStorage.clear();
+window.location.href="index.html";
+}
 </script>
 
 </body>
