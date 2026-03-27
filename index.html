@@ -1,53 +1,213 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DB Solutions</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-    }
-    .box {
-      background: rgba(0,0,0,0.7);
-      padding: 30px;
-      border-radius: 15px;
-      width: 300px;
-      text-align: center;
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      border: none;
-    }
-    button {
-      background: #00c6ff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+<title>DB Solutions</title>
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI';
+background:#0f2027;
+color:white;
+}
+
+/* HEADER */
+header{
+display:flex;
+justify-content:space-between;
+padding:20px 50px;
+background:rgba(0,0,0,0.6);
+position:fixed;
+width:100%;
+z-index:100;
+}
+
+.logo{font-size:22px;font-weight:bold;}
+
+.nav button{
+margin-left:10px;
+padding:8px 18px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+}
+
+.login{background:transparent;border:1px solid white;color:white;}
+.signup{background:#00c6ff;color:white;}
+
+/* HERO */
+.hero{
+height:100vh;
+background:url('https://images.unsplash.com/photo-1497366216548-37526070297c') center/cover;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.hero h1{font-size:50px;}
+.hero p{font-size:18px;}
+
+.hero button{
+padding:15px 30px;
+border-radius:30px;
+border:none;
+background:#00c6ff;
+color:white;
+font-size:18px;
+margin-top:20px;
+cursor:pointer;
+}
+
+/* SECTION */
+.section{padding:70px 30px;text-align:center;}
+
+.cards{display:flex;flex-wrap:wrap;justify-content:center;}
+
+.card{
+width:250px;
+background:rgba(255,255,255,0.08);
+margin:15px;
+padding:20px;
+border-radius:15px;
+}
+
+/* STATS */
+.stats{
+display:flex;
+justify-content:space-around;
+flex-wrap:wrap;
+}
+
+.stat{
+font-size:30px;
+margin:20px;
+}
+
+/* TESTIMONIAL */
+.testimonial{
+background:rgba(255,255,255,0.05);
+margin:20px;
+padding:20px;
+border-radius:10px;
+}
+
+/* LOGOS */
+.companies img{
+width:120px;
+margin:20px;
+}
+
+/* FOOTER */
+footer{
+text-align:center;
+padding:30px;
+background:black;
+}
+
+/* POPUP */
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.popup-box{
+background:#1c1c1c;
+padding:30px;
+border-radius:15px;
+text-align:center;
+}
+
+input{
+display:block;
+margin:10px auto;
+padding:10px;
+width:250px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2>Sign Up</h2>
-  <input id="name" placeholder="Name"><br>
-  <input id="email" placeholder="Email"><br>
-  <input id="mobile" placeholder="Mobile"><br>
-  <button id="continueBtn">Continue</button>
+<header>
+<div class="logo">DB Solutions</div>
+<div class="nav">
+<button class="login" onclick="openPopup()">Login</button>
+<button class="signup" onclick="openPopup()">Sign Up</button>
+</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+<h1>Build Your Career With DB Solutions</h1>
+<p>Top MNC Jobs | Work From Home | Verified Hiring</p>
+<button onclick="openPopup()">Get Hired Now</button>
 </div>
 
-<!-- FIREBASE -->
+<!-- STATS -->
+<div class="section stats">
+<div class="stat"><span id="num1">0</span>+ Candidates</div>
+<div class="stat"><span id="num2">0</span>+ Jobs</div>
+<div class="stat"><span id="num3">0</span>+ Companies</div>
+</div>
+
+<!-- ABOUT -->
+<div class="section">
+<h2>About DB Solutions</h2>
+<p>We connect talent with top companies like Amazon, Wipro, Accenture and more.</p>
+</div>
+
+<!-- HOW -->
+<div class="section">
+<h2>How It Works</h2>
+<div class="cards">
+<div class="card">Sign Up</div>
+<div class="card">Profile Complete</div>
+<div class="card">Get Job Updates</div>
+<div class="card">Get Hired</div>
+</div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="section">
+<h2>Success Stories</h2>
+<div class="testimonial">"Got WFH job within 10 days!" - Rohit</div>
+<div class="testimonial">"Best hiring platform I found." - Sneha</div>
+</div>
+
+<!-- COMPANIES -->
+<div class="section companies">
+<h2>Our Clients</h2>
+<img src="https://logo.clearbit.com/amazon.com">
+<img src="https://logo.clearbit.com/wipro.com">
+<img src="https://logo.clearbit.com/accenture.com">
+<img src="https://logo.clearbit.com/jio.com">
+<img src="https://logo.clearbit.com/makemytrip.com">
+</div>
+
+<footer>
+📞 7987107059 | 📧 dbsolutionmopa@zohomail.in
+</footer>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+<div class="popup-box">
+<h2>Sign Up</h2>
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="mobile" placeholder="Mobile">
+<button onclick="continueLogin()">Continue</button>
+</div>
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -55,50 +215,48 @@ import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/1
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD_Ga-Mi9EPdi9gtJWkXA7fqgea1P40E54",
-  authDomain: "dbsolutions-career.firebaseapp.com",
-  databaseURL: "https://dbsolutions-career-default-rtdb.firebaseio.com",
-  projectId: "dbsolutions-career",
-  storageBucket: "dbsolutions-career.appspot.com",
-  messagingSenderId: "672960239523",
-  appId: "1:672960239523:web:9249f5b4e3d8eb6fe5ec16",
-  measurementId: "G-XGD5ZM9MYC"
+apiKey: "AIzaSyD_Ga-Mi9EPdi9gtJWkXA7fqgea1P40E54",
+authDomain: "dbsolutions-career.firebaseapp.com",
+databaseURL: "https://dbsolutions-career-default-rtdb.firebaseio.com",
+projectId: "dbsolutions-career"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// LOGIN
-signInAnonymously(auth)
-  .then(() => console.log("Login Success"))
-  .catch((error) => alert(error.message));
+signInAnonymously(auth);
 
-// BUTTON CLICK
-document.getElementById("continueBtn").addEventListener("click", () => {
+// popup
+window.openPopup = ()=> document.getElementById("popup").style.display="flex";
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const mobile = document.getElementById("mobile").value;
+window.continueLogin = ()=>{
+const name=document.getElementById("name").value;
+const email=document.getElementById("email").value;
+const mobile=document.getElementById("mobile").value;
 
-  if (!name || !email || !mobile) {
-    alert("Please fill all fields");
-    return;
-  }
+if(!name||!email||!mobile){alert("Fill all");return;}
 
-  const userId = Date.now();
+set(ref(db,"users/"+Date.now()),{name,email,mobile});
 
-  set(ref(db, "users/" + userId), {
-    name,
-    email,
-    mobile
-  });
+localStorage.setItem("userName",name);
 
-  localStorage.setItem("userName", name);
+window.location.href="dashboard.html";
+};
 
-  alert("Login Successful 🚀");
-  window.location.href = "dashboard.html";
-});
+// ANIMATION
+function animate(id,target){
+let i=0;
+let interval=setInterval(()=>{
+i+=10;
+document.getElementById(id).innerText=i;
+if(i>=target) clearInterval(interval);
+},20);
+}
+
+animate("num1",1200);
+animate("num2",350);
+animate("num3",25);
 
 </script>
 
