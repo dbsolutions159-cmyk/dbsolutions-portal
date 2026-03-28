@@ -2,116 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DB Solutions Pro Dashboard</title>
+<title>DB Solutions Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
-/* ===== GLOBAL ===== */
 body{
   margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:#333;
+  font-family:Segoe UI;
+  background:#eef2f7;
 }
 
-/* ===== LAYOUT ===== */
-.container{display:flex}
+.container{display:flex;}
 
-/* ===== SIDEBAR ===== */
 .sidebar{
-  width:240px;
+  width:220px;
+  background:#0f2027;
+  color:white;
   height:100vh;
   padding:20px;
-  color:white;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
 }
 
-.sidebar h2{margin-bottom:20px}
+.sidebar h2{margin-bottom:20px;}
 
 .sidebar a{
   display:block;
-  padding:12px;
-  border-radius:8px;
-  margin:8px 0;
-  text-decoration:none;
+  margin:10px 0;
   color:white;
-  transition:.3s;
+  text-decoration:none;
 }
 
-.sidebar a:hover{
-  background:rgba(255,255,255,0.2);
-}
-
-/* ===== CONTENT ===== */
 .content{
   flex:1;
-  padding:25px;
+  padding:20px;
 }
 
-/* ===== CARD ===== */
 .card{
   background:white;
   padding:20px;
-  border-radius:14px;
+  border-radius:10px;
   margin-bottom:20px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* ===== BUTTON ===== */
-.btn{
-  padding:10px 18px;
+button{
+  padding:10px 15px;
   border:none;
-  border-radius:10px;
-  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  background:#0072ff;
   color:white;
+  border-radius:6px;
   cursor:pointer;
-  font-weight:bold;
 }
 
-/* ===== JOB CARD ===== */
-.job{
-  padding:12px;
-  background:#f5f7fb;
-  border-radius:10px;
-  margin-top:10px;
-}
-
-/* ===== CHAT ===== */
 .chat{
   position:fixed;
   bottom:20px;
   right:20px;
-  width:300px;
+  width:280px;
   background:white;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
   padding:10px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 .chat-area{
-  height:150px;
+  height:120px;
   overflow:auto;
   font-size:14px;
 }
-
-input{
-  padding:8px;
-  width:65%;
-}
-
-.toast{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:#0072ff;
-  color:white;
-  padding:10px 15px;
-  border-radius:8px;
-  display:none;
-}
-
 </style>
 </head>
 
@@ -122,11 +78,11 @@ input{
 <!-- SIDEBAR -->
 <div class="sidebar">
   <h2>DB Solutions</h2>
-  <a href="#">🏠 Dashboard</a>
-  <a href="profile.html">👤 Profile</a>
+  <a href="dashboard.html">Home</a>
+  <a href="profile.html">Profile</a>
 </div>
 
-<!-- MAIN -->
+<!-- CONTENT -->
 <div class="content">
 
 <h2 id="welcome">Welcome 👋</h2>
@@ -134,157 +90,116 @@ input{
 <div class="card">
   <h3>Profile Completion</h3>
   <p id="progress">0%</p>
-  <button class="btn" onclick="goProfile()">Complete Profile</button>
+  <button onclick="goProfile()">Complete Profile</button>
 </div>
 
 <div class="card">
-  <h3>🤖 AI Recommended Jobs</h3>
+  <h3>AI Recommended Jobs</h3>
   <div id="jobs"></div>
 </div>
 
-<div class="card">
-  <h3>💡 AI Suggestions</h3>
-  <div id="tips"></div>
-</div>
-
 </div>
 </div>
 
-<!-- CHAT -->
+<!-- CHATBOX -->
 <div class="chat">
   <b>🤖 DB Mitra</b>
   <div id="chatArea" class="chat-area"></div>
   <input id="msg" placeholder="Ask...">
-  <button onclick="send()">Send</button>
+  <button onclick="sendMsg()">Send</button>
 </div>
 
-<div id="toast" class="toast"></div>
-
+<!-- JS START -->
 <script>
 
-/* ========= DATA ========= */
+// SAFE LOAD (error-proof)
+let user = null;
 
-let user = safeParse(localStorage.getItem("profileData"));
+try{
+  user = JSON.parse(localStorage.getItem("profileData"));
+}catch(e){
+  user = null;
+}
 
-let jobs = [
- {title:"Data Entry", skills:["excel"], salary:20000},
- {title:"Customer Support", skills:["communication"], salary:25000},
- {title:"WFH Chat Support", skills:["english"], salary:30000}
+// WELCOME NAME
+if(user && user.name){
+  document.getElementById("welcome").innerText =
+  "Welcome " + user.name + " 👋";
+}
+
+// PROFILE %
+let percent = localStorage.getItem("profilePercent");
+document.getElementById("progress").innerText =
+percent ? percent + "%" : "0%";
+
+// JOB SYSTEM
+let jobsData = [
+  {title:"Data Entry", skill:"excel"},
+  {title:"Customer Support", skill:"communication"},
+  {title:"WFH Chat Support", skill:"english"}
 ];
 
-/* ========= HELPERS ========= */
+let jobHTML = "";
 
-function safeParse(data){
- try{return JSON.parse(data)}catch{return null}
-}
+if(user && user.skills){
 
-function showToast(msg){
- let t=document.getElementById("toast");
- t.innerText=msg;
- t.style.display="block";
- setTimeout(()=>t.style.display="none",2000);
-}
+  jobsData.forEach(job=>{
+    let match = user.skills.toLowerCase().includes(job.skill) ? 80 : 30;
 
-/* ========= WELCOME ========= */
-
-if(user?.name){
- welcome.innerText = "Welcome " + user.name + " 👋";
-}
-
-/* ========= PROFILE SCORE ========= */
-
-let score = 0;
-
-if(user){
- if(user.name) score+=20;
- if(user.skills) score+=30;
- if(user.experience) score+=20;
- if(user.jobType) score+=30;
-}
-
-progress.innerText = score + "%";
-
-/* ========= JOB MATCH ========= */
-
-let html="";
-
-if(user?.skills){
-
- jobs.forEach(j=>{
-   let match=0;
-
-   j.skills.forEach(s=>{
-     if(user.skills.toLowerCase().includes(s)) match+=50;
-   });
-
-   html+=`
-   <div class="job">
-     <b>${j.title}</b><br>
-     Match: ${match}%<br>
-     Salary: ₹${j.salary}<br><br>
-     <button class="btn" onclick="apply()">Apply</button>
-   </div>`;
- });
+    jobHTML += `
+      <div style="margin-bottom:10px;">
+        <b>${job.title}</b><br>
+        Match: ${match}%<br>
+        <button onclick="applyJob()">Apply</button>
+      </div>
+    `;
+  });
 
 }else{
- html="Complete profile to unlock jobs";
+  jobHTML = "👉 Complete your profile to unlock jobs";
 }
 
-jobsDiv = document.getElementById("jobs");
-jobsDiv.innerHTML = html;
+document.getElementById("jobs").innerHTML = jobHTML;
 
-/* ========= AI TIPS ========= */
-
-let tips="";
-
-if(user){
- if(!user.skills) tips+="👉 Add skills<br>";
- if(user.experience==="Fresher") tips+="👉 Apply for fresher jobs<br>";
-}else{
- tips="👉 Complete profile first";
-}
-
-document.getElementById("tips").innerHTML = tips;
-
-/* ========= NAV ========= */
-
+// NAVIGATION
 function goProfile(){
- window.location.href="profile.html";
+  window.location.href = "profile.html";
 }
 
-/* ========= APPLY ========= */
-
-function apply(){
- showToast("Application Started 🚀");
+// APPLY BUTTON
+function applyJob(){
+  alert("Application Started 🚀");
 }
 
-/* ========= CHAT ========= */
+// CHATBOT
+function sendMsg(){
 
-function send(){
+  let msg = document.getElementById("msg").value.toLowerCase();
+  let reply = "";
 
- let m = msg.value.toLowerCase();
- let reply="";
+  if(msg.includes("job")){
+    reply = "Check jobs above based on your profile.";
+  }
+  else if(msg.includes("salary")){
+    reply = "Salary range ₹15k - ₹40k.";
+  }
+  else if(msg.includes("profile")){
+    reply = "Complete your profile for better jobs.";
+  }
+  else{
+    reply = "Hello! I am DB Mitra 🤖";
+  }
 
- if(m.includes("job")){
-   reply="Jobs are shown above based on your profile.";
- }
- else if(m.includes("salary")){
-   reply="Salary depends on your skills & experience.";
- }
- else if(m.includes("profile")){
-   reply="Complete your profile for better matches.";
- }
- else{
-   reply="I am DB Mitra 🤖";
- }
+  let chat = document.getElementById("chatArea");
 
- chatArea.innerHTML+=<p><b>You:</b> ${m}</p>;
- chatArea.innerHTML+=<p><b>AI:</b> ${reply}</p>;
+  chat.innerHTML += "<p><b>You:</b> "+msg+"</p>";
+  chat.innerHTML += "<p><b>AI:</b> "+reply+"</p>";
 
- msg.value="";
+  document.getElementById("msg").value="";
 }
 
 </script>
+<!-- JS END -->
 
 </body>
 </html>
