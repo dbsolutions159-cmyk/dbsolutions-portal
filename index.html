@@ -252,20 +252,32 @@ typing.className="msg bot";
 chat.appendChild(typing);
 
 try{
+
 let res = await fetch("https://db-backend-hiye.onrender.com/api/chat", {
 method:"POST",
-headers:{"Content-Type":"application/json"},
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify({message:text})
 });
 
-let data=await res.json();
-chat.removeChild(typing);
-add(data.reply,"bot");
-
-}catch{
-chat.removeChild(typing);
-add("Server not connected","bot");
+// अगर response सही नहीं है
+if(!res.ok){
+throw new Error("Server slow");
 }
+
+let data = await res.json();
+
+chat.removeChild(typing);
+add(data.reply || "No response","bot");
+
+}catch(err){
+console.log(err);
+
+chat.removeChild(typing);
+add("Server starting... try again in 5 sec ⏳","bot");
+}
+
 
 }
 
