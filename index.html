@@ -252,7 +252,7 @@ typing.className="msg bot";
 chat.appendChild(typing);
 
 try{
-let res=await fetch("http://localhost:3000/chat",{
+let res = await fetch("https://db-backend-hiye.onrender.com/api/chat", {
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({message:text})
