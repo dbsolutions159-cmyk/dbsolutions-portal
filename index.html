@@ -21,17 +21,20 @@ box.style.flexDirection="column";
 }
 
 async function send(){
-let text=document.getElementById("msg").value;
+let input=document.getElementById("msg");
+let chat=document.getElementById("chat");
+
+let text=input.value;
 if(!text)return;
 
 add(text,"user");
-document.getElementById("msg").value="";
+input.value="";
 
 // typing
 let typing=document.createElement("div");
 typing.innerText="Typing...";
 typing.className="msg bot";
-document.getElementById("chat").appendChild(typing);
+chat.appendChild(typing);
 
 try{
 let res=await fetch("https://db-backend-hiye.onrender.com/api/chat",{
@@ -44,21 +47,24 @@ body:JSON.stringify({message:text})
 
 let data=await res.json();
 
-document.getElementById("chat").removeChild(typing);
+chat.removeChild(typing);
 add(data.reply || "No response","bot");
 
 }catch(err){
 console.log(err);
-document.getElementById("chat").removeChild(typing);
+chat.removeChild(typing);
 add("Server not connected","bot");
 }
 }
 
 function add(text,type){
+let chat=document.getElementById("chat");
+
 let div=document.createElement("div");
 div.className="msg "+type;
 div.innerText=text;
-document.getElementById("chat").appendChild(div);
+
+chat.appendChild(div);
 }
 
 </script>
