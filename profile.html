@@ -1,42 +1,281 @@
+[10:20 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Solutions Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { margin:0; font-family: Arial; }
+
+.container { display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+  width:220px;
+  background:#0f2027;
+  color:white;
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar h2 { color:#00c6ff; }
+
+.sidebar a {
+  display:block;
+  color:white;
+  text-decoration:none;
+  margin:12px 0;
+}
+
+.sidebar a:hover {
+  background:#1e3a5f;
+  padding-left:5px;
+}
+
+/* CONTENT */
+.content {
+  flex:1;
+  padding:20px;
+  background:#f1f5f9;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+button {
+  pa…
+[10:27 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Solutions - Premium Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+}
+
+.container { display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+  width:220px;
+  background:rgba(0,0,0,0.4);
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar a {
+  display:block;
+  color:white;
+  margin:10px 0;
+  text-decoration:none;
+}
+
+/* CONTENT */
+.content {
+  flex:1;
+  padding:30px;
+}
+
+.card {
+  background:rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  padding:25px;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+/* FORM */
+input, select, textarea {
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+  border:none;
+}
+
+/* PROFILE IMAGE */
+.profile-img {
+  text-align:center;
+}
+
+.profile-img img {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  margin-bottom:10px;
+}
+
+/* BUTTON */
+button {
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background: linear-gradient(45deg,#00c6ff,#0072ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover {
+  transform:scale(1.03);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>DB Solutions</h2>
+  <a href="dashboard.html">Home</a>
+  <a href="profile.html">Profile</a>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<h1>Create Your Professional Profile</h1>
+
+<div class="card">
+
+<!-- PROFILE PHOTO -->
+<div class="profile-img">
+  <img id="preview" src="https://via.placeholder.com/120">
+  <input type="file" id="photo">
+</div>
+
+<!-- BASIC -->
+<h3>Basic Details</h3>
+<input id="name" placeholder="Full Name *">
+<input id="email" placeholder="Email *">
+<input id="phone" placeholder="Phone *">
+
+<!-- PROFESSIONAL -->
+<h3>Professional Details</h3>
+<select id="education">
+  <option value="">Education *</option>
+  <option>10th</option>
+  <option>12th</option>
+  <option>Graduate</option>
+</select>
+
+<select id="experience">
+  <option value="">Experience *</option>
+  <option>Fresher</option>
+  <option>1 Year</option>
+  <option>2+ Years</option>
+</select>
+
+<input id="skills" placeholder="Skills *">
+
+<select id="jobType">
+  <option value="">Job Type *</option>
+  <option>Work From Home</option>
+  <option>Office</option>
+</select>
+
+<select id="location">
+  <option value="">Preferred Location *</option>
+  <option>Remote</option>
+  <option>Delhi</option>
+  <option>Mumbai</option>
+</select>
+
+<!-- EXTRA -->
+<h3>Additional Info</h3>
+<textarea id="address" placeholder="Address *"></textarea>
+<input id="resume" placeholder="Resume Link *">
+
+<button onclick="saveProfile()">🚀 Save Profile</button>
+
+</div>
+
+</div>
+
+</div>
+
 <script>
 
+// IMAGE UPLOAD
+document.getElementById("photo").addEventListener("change", function(){
+  const file = this.files[0];
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      preview.src = e.target.result;
+      localStorage.setItem("profileImage", e.target.result);
+    }
+    reader.readAsDataURL(file);
+  }
+});
+
+// SAVE PROFILE
 function saveProfile(){
 
   let data = {
-    name: name.value.trim(),
-    email: email.value.trim(),
-    phone: phone.value.trim(),
-    education: education.value,
-    experience: experience.value,
-    skills: skills.value.trim(),
-    jobType: jobType.value,
-    location: location.value,
-    address: address.value.trim(),
-    resume: resume.value.trim()
+    name:name.value,
+    email:email.value,
+    phone:phone.value,
+    education:education.value,
+    experience:experience.value,
+    skills:skills.value,
+    jobType:jobType.value,
+    location:location.value,
+    address:address.value,
+    resume:resume.value
   };
 
-  // AI VALIDATION
-  let total = Object.keys(data).length;
-  let filled = 0;
-
+  // VALIDATION
   for(let key in data){
-    if(data[key] !== ""){
-      filled++;
+    if(!data[key]){
+      alert("❌ Fill all fields");
+      return;
     }
   }
 
-  let percent = Math.round((filled / total) * 100);
+  // AI % CALCULATION
+  let percent = 100;
 
-  // SAVE
   localStorage.setItem("profileData", JSON.stringify(data));
   localStorage.setItem("profilePercent", percent);
 
-  // RESULT
-  if(percent === 100){
-    alert("✅ Profile 100% Completed!");
-  }else{
-    alert("⚠️ Profile " + percent + "% Completed\nPlease fill all fields");
+  alert("✅ Profile Completed 100%");
+  window.location.href="dashboard.html";
+}
+
+// LOAD DATA
+let saved = JSON.parse(localStorage.getItem("profileData"));
+if(saved){
+  for(let key in saved){
+    if(document.getElementById(key)){
+      document.getElementById(key).value = saved[key];
+    }
   }
 }
 
+// LOAD IMAGE
+let img = localStorage.getItem("profileImage");
+if(img){
+  preview.src = img;
+}
+
 </script>
+
+</body>
+</html>
