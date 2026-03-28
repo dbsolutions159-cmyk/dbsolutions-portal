@@ -11,7 +11,7 @@ body {margin:0;font-family:'Segoe UI';background:#f1f5f9;}
 
 .sidebar {
   width:230px;
-  background:linear-gradient(180deg,#0f2027,#203a43);
+  background:#0f2027;
   color:white;
   height:100vh;
   padding:20px;
@@ -82,21 +82,23 @@ button {
 
 <script>
 
-// PROFILE LOAD
+// LOAD PROFILE
 let user = JSON.parse(localStorage.getItem("profileData"));
 let percent = localStorage.getItem("profilePercent");
 
+// WELCOME
 if(user && user.name){
-  welcomeText.innerText = "Welcome, " + user.name + " 👋";
+  document.getElementById("welcomeText").innerText = "Welcome, " + user.name + " 👋";
 }
 
-progressText.innerText = percent ? percent+"%" : "0%";
+// PROGRESS
+document.getElementById("progressText").innerText = percent ? percent + "%" : "0%";
 
 // JOB DATABASE
 let jobs = [
- {title:"Data Entry Executive", skills:["excel"], exp:"Fresher", salary:20000},
- {title:"Customer Support", skills:["communication"], exp:"Fresher", salary:25000},
- {title:"WFH Chat Support", skills:["communication"], exp:"Fresher", salary:30000}
+ {title:"Data Entry Executive", skills:["excel","typing"], exp:"Fresher", type:"Work From Home", salary:20000},
+ {title:"Customer Support", skills:["communication"], exp:"Fresher", type:"Office", salary:25000},
+ {title:"WFH Chat Support", skills:["communication","english"], exp:"Fresher", type:"Work From Home", salary:30000}
 ];
 
 // AI MATCHING
@@ -109,106 +111,98 @@ if(user){
  jobs.forEach(job=>{
    let score = 0;
 
-   job.skills.forEach(s=>{
-     if(user.skills.toLowerCase().includes(s)) score+=50;
+   job.skills.forEach(skill=>{
+     if(user.skills && user.skills.toLowerCase().includes(skill)){
+       score += 50;
+     }
    });
 
-   if(user.experience===job.exp) score+=30;
+   if(user.experience === job.exp) score += 30;
 
-   if(user.jobType==="Work From Home" && job.title.includes("WFH")) score+=20;
+   if(user.jobType === job.type) score += 20;
 
-   results.push({...job,score});
+   results.push({...job, score});
  });
 
  results.sort((a,b)=>b.score-a.score);
 
  results.slice(0,3).forEach(job=>{
-   html+=`
+   html += `
    <div class="job-card">
-   <b>${job.title}</b><br>
-   Match: ${job.score}%<br>
-   Salary: ₹${job.salary}<br><br>
-   <button onclick="goApply()">Apply</button>
+     <b>${job.title}</b><br>
+     Match: ${job.score}%<br>
+     Salary: ₹${job.salary}<br><br>
+     <button onclick="goApply()">Apply Now</button>
    </div>`;
  });
 
 }else{
- html=<button onclick="goProfile()">Create Profile</button>;
+ html = <p>Please complete your profile to see jobs.</p>;
 }
 
-jobBox.innerHTML=html;
+document.getElementById("jobBox").innerHTML = html;
 
-// FUNCTIONS
-function goProfile(){window.location.href="profile.html";}
-function goApply(){window.location.href="payment.html";}
+// NAVIGATION
+function goProfile(){
+  window.location.href="profile.html";
+}
+
+function goApply(){
+  window.location.href="payment.html";
+}
 
 </script>
 
-<!-- 🤖 DB MITRA CHATBOT -->
+<!-- 🤖 SIMPLE DB MITRA CHATBOT -->
 
-<div id="chatbot" style="
+<div style="
 position:fixed;
 bottom:20px;
 right:20px;
-width:320px;
+width:300px;
 background:white;
-border-radius:12px;
+border-radius:10px;
 box-shadow:0 5px 20px rgba(0,0,0,0.2);
-overflow:hidden;
+padding:10px;
 ">
 
-<div style="background:#0072ff;color:white;padding:10px;">
-🤖 DB Mitra
-</div>
+<h4>🤖 DB Mitra</h4>
 
-<div id="chatArea" style="height:250px;overflow:auto;padding:10px;font-size:14px;"></div>
+<div id="chatArea" style="height:150px;overflow:auto;font-size:14px;"></div>
 
-<div style="display:flex;">
-<input id="userMsg" placeholder="Ask DB Mitra..." style="flex:1;padding:10px;border:none;">
-<button onclick="sendMsg()" style="background:#0072ff;color:white;border:none;padding:10px;">Send</button>
-</div>
+<input id="userMsg" placeholder="Ask..." style="width:70%;">
+<button onclick="sendMsg()">Send</button>
 
 </div>
 
 <script>
 
-async function sendMsg(){
+function sendMsg(){
 
-let msg = userMsg.value;
-chatArea.innerHTML += "<p><b>You:</b> "+msg+"</p>";
+let msg = document.getElementById("userMsg").value.toLowerCase();
+let chat = document.getElementById("chatArea");
 
-let profile = JSON.parse(localStorage.getItem("profileData"));
+let reply = "";
 
-let context = `
-You are DB Mitra, AI job consultant.
-User:
-Name:${profile?.name||""}
-Skills:${profile?.skills||""}
-Experience:${profile?.experience||""}
-`;
+// SIMPLE AI (NO API)
 
-let res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-"Authorization":"Bearer YOUR_GROQ_API_KEY"
-},
-body:JSON.stringify({
-model:"llama3-8b-8192",
-messages:[
-{role:"system",content:context},
-{role:"user",content:msg}
-]
-})
-});
+if(msg.includes("job")){
+  reply = "Based on your profile, you can apply for recommended jobs above.";
+}
+else if(msg.includes("salary")){
+  reply = "Salary range is ₹15k to ₹40k depending on job.";
+}
+else if(msg.includes("help")){
+  reply = "I can help you with jobs and profile guidance.";
+}
+else{
+  reply = "Hello! I am DB Mitra. Ask me about jobs.";
+}
 
-let data = await res.json();
+chat.innerHTML += "<p><b>You:</b> " + msg + "</p>";
+chat.innerHTML += "<p><b>DB Mitra:</b> " + reply + "</p>";
 
-let reply=data.choices[0].message.content;
-
-chatArea.innerHTML += "<p><b>DB Mitra:</b> "+reply+"</p>";
-
-userMsg.value="";
+document.getElementById("userMsg").value="";
 }
 
 </script>
