@@ -1,75 +1,118 @@
-<!DOCTYPE html>
+[10:19 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>DB Solutions Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>DB Solutions Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+<style>
+body { margin:0; font-family: Arial; }
 
-    .container {
-      display: flex;
-    }
+.container { display:flex; }
 
-    /* SIDEBAR */
-    .sidebar {
-      width: 220px;
-      background: #0f2027;
-      color: white;
-      height: 100vh;
-      padding: 20px;
-    }
+/* SIDEBAR */
+.sidebar {
+  width:220px;
+  background:#0f2027;
+  color:white;
+  height:100vh;
+  padding:20px;
+}
 
-    .sidebar h2 {
-      margin-bottom: 20px;
-      color: #00c6ff;
-    }
+.sidebar h2 { color:#00c6ff; }
 
-    .sidebar a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      margin: 12px 0;
-      padding: 8px;
-      border-radius: 6px;
-    }
+.sidebar a {
+  display:block;
+  color:white;
+  text-decoration:none;
+  margin:12px 0;
+}
 
-    .sidebar a:hover {
-      background: #1e3a5f;
-    }
+.sidebar a:hover {
+  background:#1e3a5f;
+  padding-left:5px;
+}
 
-    /* CONTENT */
-    .content {
-      flex: 1;
-      padding: 20px;
-      background: #f1f5f9;
-    }
+/* CONTENT */
+.content {
+  flex:1;
+  padding:20px;
+  background:#f1f5f9;
+}
 
-    .card {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+.card {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
 
-    button {
-      padding: 8px 15px;
-      border: none;
-      background: #00c6ff;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+button {
+  pa…
+[10:20 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Solutions Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    button:hover {
-      background: #0072ff;
-    }
-  </style>
+<style>
+body { margin:0; font-family: Arial; }
+
+.container { display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+  width:220px;
+  background:#0f2027;
+  color:white;
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar h2 { color:#00c6ff; }
+
+.sidebar a {
+  display:block;
+  color:white;
+  text-decoration:none;
+  margin:12px 0;
+}
+
+.sidebar a:hover {
+  background:#1e3a5f;
+  padding-left:5px;
+}
+
+/* CONTENT */
+.content {
+  flex:1;
+  padding:20px;
+  background:#f1f5f9;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+button {
+  padding:8px 15px;
+  border:none;
+  background:#00c6ff;
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+button:hover {
+  background:#0072ff;
+}
+</style>
 </head>
 
 <body>
@@ -91,29 +134,139 @@
 
   <!-- MAIN CONTENT -->
   <div class="content">
+
     <h1>Dashboard</h1>
 
     <!-- PROFILE STATUS -->
     <div class="card">
       <h3>Profile Completion</h3>
-      <p>60% Completed</p>
-      <button onclick="window.location.href='profile.html'">Complete Profile</button>
+
+      <p id="progressText">0% Completed</p>
+
+      <button onclick="goProfile()">Complete Profile</button>
     </div>
 
-    <!-- JOBS -->
+    <!-- AI JOBS -->
     <div class="card">
-      <h3>Recommended Jobs</h3>
-      <p><b>Amazon - Work From Home Support</b></p>
-      <p>₹25,000 - ₹40,000</p>
+      <h3>🤖 AI Recommended Jobs</h3>
 
-      <button onclick="window.location.href='payment.html'">
-        Apply Now
-      </button>
+      <div id="jobBox">
+        <p>Loading AI recommendations...</p>
+      </div>
     </div>
 
   </div>
 
 </div>
+
+<script>
+
+//////////////////////////////
+// PROFILE % (FIXED)
+//////////////////////////////
+
+let percent = localStorage.getItem("profilePercent");
+
+if(percent){
+  document.getElementById("progressText").innerText = percent + "% Completed";
+}else{
+  document.getElementById("progressText").innerText = "0% Completed";
+}
+
+//////////////////////////////
+// AI JOB RECOMMENDATION
+//////////////////////////////
+
+let data = JSON.parse(localStorage.getItem("profileData"));
+
+let jobHTML = "";
+
+if(data){
+
+  let skills = (data.skills || "").toLowerCase();
+  let jobType = data.jobType || "";
+  let exp = data.experience || "";
+
+  // AI MATCHING
+
+  if(skills.includes("excel") || skills.includes("data")){
+    jobHTML += `
+      <div>
+        <b>MIS Executive / Data Entry</b><br>
+        ₹18,000 - ₹30,000<br><br>
+        <button onclick="goApply()">Apply</button>
+      </div><hr>
+    `;
+  }
+
+  if(skills.includes("communication") || skills.includes("calling")){
+    jobHTML += `
+      <div>
+        <b>Customer Support Executive</b><br>
+        ₹20,000 - ₹35,000<br><br>
+        <button onclick="goApply()">Apply</button>
+      </div><hr>
+    `;
+  }
+
+  if(jobType === "Work From Home"){
+    jobHTML += `
+      <div>
+        <b>WFH Chat Support</b><br>
+        ₹22,000 - ₹40,000<br><br>
+        <button onclick="goApply()">Apply</button>
+      </div><hr>
+    `;
+  }
+
+  if(exp.includes("Fresher")){
+    jobHTML += `
+      <div>
+        <b>Fresher Hiring - Back Office</b><br>
+        ₹15,000 - ₹22,000<br><br>
+        <button onclick="goApply()">Apply</button>
+      </div>
+    `;
+  }
+
+  // अगर profile incomplete है
+  if(percent < 100){
+    jobHTML = `
+      <p>⚠️ Complete your profile to unlock best jobs</p>
+      <button onclick="goProfile()">Complete Profile</button>
+    `;
+  }
+
+  // अगर कुछ match नहीं
+  if(jobHTML === ""){
+    jobHTML = `
+      <p>No strong match found</p>
+      <p>👉 Update your skills for better jobs</p>
+    `;
+  }
+
+}else{
+  jobHTML = `
+    <p>⚠️ Profile not created</p>
+    <button onclick="goProfile()">Create Profile</button>
+  `;
+}
+
+document.getElementById("jobBox").innerHTML = jobHTML;
+
+//////////////////////////////
+// FUNCTIONS
+//////////////////////////////
+
+function goApply(){
+  window.location.href = "payment.html";
+}
+
+function goProfile(){
+  window.location.href = "profile.html";
+}
+
+</script>
 
 </body>
 </html>
