@@ -1,4 +1,52 @@
-<!DOCTYPE html>
+[10:27 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Solutions - Premium Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+}
+
+.container { display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+  width:220px;
+  background:rgba(0,0,0,0.4);
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar a {
+  display:block;
+  color:white;
+  margin:10px 0;
+  text-decoration:none;
+}
+
+/* CONTENT */
+.content {
+  flex:1;
+  padding:30px;
+}
+
+.card {
+  background:rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  padding:25px;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+/* FORM */
+input, selec…
+[10:32 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,14 +54,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body { margin:0; font-family: Arial; }
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background:#f1f5f9;
+}
 
 .container { display:flex; }
 
 /* SIDEBAR */
 .sidebar {
-  width:220px;
-  background:#0f2027;
+  width:230px;
+  background: linear-gradient(180deg,#0f2027,#203a43);
   color:white;
   height:100vh;
   padding:20px;
@@ -28,156 +80,113 @@ body { margin:0; font-family: Arial; }
   margin:12px 0;
 }
 
-.sidebar a:hover {
-  background:#1e3a5f;
-  padding-left:5px;
-}
-
 /* CONTENT */
 .content {
   flex:1;
-  padding:20px;
-  background:#f1f5f9;
+  padding:25px;
 }
 
+/* CARD */
 .card {
   background:white;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-button {
-  pa…
-[10:20 pm, 27/3/2026] Dharmesh Band: <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>DB Solutions Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body { margin:0; font-family: Arial; }
-
-.container { display:flex; }
-
-/* SIDEBAR */
-.sidebar {
-  width:220px;
-  background:#0f2027;
-  color:white;
-  height:100vh;
   padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
 }
 
-.sidebar h2 { color:#00c6ff; }
-
-.sidebar a {
-  display:block;
-  color:white;
-  text-decoration:none;
-  margin:12px 0;
-}
-
-.sidebar a:hover {
-  background:#1e3a5f;
-  padding-left:5px;
-}
-
-/* CONTENT */
-.content {
-  flex:1;
-  padding:20px;
-  background:#f1f5f9;
-}
-
-.card {
-  background:white;
-  padding:15px;
+/* JOB CARD */
+.job-card {
+  display:flex;
+  gap:15px;
+  margin-top:15px;
+  padding:10px;
   border-radius:10px;
-  margin-bottom:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+  background:#f8fafc;
 }
 
+.job-card img {
+  width:120px;
+  height:90px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+/* BUTTON */
 button {
-  padding:8px 15px;
+  padding:10px 18px;
   border:none;
-  background:#00c6ff;
+  border-radius:8px;
+  background: linear-gradient(45deg,#00c6ff,#0072ff);
   color:white;
-  border-radius:5px;
   cursor:pointer;
 }
-
-button:hover {
-  background:#0072ff;
-}
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h2>DB Solutions</h2>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>DB Solutions</h2>
 
-    <a href="dashboard.html">🏠 Home</a>
-    <a href="profile.html">👤 My Profile</a>
-    <a href="applied.html">📄 Applied Jobs</a>
-    <a href="saved.html">⭐ Saved Jobs</a>
-    <a href="recommended.html">💼 Recommended</a>
-    <a href="settings.html">⚙️ Settings</a>
-    <a href="payment.html">💳 Payment</a>
-  </div>
+  <a href="dashboard.html">🏠 Home</a>
+  <a href="profile.html">👤 My Profile</a>
+  <a href="applied.html">📄 Applied Jobs</a>
+  <a href="saved.html">⭐ Saved Jobs</a>
+  <a href="recommended.html">💼 Recommended</a>
+  <a href="settings.html">⚙️ Settings</a>
+  <a href="payment.html">💳 Payment</a>
+</div>
 
-  <!-- MAIN CONTENT -->
-  <div class="content">
+<!-- CONTENT -->
+<div class="content">
 
-    <h1>Dashboard</h1>
+<h2 id="welcomeText">Welcome 👋</h2>
 
-    <!-- PROFILE STATUS -->
-    <div class="card">
-      <h3>Profile Completion</h3>
+<!-- PROFILE -->
+<div class="card">
+  <h3>Profile Completion</h3>
+  <p id="progressText">0% Completed</p>
+  <button onclick="goProfile()">Complete Profile</button>
+</div>
 
-      <p id="progressText">0% Completed</p>
+<!-- AI JOBS -->
+<div class="card">
+  <h3>🤖 AI Recommended Jobs</h3>
+  <div id="jobBox"></div>
+</div>
 
-      <button onclick="goProfile()">Complete Profile</button>
-    </div>
-
-    <!-- AI JOBS -->
-    <div class="card">
-      <h3>🤖 AI Recommended Jobs</h3>
-
-      <div id="jobBox">
-        <p>Loading AI recommendations...</p>
-      </div>
-    </div>
-
-  </div>
-
+</div>
 </div>
 
 <script>
 
-//////////////////////////////
-// PROFILE % (FIXED)
-//////////////////////////////
+//////////////////////////
+// LOAD PROFILE
+//////////////////////////
 
+let data = JSON.parse(localStorage.getItem("profileData"));
 let percent = localStorage.getItem("profilePercent");
 
+// Welcome Name
+if(data && data.name){
+  document.getElementById("welcomeText").innerText = "Welcome, " + data.name + " 👋";
+}
+
+// Profile %
 if(percent){
   document.getElementById("progressText").innerText = percent + "% Completed";
 }else{
   document.getElementById("progressText").innerText = "0% Completed";
 }
 
-//////////////////////////////
-// AI JOB RECOMMENDATION
-//////////////////////////////
-
-let data = JSON.parse(localStorage.getItem("profileData"));
+//////////////////////////
+// AI JOBS
+//////////////////////////
 
 let jobHTML = "";
 
@@ -187,83 +196,77 @@ if(data){
   let jobType = data.jobType || "";
   let exp = data.experience || "";
 
-  // AI MATCHING
-
-  if(skills.includes("excel") || skills.includes("data")){
-    jobHTML += `
-      <div>
-        <b>MIS Executive / Data Entry</b><br>
-        ₹18,000 - ₹30,000<br><br>
-        <button onclick="goApply()">Apply</button>
-      </div><hr>
-    `;
-  }
-
-  if(skills.includes("communication") || skills.includes("calling")){
-    jobHTML += `
-      <div>
-        <b>Customer Support Executive</b><br>
-        ₹20,000 - ₹35,000<br><br>
-        <button onclick="goApply()">Apply</button>
-      </div><hr>
-    `;
-  }
-
-  if(jobType === "Work From Home"){
-    jobHTML += `
-      <div>
-        <b>WFH Chat Support</b><br>
-        ₹22,000 - ₹40,000<br><br>
-        <button onclick="goApply()">Apply</button>
-      </div><hr>
-    `;
-  }
-
-  if(exp.includes("Fresher")){
-    jobHTML += `
-      <div>
-        <b>Fresher Hiring - Back Office</b><br>
-        ₹15,000 - ₹22,000<br><br>
-        <button onclick="goApply()">Apply</button>
-      </div>
-    `;
-  }
-
-  // अगर profile incomplete है
   if(percent < 100){
     jobHTML = `
-      <p>⚠️ Complete your profile to unlock best jobs</p>
+      <p>⚠️ Complete your profile to unlock jobs</p>
       <button onclick="goProfile()">Complete Profile</button>
     `;
-  }
+  }else{
 
-  // अगर कुछ match नहीं
-  if(jobHTML === ""){
-    jobHTML = `
-      <p>No strong match found</p>
-      <p>👉 Update your skills for better jobs</p>
-    `;
+    if(skills.includes("excel") || skills.includes("data")){
+      jobHTML += `
+        <div class="job-card">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f">
+          <div>
+            <b>Data Entry / MIS Executive</b><br>
+            ₹18k - ₹30k<br><br>
+            <button onclick="goApply()">Apply</button>
+          </div>
+        </div>
+      `;
+    }
+
+    if(skills.includes("communication")){
+      jobHTML += `
+        <div class="job-card">
+          <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216">
+          <div>
+            <b>Customer Support Executive</b><br>
+            ₹20k - ₹35k<br><br>
+            <button onclick="goApply()">Apply</button>
+          </div>
+        </div>
+      `;
+    }
+
+    if(jobType === "Work From Home"){
+      jobHTML += `
+        <div class="job-card">
+          <img src="https://images.unsplash.com/photo-1581090700227-4c4f50c9f1c3">
+          <div>
+            <b>WFH Chat Support</b><br>
+            ₹22k - ₹40k<br><br>
+            <button onclick="goApply()">Apply</button>
+          </div>
+        </div>
+      `;
+    }
+
+    if(jobHTML === ""){
+      jobHTML = <p>No strong match found. Update your profile.</p>;
+    }
+
   }
 
 }else{
   jobHTML = `
-    <p>⚠️ Profile not created</p>
+    <p>⚠️ No profile found</p>
     <button onclick="goProfile()">Create Profile</button>
   `;
 }
 
 document.getElementById("jobBox").innerHTML = jobHTML;
 
-//////////////////////////////
+//////////////////////////
 // FUNCTIONS
-//////////////////////////////
-
-function goApply(){
-  window.location.href = "payment.html";
-}
+//////////////////////////
 
 function goProfile(){
   window.location.href = "profile.html";
+}
+
+function goApply(){
+  window.location.href = "payment.html";
 }
 
 </script>
