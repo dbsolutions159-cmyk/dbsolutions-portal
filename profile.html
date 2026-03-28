@@ -1,203 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>DB Solutions - Profile</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body { margin:0; font-family: Arial; background:#f1f5f9; }
-.container { display:flex; }
-
-.sidebar {
-  width:220px;
-  background:#0f2027;
-  color:white;
-  height:100vh;
-  padding:20px;
-}
-
-.sidebar a {
-  display:block;
-  color:white;
-  text-decoration:none;
-  margin:10px 0;
-}
-
-.content { flex:1; padding:20px; }
-
-.card {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  max-width:700px;
-}
-
-input, select, textarea {
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:5px;
-  border:1px solid #ccc;
-}
-
-button {
-  padding:10px;
-  background:#00c6ff;
-  border:none;
-  color:white;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-img {
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  object-fit:cover;
-  margin-bottom:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h2>DB Solutions</h2>
-    <a href="dashboard.html">Home</a>
-    <a href="profile.html">My Profile</a>
-    <a href="applied.html">Applied Jobs</a>
-    <a href="saved.html">Saved Jobs</a>
-    <a href="recommended.html">Recommended</a>
-    <a href="settings.html">Settings</a>
-  </div>
-
-  <!-- CONTENT -->
-  <div class="content">
-    <h1>Create / Update Profile</h1>
-
-    <div class="card">
-
-      <!-- PROFILE IMAGE -->
-      <img id="preview" src="https://via.placeholder.com/100">
-      <input type="file" id="photo" accept="image/*">
-
-      <!-- BASIC -->
-      <input id="name" placeholder="Full Name *">
-      <input id="email" placeholder="Email *">
-      <input id="phone" placeholder="Phone Number *">
-
-      <!-- DETAILS -->
-      <select id="education">
-        <option value="">Select Education *</option>
-        <option>10th</option>
-        <option>12th</option>
-        <option>Graduate</option>
-        <option>Post Graduate</option>
-      </select>
-
-      <select id="experience">
-        <option value="">Experience *</option>
-        <option>Fresher</option>
-        <option>1 Year</option>
-        <option>2 Years</option>
-        <option>3+ Years</option>
-      </select>
-
-      <input id="skills" placeholder="Skills *">
-
-      <select id="jobType">
-        <option value="">Preferred Job Type *</option>
-        <option>Work From Home</option>
-        <option>Office</option>
-      </select>
-
-      <select id="location">
-        <option value="">Preferred Location *</option>
-        <option>Delhi</option>
-        <option>Mumbai</option>
-        <option>Bangalore</option>
-        <option>Remote</option>
-      </select>
-
-      <textarea id="address" placeholder="Full Address *"></textarea>
-
-      <input id="resume" placeholder="Resume Link (Google Drive) *">
-
-      <button onclick="saveProfile()">Save Profile</button>
-
-    </div>
-  </div>
-
-</div>
-
 <script>
 
-// IMAGE PREVIEW
-document.getElementById("photo").addEventListener("change", function(){
-  const file = this.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = function(e){
-      document.getElementById("preview").src = e.target.result;
-      localStorage.setItem("profileImage", e.target.result);
-    }
-    reader.readAsDataURL(file);
-  }
-});
-
-// SAVE PROFILE WITH VALIDATION
 function saveProfile(){
 
-  let fields = ["name","email","phone","education","experience","skills","jobType","location","address","resume"];
-
-  for(let id of fields){
-    let value = document.getElementById(id).value;
-    if(!value){
-      alert("❌ Please fill all fields!");
-      return;
-    }
-  }
-
   let data = {
-    name: name.value,
-    email: email.value,
-    phone: phone.value,
+    name: name.value.trim(),
+    email: email.value.trim(),
+    phone: phone.value.trim(),
     education: education.value,
     experience: experience.value,
-    skills: skills.value,
+    skills: skills.value.trim(),
     jobType: jobType.value,
     location: location.value,
-    address: address.value,
-    resume: resume.value
+    address: address.value.trim(),
+    resume: resume.value.trim()
   };
 
-  localStorage.setItem("profileData", JSON.stringify(data));
+  // AI VALIDATION
+  let total = Object.keys(data).length;
+  let filled = 0;
 
-  alert("✅ Profile Saved Successfully!");
-}
-
-// LOAD DATA (Returning User)
-let saved = JSON.parse(localStorage.getItem("profileData"));
-
-if(saved){
-  for(let key in saved){
-    if(document.getElementById(key)){
-      document.getElementById(key).value = saved[key];
+  for(let key in data){
+    if(data[key] !== ""){
+      filled++;
     }
   }
-}
 
-// LOAD IMAGE
-let img = localStorage.getItem("profileImage");
-if(img){
-  document.getElementById("preview").src = img;
+  let percent = Math.round((filled / total) * 100);
+
+  // SAVE
+  localStorage.setItem("profileData", JSON.stringify(data));
+  localStorage.setItem("profilePercent", percent);
+
+  // RESULT
+  if(percent === 100){
+    alert("✅ Profile 100% Completed!");
+  }else{
+    alert("⚠️ Profile " + percent + "% Completed\nPlease fill all fields");
+  }
 }
 
 </script>
-
-</body>
-</html>
