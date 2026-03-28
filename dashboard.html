@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DB Solutions Dashboard</title>
+<title>DB Solutions Pro Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
-/* GLOBAL */
+/* ===== GLOBAL ===== */
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
@@ -15,24 +15,20 @@ body{
   color:#333;
 }
 
-/* LAYOUT */
-.container{
-  display:flex;
-}
+/* ===== LAYOUT ===== */
+.container{display:flex}
 
-/* SIDEBAR */
+/* ===== SIDEBAR ===== */
 .sidebar{
   width:240px;
   height:100vh;
+  padding:20px;
+  color:white;
   background:rgba(255,255,255,0.05);
   backdrop-filter:blur(10px);
-  color:white;
-  padding:25px;
 }
 
-.sidebar h2{
-  margin-bottom:20px;
-}
+.sidebar h2{margin-bottom:20px}
 
 .sidebar a{
   display:block;
@@ -41,61 +37,49 @@ body{
   margin:8px 0;
   text-decoration:none;
   color:white;
-  transition:0.3s;
+  transition:.3s;
 }
 
 .sidebar a:hover{
   background:rgba(255,255,255,0.2);
 }
 
-/* CONTENT */
+/* ===== CONTENT ===== */
 .content{
   flex:1;
-  padding:30px;
-}
-
-/* CARD */
-.card{
-  background:rgba(255,255,255,0.9);
-  backdrop-filter:blur(10px);
   padding:25px;
-  border-radius:15px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background:white;
+  padding:20px;
+  border-radius:14px;
   margin-bottom:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* JOB CARD */
-.job-card{
-  background:#f8fafc;
-  padding:15px;
-  border-radius:12px;
-  margin-top:10px;
-  transition:0.3s;
-}
-
-.job-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.1);
-}
-
-/* BUTTON */
-button{
+/* ===== BUTTON ===== */
+.btn{
   padding:10px 18px;
   border:none;
   border-radius:10px;
   background:linear-gradient(45deg,#00c6ff,#0072ff);
   color:white;
-  font-weight:bold;
   cursor:pointer;
-  transition:0.3s;
+  font-weight:bold;
 }
 
-button:hover{
-  transform:scale(1.05);
+/* ===== JOB CARD ===== */
+.job{
+  padding:12px;
+  background:#f5f7fb;
+  border-radius:10px;
+  margin-top:10px;
 }
 
-/* CHATBOX */
-.chatbox{
+/* ===== CHAT ===== */
+.chat{
   position:fixed;
   bottom:20px;
   right:20px;
@@ -106,11 +90,6 @@ button:hover{
   padding:10px;
 }
 
-.chat-header{
-  font-weight:bold;
-  margin-bottom:5px;
-}
-
 .chat-area{
   height:150px;
   overflow:auto;
@@ -119,9 +98,18 @@ button:hover{
 
 input{
   padding:8px;
-  border-radius:6px;
-  border:1px solid #ccc;
   width:65%;
+}
+
+.toast{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#0072ff;
+  color:white;
+  padding:10px 15px;
+  border-radius:8px;
+  display:none;
 }
 
 </style>
@@ -134,132 +122,166 @@ input{
 <!-- SIDEBAR -->
 <div class="sidebar">
   <h2>DB Solutions</h2>
-  <a href="#">🏠 Home</a>
+  <a href="#">🏠 Dashboard</a>
   <a href="profile.html">👤 Profile</a>
-  <a href="#">💼 Jobs</a>
-  <a href="#">⚙ Settings</a>
 </div>
 
 <!-- MAIN -->
 <div class="content">
 
-<h2 id="welcomeText">Welcome 👋</h2>
+<h2 id="welcome">Welcome 👋</h2>
 
 <div class="card">
   <h3>Profile Completion</h3>
-  <p id="progressText">0%</p>
-  <button onclick="goProfile()">Complete Profile</button>
+  <p id="progress">0%</p>
+  <button class="btn" onclick="goProfile()">Complete Profile</button>
 </div>
 
 <div class="card">
   <h3>🤖 AI Recommended Jobs</h3>
-  <div id="jobBox"></div>
+  <div id="jobs"></div>
 </div>
 
 <div class="card">
   <h3>💡 AI Suggestions</h3>
-  <div id="aiTips"></div>
+  <div id="tips"></div>
 </div>
 
 </div>
 </div>
 
 <!-- CHAT -->
-<div class="chatbox">
-
-<div class="chat-header">🤖 DB Mitra</div>
-
-<div id="chatArea" class="chat-area"></div>
-
-<input id="userMsg" placeholder="Ask...">
-<button onclick="sendMsg()">Send</button>
-
+<div class="chat">
+  <b>🤖 DB Mitra</b>
+  <div id="chatArea" class="chat-area"></div>
+  <input id="msg" placeholder="Ask...">
+  <button onclick="send()">Send</button>
 </div>
+
+<div id="toast" class="toast"></div>
 
 <script>
 
-// PROFILE LOAD
-let user = JSON.parse(localStorage.getItem("profileData"));
-let percent = localStorage.getItem("profilePercent");
+/* ========= DATA ========= */
 
-// WELCOME
-if(user && user.name){
-  welcomeText.innerText = "Welcome, " + user.name + " 👋";
-}
+let user = safeParse(localStorage.getItem("profileData"));
 
-// PROGRESS
-progressText.innerText = percent ? percent + "%" : "0%";
-
-// JOB DATA
 let jobs = [
  {title:"Data Entry", skills:["excel"], salary:20000},
  {title:"Customer Support", skills:["communication"], salary:25000},
  {title:"WFH Chat Support", skills:["english"], salary:30000}
 ];
 
-let html="";
+/* ========= HELPERS ========= */
+
+function safeParse(data){
+ try{return JSON.parse(data)}catch{return null}
+}
+
+function showToast(msg){
+ let t=document.getElementById("toast");
+ t.innerText=msg;
+ t.style.display="block";
+ setTimeout(()=>t.style.display="none",2000);
+}
+
+/* ========= WELCOME ========= */
+
+if(user?.name){
+ welcome.innerText = "Welcome " + user.name + " 👋";
+}
+
+/* ========= PROFILE SCORE ========= */
+
+let score = 0;
 
 if(user){
+ if(user.name) score+=20;
+ if(user.skills) score+=30;
+ if(user.experience) score+=20;
+ if(user.jobType) score+=30;
+}
 
- jobs.forEach(job=>{
-   let match = 0;
+progress.innerText = score + "%";
 
-   job.skills.forEach(skill=>{
-     if(user.skills?.toLowerCase().includes(skill)){
-       match += 50;
-     }
+/* ========= JOB MATCH ========= */
+
+let html="";
+
+if(user?.skills){
+
+ jobs.forEach(j=>{
+   let match=0;
+
+   j.skills.forEach(s=>{
+     if(user.skills.toLowerCase().includes(s)) match+=50;
    });
 
-   html += `
-   <div class="job-card">
-     <b>${job.title}</b><br>
+   html+=`
+   <div class="job">
+     <b>${j.title}</b><br>
      Match: ${match}%<br>
-     Salary: ₹${job.salary}<br><br>
-     <button>Apply Now</button>
+     Salary: ₹${j.salary}<br><br>
+     <button class="btn" onclick="apply()">Apply</button>
    </div>`;
  });
 
 }else{
- html = "Complete profile to see jobs";
+ html="Complete profile to unlock jobs";
 }
 
-jobBox.innerHTML = html;
+jobsDiv = document.getElementById("jobs");
+jobsDiv.innerHTML = html;
 
-// AI TIPS
+/* ========= AI TIPS ========= */
+
 let tips="";
+
 if(user){
  if(!user.skills) tips+="👉 Add skills<br>";
  if(user.experience==="Fresher") tips+="👉 Apply for fresher jobs<br>";
 }else{
  tips="👉 Complete profile first";
 }
-aiTips.innerHTML = tips;
 
-// CHAT
-function sendMsg(){
- let msg=userMsg.value.toLowerCase();
+document.getElementById("tips").innerHTML = tips;
 
+/* ========= NAV ========= */
+
+function goProfile(){
+ window.location.href="profile.html";
+}
+
+/* ========= APPLY ========= */
+
+function apply(){
+ showToast("Application Started 🚀");
+}
+
+/* ========= CHAT ========= */
+
+function send(){
+
+ let m = msg.value.toLowerCase();
  let reply="";
 
- if(msg.includes("job")){
-   reply="Check recommended jobs above.";
+ if(m.includes("job")){
+   reply="Jobs are shown above based on your profile.";
  }
- else if(msg.includes("salary")){
-   reply="Salary depends on your profile.";
+ else if(m.includes("salary")){
+   reply="Salary depends on your skills & experience.";
+ }
+ else if(m.includes("profile")){
+   reply="Complete your profile for better matches.";
  }
  else{
    reply="I am DB Mitra 🤖";
  }
 
- chatArea.innerHTML+=<p><b>You:</b> ${msg}</p>;
+ chatArea.innerHTML+=<p><b>You:</b> ${m}</p>;
  chatArea.innerHTML+=<p><b>AI:</b> ${reply}</p>;
 
- userMsg.value="";
-}
-
-// NAV
-function goProfile(){
- window.location.href="profile.html";
+ msg.value="";
 }
 
 </script>
