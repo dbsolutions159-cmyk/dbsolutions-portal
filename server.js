@@ -12,6 +12,13 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("DB Backend Running 🚀");
 });
+app.post("/api/chat", (req, res) => {
+  const userMessage = req.body.message;
+
+  res.json({
+    reply: "You said: " + userMessage
+  });
+});
 
 // PORT (IMPORTANT FOR RENDER)
 const PORT = process.env.PORT || 10000;
