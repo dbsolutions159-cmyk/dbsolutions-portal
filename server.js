@@ -12,12 +12,44 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("DB Backend Running 🚀");
 });
-app.post("/api/chat", (req, res) => {
+const axios = require("axios");
+
+app.post("/api/chat", async (req, res) => {
   const userMessage = req.body.message;
 
-  res.json({
-    reply: "You said: " + userMessage
-  });
+  try {
+    const response = await axios.post(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        model: "llama3-70b-8192",
+        messages: [
+          {
+            role: "system",
+            content: "You are DB Mitra AI, a helpful job assistant from DB Solutions. Help users find jobs."
+          },
+          {
+            role: "user",
+            content: userMessage
+          }
+        ]
+      },
+      {
+  headers: {
+    Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+    "Content-Type": "application/json"
+  }
+}
+      }
+    );
+
+    const reply = response.data.choices[0].message.content;
+
+    res.json({ reply });
+
+  } catch (error) {
+    console.log(error.message);
+    res.json({ reply: "AI not responding, try again." });
+  }
 });
 
 // PORT (IMPORTANT FOR RENDER)
