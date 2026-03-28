@@ -1,28 +1,36 @@
 <script>
 
+document.addEventListener("DOMContentLoaded", () => {
+
 /* BUTTONS */
-function login(){
+window.login = function(){
 alert("Login working ✔");
 }
 
-function signup(){
+window.signup = function(){
 alert("Signup working ✔");
 }
 
-function start(){
+window.start = function(){
 toggleChat();
 }
 
 /* CHAT */
-function toggleChat(){
+window.toggleChat = function(){
 let box=document.getElementById("chatBox");
 box.style.display=box.style.display==="flex"?"none":"flex";
 box.style.flexDirection="column";
 }
 
-async function send(){
+window.send = async function(){
+
 let input=document.getElementById("msg");
 let chat=document.getElementById("chat");
+
+if(!input || !chat){
+console.error("Chat elements not found");
+return;
+}
 
 let text=input.value;
 if(!text)return;
@@ -55,6 +63,7 @@ console.log(err);
 chat.removeChild(typing);
 add("Server not connected","bot");
 }
+
 }
 
 function add(text,type){
@@ -66,5 +75,7 @@ div.innerText=text;
 
 chat.appendChild(div);
 }
+
+});
 
 </script>
