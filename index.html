@@ -10,31 +10,37 @@
 
 body{
 font-family:-apple-system,Segoe UI;
-background:radial-gradient(circle at top,#111827,#020617);
+background:#020617;
 color:white;
-overflow-x:hidden;
 }
 
 /* NAVBAR */
 nav{
 display:flex;
 justify-content:space-between;
-padding:20px 40px;
+padding:20px;
+background:rgba(0,0,0,0.6);
 position:fixed;
 width:100%;
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(15px);
+backdrop-filter:blur(10px);
 z-index:1000;
 }
 
-nav h2{color:#22c55e}
+.logo{
+font-size:22px;
+font-weight:bold;
+}
+
+.logo span{
+color:#22c55e;
+}
 
 nav button{
 margin-left:10px;
-padding:10px 18px;
+padding:10px 15px;
 border:none;
 border-radius:8px;
-background:linear-gradient(45deg,#22c55e,#4ade80);
+background:#22c55e;
 cursor:pointer;
 }
 
@@ -42,15 +48,15 @@ cursor:pointer;
 .hero{
 height:100vh;
 display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
 flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
 padding:20px;
 }
 
 .hero h1{
-font-size:50px;
+font-size:45px;
 }
 
 .hero span{color:#22c55e}
@@ -58,13 +64,13 @@ font-size:50px;
 .hero p{
 margin:20px 0;
 color:#aaa;
-max-width:600px;
+max-width:700px;
 }
 
 .btn{
-padding:15px 30px;
+padding:15px 25px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:linear-gradient(45deg,#22c55e,#4ade80);
 cursor:pointer;
 }
@@ -75,21 +81,11 @@ padding:80px 20px;
 text-align:center;
 }
 
-.cards{
-display:flex;
-gap:20px;
-margin-top:30px;
-flex-wrap:wrap;
-}
-
 .card{
-flex:1;
-min-width:250px;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(15px);
-padding:30px;
-border-radius:20px;
-border:1px solid rgba(255,255,255,0.1);
+background:#111827;
+padding:25px;
+border-radius:15px;
+margin:15px 0;
 }
 
 /* CHAT BUTTON */
@@ -97,52 +93,67 @@ border:1px solid rgba(255,255,255,0.1);
 position:fixed;
 bottom:20px;
 right:20px;
-background:linear-gradient(45deg,#22c55e,#4ade80);
-padding:18px;
+background:#22c55e;
+padding:15px;
 border-radius:50%;
 cursor:pointer;
-box-shadow:0 0 20px #22c55e;
-z-index:999;
+}
+
+/* WHATSAPP */
+#whatsapp{
+position:fixed;
+bottom:20px;
+left:20px;
+background:#25D366;
+padding:15px;
+border-radius:50%;
+cursor:pointer;
 }
 
 /* CHAT BOX */
 #chatBox{
 position:fixed;
-bottom:90px;
+bottom:80px;
 right:20px;
 width:320px;
-height:480px;
+height:450px;
 background:#111827;
 border-radius:20px;
 display:none;
 flex-direction:column;
 overflow:hidden;
-box-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
-/* HEADER */
+/* CHAT HEADER */
 .chat-header{
 padding:15px;
 background:#1f2937;
 font-weight:bold;
 }
 
-/* BODY */
+/* CHAT BODY */
 .chat-body{
 flex:1;
 padding:10px;
 overflow:auto;
 }
 
-/* MESSAGE */
+/* BUBBLE STYLE */
 .msg{
-margin:5px;
-padding:10px;
-border-radius:10px;
+margin:8px;
+padding:10px 15px;
+border-radius:20px;
+max-width:80%;
 }
 
-.user{background:#22c55e;margin-left:auto}
-.bot{background:#374151}
+.user{
+background:#22c55e;
+margin-left:auto;
+}
+
+.bot{
+background:#374151;
+}
 
 /* INPUT */
 .chat-input{
@@ -160,59 +171,69 @@ outline:none;
 background:#22c55e;
 border:none;
 padding:10px;
-cursor:pointer;
 }
 
 /* MOBILE */
 @media(max-width:768px){
-
-.hero h1{
-font-size:28px;
-}
-
-.hero p{
-font-size:14px;
-}
-
-.cards{
-flex-direction:column;
-}
-
+.hero h1{font-size:28px;}
 #chatBox{
 width:90%;
-height:75%;
 right:5%;
 }
-
 }
-
 </style>
 </head>
 
 <body>
 
 <nav>
-<h2>DB Solutions</h2>
+<div class="logo">DB Solutions <span>AI</span></div>
+
 <div>
-<button onclick="login()">Login</button>
-<button onclick="signup()">Sign Up</button>
+<button onclick="window.location.href='login.html'">Login</button>
+<button onclick="window.location.href='signup.html'">Sign Up</button>
 </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
 <h1>AI Powered <span>Hiring Platform</span></h1>
-<p>Find jobs instantly with DB Mitra AI automation</p>
-<button class="btn" onclick="toggleChat()">Start with AI</button>
+<p>
+DB Solutions is a next-generation manpower outsourcing and AI-based hiring platform 
+designed to connect candidates with the right opportunities faster than ever.
+</p>
+
+<button class="btn" onclick="toggleChat()">Talk to DB Hire GPT</button>
 </section>
 
+<!-- ABOUT -->
 <section class="section">
-<h2>How AI Works</h2>
 
-<div class="cards">
-<div class="card">AI Talks with Candidates</div>
-<div class="card">Collects Data</div>
-<div class="card">Suggests Jobs</div>
+<h2>About DB Solutions</h2>
+
+<div class="card">
+<p>
+DB Solutions is a modern recruitment and manpower outsourcing company powered by Artificial Intelligence. 
+We help businesses hire the right talent efficiently while providing candidates with real-time job recommendations.
+
+Our AI assistant, DB Hire GPT, interacts with users, understands their skills, experience, and preferences, 
+and suggests the best job opportunities instantly.
+
+We aim to automate hiring processes, reduce manual effort, and create a seamless connection between recruiters 
+and job seekers.
+</p>
 </div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+<h2>What We Offer</h2>
+
+<div class="card">AI Job Recommendations</div>
+<div class="card">Smart Candidate Screening</div>
+<div class="card">Resume & Career Guidance</div>
+<div class="card">Instant Hiring Automation</div>
 
 </section>
 
@@ -220,37 +241,42 @@ right:5%;
 <div id="chatBtn" onclick="toggleChat()">💬</div>
 
 <div id="chatBox">
-<div class="chat-header">DB Mitra AI</div>
+<div class="chat-header">DB Hire GPT 🤖</div>
 <div class="chat-body" id="chat"></div>
 
 <div class="chat-input">
-<input id="msg" placeholder="Ask for jobs...">
+<input id="msg" placeholder="Ask about jobs...">
 <button onclick="send()">➤</button>
 </div>
 </div>
 
+<!-- WHATSAPP -->
+<div id="whatsapp" onclick="openWhatsApp()">📞</div>
+
 <script>
-
-function login(){
-alert("Login system coming soon");
-}
-
-function signup(){
-alert("Signup system coming soon");
-}
 
 function toggleChat(){
 let box=document.getElementById("chatBox");
-box.style.display = box.style.display === "flex" ? "none" : "flex";
+box.style.display=box.style.display==="flex"?"none":"flex";
 }
 
+/* WhatsApp */
+function openWhatsApp(){
+window.open("https://wa.me/9171449936","_blank");
+}
+
+/* CHAT */
 function add(text,type){
 let div=document.createElement("div");
 div.className="msg "+type;
 div.innerText=text;
 chat.appendChild(div);
-chat.scrollTop = chat.scrollHeight;
+chat.scrollTop=chat.scrollHeight;
 }
+
+window.onload = ()=>{
+add("Hi 👋 I am DB Hire GPT. Ask me about jobs!", "bot");
+};
 
 async function send(){
 let text=document.getElementById("msg").value;
@@ -274,12 +300,11 @@ body:JSON.stringify({message:text})
 let data=await res.json();
 
 chat.removeChild(typing);
-
 add(data.reply || "No response","bot");
 
 }catch{
 chat.removeChild(typing);
-add("Server waking up... try again ⏳","bot");
+add("Server waking up ⏳","bot");
 }
 }
 
