@@ -24,20 +24,19 @@ app.post("/api/chat", async (req, res) => {
         "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile"
-        messages: [
-          {
-            role: "system",
-            content: "You are DB Mitra AI, a helpful job assistant"
-          },
-          {
-            role: "user",
-            content: userMessage
-          }
-        ]
-      })
-    });
+     body: JSON.stringify({
+  model: "llama-3.3-70b-versatile",
+  messages: [
+    {
+      role: "system",
+      content: "You are DB Mitra AI, a helpful job assistant"
+    },
+    {
+      role: "user",
+      content: userMessage
+    }
+  ]
+})
 
     const data = await response.json();
 
