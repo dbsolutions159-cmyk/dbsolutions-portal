@@ -1,197 +1,167 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DB Solutions</title>
-
+<title>DB Hire GPT</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI}
 
-body{
-font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-background:#000;
-color:white;
-}
+body{background:#f5f7fa;color:#111}
 
 /* NAVBAR */
 nav{
 display:flex;
 justify-content:space-between;
-align-items:center;
-padding:20px 40px;
-position:fixed;
-width:100%;
-background:rgba(0,0,0,0.7);
-backdrop-filter:blur(10px);
-z-index:1000;
+padding:15px 40px;
+background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
 .logo{
-font-size:18px;
-font-weight:500;
-letter-spacing:1px;
+font-size:22px;
+font-weight:bold;
+color:#2563eb;
 }
 
 nav button{
 margin-left:10px;
 padding:8px 16px;
 border-radius:20px;
-border:1px solid #333;
-background:transparent;
-color:white;
-cursor:pointer;
-}
-
-nav button:hover{
+border:1px solid #ccc;
 background:white;
-color:black;
+cursor:pointer;
 }
 
 /* HERO */
 .hero{
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
 text-align:center;
-padding:20px;
-}
-
-.hero-content{
-max-width:800px;
+padding:80px 20px;
+background:white;
 }
 
 .hero h1{
-font-size:72px;
-font-weight:600;
-letter-spacing:-2px;
-}
-
-.hero span{
-color:#22c55e;
+font-size:40px;
 }
 
 .hero p{
-margin-top:20px;
-font-size:18px;
-color:#aaa;
-line-height:1.6;
+color:#555;
+margin-top:10px;
 }
 
-.hero-buttons{
+/* SEARCH BAR */
+.search-box{
 margin-top:30px;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
 }
 
-.hero-buttons button{
-margin:10px;
-padding:12px 28px;
-border-radius:25px;
+.search-box input{
+padding:12px;
+width:200px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+.search-box button{
+padding:12px 20px;
+background:#2563eb;
+color:white;
 border:none;
-font-size:16px;
+border-radius:8px;
 cursor:pointer;
 }
 
-.primary{
-background:white;
-color:black;
+/* CATEGORY */
+.categories{
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+justify-content:center;
+padding:30px;
 }
 
-.secondary{
-background:transparent;
-border:1px solid #333;
+.cat{
+background:white;
+padding:15px 20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+cursor:pointer;
+}
+
+/* COMPANIES */
+.section{
+padding:40px 20px;
+text-align:center;
+}
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+justify-content:center;
+margin-top:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:12px;
+width:200px;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* AI SECTION */
+.ai{
+background:#111;
 color:white;
+padding:50px 20px;
+text-align:center;
 }
 
-.primary:hover{
-opacity:0.9;
+.ai button{
+margin-top:20px;
+padding:12px 25px;
+background:#22c55e;
+border:none;
+border-radius:8px;
+cursor:pointer;
 }
 
-.secondary:hover{
-background:white;
-color:black;
-}
-
-/* CHAT BUTTON */
+/* CHAT */
 #chatBtn{
 position:fixed;
 bottom:20px;
 right:20px;
-background:white;
-color:black;
-padding:14px;
+background:#22c55e;
+padding:15px;
 border-radius:50%;
 cursor:pointer;
-z-index:999;
 }
 
-/* CHAT BOX */
 #chatBox{
 position:fixed;
 bottom:80px;
 right:20px;
 width:320px;
 height:420px;
-background:#111;
-border-radius:16px;
+background:white;
+border-radius:10px;
 display:none;
 flex-direction:column;
 overflow:hidden;
 }
 
-.chat-header{
-padding:12px;
-border-bottom:1px solid #222;
-}
-
-.chat-body{
-flex:1;
-padding:10px;
-overflow:auto;
-}
-
-.msg{
-margin:6px;
-padding:10px;
-border-radius:12px;
-max-width:80%;
-font-size:14px;
-}
-
-.user{
-background:white;
-color:black;
-margin-left:auto;
-}
-
-.bot{
-background:#222;
-}
-
-.chat-input{
-display:flex;
-border-top:1px solid #222;
-}
-
-.chat-input input{
-flex:1;
-padding:10px;
-border:none;
-background:#111;
-color:white;
-}
-
-.chat-input button{
-padding:10px;
-background:white;
-border:none;
-}
+.chat-body{flex:1;padding:10px;overflow:auto}
+.msg{margin:5px;padding:8px;border-radius:8px}
+.user{background:#2563eb;color:white;margin-left:auto}
+.bot{background:#eee}
 
 /* MOBILE */
 @media(max-width:768px){
-.hero h1{font-size:36px;}
-.hero p{font-size:14px;}
-#chatBox{width:90%;right:5%;}
+.search-box input{width:100%}
 }
 </style>
 
@@ -201,49 +171,61 @@ border:none;
 
 <!-- NAV -->
 <nav>
-<div class="logo">DB Solutions</div>
-
+<div class="logo">DB Hire GPT</div>
 <div>
 <button onclick="window.location.href='login.html'">Login</button>
-<button onclick="window.location.href='signup.html'">Sign Up</button>
+<button onclick="window.location.href='signup.html'">Register</button>
 </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
+<h1>Find your dream job now</h1>
+<p>AI powered job platform by DB Solutions</p>
 
-<div class="hero-content">
+<div class="search-box">
+<input placeholder="Skills / Job role">
+<input placeholder="Experience">
+<input placeholder="Location">
+<button>Search</button>
+</div>
+</section>
 
-<h1>
-Hire Smarter <br>
-with <span>AI</span>
-</h1>
-
-<p>
-DB Solutions helps you find the right job faster using intelligent automation and real-time hiring technology.
-</p>
-
-<div class="hero-buttons">
-<button class="primary" onclick="toggleChat()">Start with AI</button>
-<button class="secondary" onclick="window.location.href='signup.html'">Create Account</button>
+<!-- CATEGORIES -->
+<div class="categories">
+<div class="cat">Work from Home</div>
+<div class="cat">IT Jobs</div>
+<div class="cat">HR Jobs</div>
+<div class="cat">Fresher Jobs</div>
+<div class="cat">Marketing</div>
 </div>
 
+<!-- COMPANIES -->
+<section class="section">
+<h2>Top companies hiring</h2>
+
+<div class="cards">
+<div class="card">Infosys</div>
+<div class="card">TCS</div>
+<div class="card">Wipro</div>
+<div class="card">Capgemini</div>
 </div>
 
 </section>
 
-<!-- CHAT BUTTON -->
+<!-- AI SECTION -->
+<section class="ai">
+<h2>Talk to DB Hire GPT 🤖</h2>
+<p>Get job suggestions instantly using AI</p>
+<button onclick="toggleChat()">Start AI Chat</button>
+</section>
+
+<!-- CHAT -->
 <div id="chatBtn" onclick="toggleChat()">💬</div>
 
-<!-- CHAT BOX -->
 <div id="chatBox">
-<div class="chat-header">DB Hire GPT</div>
 <div class="chat-body" id="chat"></div>
-
-<div class="chat-input">
-<input id="msg" placeholder="Ask about jobs...">
-<button onclick="send()">➤</button>
-</div>
+<input id="msg" placeholder="Ask..." onkeydown="if(event.key==='Enter')send()">
 </div>
 
 <script>
@@ -258,35 +240,23 @@ let div=document.createElement("div");
 div.className="msg "+type;
 div.innerText=text;
 chat.appendChild(div);
-chat.scrollTop=chat.scrollHeight;
 }
 
-window.onload=()=>{
-add("Hi 👋 I am DB Hire GPT. Ask me anything about jobs.", "bot");
-};
-
 async function send(){
-let text=document.getElementById("msg").value;
+let text=msg.value;
 if(!text)return;
 
 add(text,"user");
-document.getElementById("msg").value="";
+msg.value="";
 
-try{
 let res=await fetch("https://db-backend-hiye.onrender.com/api/chat",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-message:"Answer professionally in medium length. "+text
-})
+body:JSON.stringify({message:text})
 });
 
 let data=await res.json();
 add(data.reply,"bot");
-
-}catch{
-add("Server starting... try again ⏳","bot");
-}
 }
 
 </script>
