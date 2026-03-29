@@ -1,205 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>DB Solutions Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
 
 <style>
 body{
-  margin:0;
-  font-family:Segoe UI;
-  background:#eef2f7;
-}
-
-.container{display:flex;}
-
-.sidebar{
-  width:220px;
-  background:#0f2027;
-  color:white;
-  height:100vh;
-  padding:20px;
-}
-
-.sidebar h2{margin-bottom:20px;}
-
-.sidebar a{
-  display:block;
-  margin:10px 0;
-  color:white;
-  text-decoration:none;
-}
-
-.content{
-  flex:1;
-  padding:20px;
+background:#020617;
+color:white;
+font-family:sans-serif;
+padding:20px;
 }
 
 .card{
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:20px;
+background:#111827;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
 }
 
-button{
-  padding:10px 15px;
-  border:none;
-  background:#0072ff;
-  color:white;
-  border-radius:6px;
-  cursor:pointer;
+.progress{
+height:10px;
+background:#333;
+border-radius:10px;
+overflow:hidden;
 }
 
-.chat{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:280px;
-  background:white;
-  padding:10px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,0.2);
-}
-
-.chat-area{
-  height:120px;
-  overflow:auto;
-  font-size:14px;
+.progress div{
+height:100%;
+width:60%;
+background:#22c55e;
 }
 </style>
+
 </head>
 
 <body>
 
-<div class="container">
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <h2>DB Solutions</h2>
-  <a href="dashboard.html">Home</a>
-  <a href="profile.html">Profile</a>
-</div>
-
-<!-- CONTENT -->
-<div class="content">
-
-<h2 id="welcome">Welcome 👋</h2>
+<h2>Welcome to Dashboard 👋</h2>
 
 <div class="card">
-  <h3>Profile Completion</h3>
-  <p id="progress">0%</p>
-  <button onclick="goProfile()">Complete Profile</button>
+<h3>Profile Completion</h3>
+<div class="progress"><div></div></div>
+<p>60% completed</p>
+<button onclick="window.location.href='profile.html'">Complete Profile</button>
 </div>
 
 <div class="card">
-  <h3>AI Recommended Jobs</h3>
-  <div id="jobs"></div>
+<h3>AI Recommended Jobs</h3>
+<p>• Customer Support - ₹25k</p>
+<p>• Chat Process - ₹28k</p>
+<p>• Work From Home Jobs</p>
 </div>
 
+<div class="card">
+<h3>DB Mitra GPT</h3>
+<p>Ask AI anything about jobs</p>
 </div>
-</div>
-
-<!-- CHATBOX -->
-<div class="chat">
-  <b>🤖 DB Mitra</b>
-  <div id="chatArea" class="chat-area"></div>
-  <input id="msg" placeholder="Ask...">
-  <button onclick="sendMsg()">Send</button>
-</div>
-
-<!-- JS START -->
-<script>
-
-// SAFE LOAD (error-proof)
-let user = null;
-
-try{
-  user = JSON.parse(localStorage.getItem("profileData"));
-}catch(e){
-  user = null;
-}
-
-// WELCOME NAME
-if(user && user.name){
-  document.getElementById("welcome").innerText =
-  "Welcome " + user.name + " 👋";
-}
-
-// PROFILE %
-let percent = localStorage.getItem("profilePercent");
-document.getElementById("progress").innerText =
-percent ? percent + "%" : "0%";
-
-// JOB SYSTEM
-let jobsData = [
-  {title:"Data Entry", skill:"excel"},
-  {title:"Customer Support", skill:"communication"},
-  {title:"WFH Chat Support", skill:"english"}
-];
-
-let jobHTML = "";
-
-if(user && user.skills){
-
-  jobsData.forEach(job=>{
-    let match = user.skills.toLowerCase().includes(job.skill) ? 80 : 30;
-
-    jobHTML += `
-      <div style="margin-bottom:10px;">
-        <b>${job.title}</b><br>
-        Match: ${match}%<br>
-        <button onclick="applyJob()">Apply</button>
-      </div>
-    `;
-  });
-
-}else{
-  jobHTML = "👉 Complete your profile to unlock jobs";
-}
-
-document.getElementById("jobs").innerHTML = jobHTML;
-
-// NAVIGATION
-function goProfile(){
-  window.location.href = "profile.html";
-}
-
-// APPLY BUTTON
-function applyJob(){
-  alert("Application Started 🚀");
-}
-
-// CHATBOT
-function sendMsg(){
-
-  let msg = document.getElementById("msg").value.toLowerCase();
-  let reply = "";
-
-  if(msg.includes("job")){
-    reply = "Check jobs above based on your profile.";
-  }
-  else if(msg.includes("salary")){
-    reply = "Salary range ₹15k - ₹40k.";
-  }
-  else if(msg.includes("profile")){
-    reply = "Complete your profile for better jobs.";
-  }
-  else{
-    reply = "Hello! I am DB Mitra 🤖";
-  }
-
-  let chat = document.getElementById("chatArea");
-
-  chat.innerHTML += "<p><b>You:</b> "+msg+"</p>";
-  chat.innerHTML += "<p><b>AI:</b> "+reply+"</p>";
-
-  document.getElementById("msg").value="";
-}
-
-</script>
-<!-- JS END -->
 
 </body>
 </html>
