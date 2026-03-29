@@ -1,61 +1,31 @@
 require("dotenv").config();
 
+const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
+// Node 18+ में fetch built-in होता है
+// अगर error आए तो: npm install node-fetch
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// 🔍 DEBUG
 console.log("MONGO URI:", process.env.MONGO_URI);
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+// ✅ MongoDB Connect
+mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log("Mongo Error:", err));
-const app = express();
+.catch(err => console.log("Mongo Error ❌:", err.message));
 
-app.use(cors());
-app.use(express.json());
-
-// test route
+// ✅ TEST ROUTE
 app.get("/", (req, res) => {
   res.send("DB Backend Running 🚀");
 });
 
-// server start
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});
-
-
-
-
-
-
-
-
-
-
-
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-// TEST ROUTE
-app.get("/", (req, res) => {
-  res.send("DB Backend Running 🚀");
-});
-
-// ✅ CHAT API (IMPORTANT)
+// 🤖 CHAT API (SMART FRIEND STYLE)
 app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
@@ -71,7 +41,7 @@ app.post("/api/chat", async (req, res) => {
         messages: [
           {
             role: "system",
-            content: "You are DB Mitra AI, a helpful job assistant"
+            content: "You are DB Hire GPT, a smart friendly job assistant. Talk like a helpful friend, give short clear answers, guide users for jobs, resumes and interviews."
           },
           {
             role: "user",
@@ -84,7 +54,7 @@ app.post("/api/chat", async (req, res) => {
     const data = await response.json();
 
     if (!data.choices) {
-      return res.json({ reply: "API error: " + JSON.stringify(data) });
+      return res.json({ reply: "AI error: " + JSON.stringify(data) });
     }
 
     res.json({
@@ -97,8 +67,8 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// SERVER START
+// ✅ SERVER START
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log("Server running on http://localhost:" + PORT);
 });
