@@ -1,6 +1,6 @@
-require("dotenv").config();   // 👈 सबसे पहले
-
+require("dotenv").config();   // ✅ पहले
 const mongoose = require("mongoose");
+console.log("MONGO URI:", process.env.MONGO_URI);  // ✅ बाद में
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected ✅"))
