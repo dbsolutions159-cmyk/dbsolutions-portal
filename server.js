@@ -1,3 +1,4 @@
+const fetch = require("node-fetch");
 require("dotenv").config();
 
 const express = require("express");
@@ -14,12 +15,49 @@ app.get("/", (req, res) => {
 });
 
 // TEST API
-app.post("/api/chat", (req, res) => {
-  const msg = req.body.message;
+app.post("/api/chat", async (req, res) => {
+  const userMessage = req.body.message;
 
-  res.json({
-    reply: "Server working: " + msg
-  });
+  try {
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama3-70b-8192",
+          messages: [
+            {
+              role: "system",
+              content: "You are DB Mitra AI, a helpful job assistant"
+            },
+            {
+              role: "user",
+              content: userMessage
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+console.log("API DATA:", data);
+
+if (!data.choices) {
+  return res.json({ reply: "API error: " + JSON.stringify(data) });
+}
+
+const reply = data.choices[0].message.content;
+
+res.json({ reply });
+
+  } catch (error) {
+    console.log(error);
+    res.json({ reply: "AI not responding, try again." });
+  }
 });
 
 const PORT = process.env.PORT || 10000;
