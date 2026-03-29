@@ -3,6 +3,8 @@
 <head>
 <title>DB Solutions AI</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -17,11 +19,12 @@ overflow-x:hidden;
 nav{
 display:flex;
 justify-content:space-between;
-padding:20px 60px;
+padding:20px 40px;
 position:fixed;
 width:100%;
 background:rgba(0,0,0,0.4);
 backdrop-filter:blur(15px);
+z-index:1000;
 }
 
 nav h2{color:#22c55e}
@@ -43,10 +46,11 @@ align-items:center;
 justify-content:center;
 text-align:center;
 flex-direction:column;
+padding:20px;
 }
 
 .hero h1{
-font-size:55px;
+font-size:50px;
 }
 
 .hero span{color:#22c55e}
@@ -65,21 +69,9 @@ background:linear-gradient(45deg,#22c55e,#4ade80);
 cursor:pointer;
 }
 
-/* GLOW EFFECT */
-.glow{
-position:absolute;
-width:400px;
-height:400px;
-background:#22c55e;
-filter:blur(120px);
-top:20%;
-right:10%;
-opacity:0.3;
-}
-
 /* SECTION */
 .section{
-padding:80px;
+padding:80px 20px;
 text-align:center;
 }
 
@@ -87,10 +79,12 @@ text-align:center;
 display:flex;
 gap:20px;
 margin-top:30px;
+flex-wrap:wrap;
 }
 
 .card{
 flex:1;
+min-width:250px;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(15px);
 padding:30px;
@@ -108,6 +102,7 @@ padding:18px;
 border-radius:50%;
 cursor:pointer;
 box-shadow:0 0 20px #22c55e;
+z-index:999;
 }
 
 /* CHAT BOX */
@@ -115,39 +110,35 @@ box-shadow:0 0 20px #22c55e;
 position:fixed;
 bottom:90px;
 right:20px;
-width:350px;
-height:500px;
+width:320px;
+height:480px;
 background:#111827;
 border-radius:20px;
 display:none;
 flex-direction:column;
 overflow:hidden;
+box-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
-/* CHAT HEADER */
+/* HEADER */
 .chat-header{
 padding:15px;
 background:#1f2937;
+font-weight:bold;
 }
 
-/* CHAT BODY */
+/* BODY */
 .chat-body{
 flex:1;
 padding:10px;
 overflow:auto;
 }
 
-/* MESSAGES */
+/* MESSAGE */
 .msg{
 margin:5px;
 padding:10px;
 border-radius:10px;
-animation:pop 0.3s ease;
-}
-
-@keyframes pop{
-0%{transform:scale(0.5);opacity:0}
-100%{transform:scale(1);opacity:1}
 }
 
 .user{background:#22c55e;margin-left:auto}
@@ -162,6 +153,7 @@ display:flex;
 flex:1;
 padding:10px;
 border:none;
+outline:none;
 }
 
 .chat-input button{
@@ -171,12 +163,33 @@ padding:10px;
 cursor:pointer;
 }
 
+/* MOBILE */
+@media(max-width:768px){
+
+.hero h1{
+font-size:28px;
+}
+
+.hero p{
+font-size:14px;
+}
+
+.cards{
+flex-direction:column;
+}
+
+#chatBox{
+width:90%;
+height:75%;
+right:5%;
+}
+
+}
+
 </style>
 </head>
 
 <body>
-
-<div class="glow"></div>
 
 <nav>
 <h2>DB Solutions</h2>
@@ -189,7 +202,7 @@ cursor:pointer;
 <section class="hero">
 <h1>AI Powered <span>Hiring Platform</span></h1>
 <p>Find jobs instantly with DB Mitra AI automation</p>
-<button class="btn" onclick="start()">Start with AI</button>
+<button class="btn" onclick="toggleChat()">Start with AI</button>
 </section>
 
 <section class="section">
@@ -218,77 +231,17 @@ cursor:pointer;
 
 <script>
 
-/* BUTTONS */
 function login(){
-alert("Login working ✔");
+alert("Login system coming soon");
 }
 
 function signup(){
-alert("Signup working ✔");
+alert("Signup system coming soon");
 }
 
-function start(){
-toggleChat();
-}
-
-/* CHAT */
 function toggleChat(){
 let box=document.getElementById("chatBox");
-box.style.display=box.style.display==="flex"?"none":"flex";
-box.style.flexDirection="column";
-}
-
-async function send(){
-let text=msg.value;
-if(!text)return;
-
-add(text,"user");
-msg.value="";
-
-// typing
-let typing=document.createElement("div");
-typing.innerText="Typing...";
-typing.className="msg bot";
-chat.appendChild(typing);
-
-try{
-
-let res = await fetch("https://db-backend-hiye.onrender.com/api/chat", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ message: text })
-});
-
-if (!res.ok) {
-  throw new Error("Server slow");
-}
-
-let data = await res.json();
-
-chat.removeChild(typing);
-
-addMessage(data.reply, "bot");
-
-// अगर response सही नहीं है
-if(!res.ok){
-throw new Error("Server slow");
-}
-
-let data = await res.json();
-
-chat.removeChild(typing);
-add(data.reply || "No response","bot");
-
-}catch(err){
-console.log(err);
-
-chat.removeChild(typing);
-add("Server starting... try again in 5 sec ⏳","bot");
-}
-
-
+box.style.display = box.style.display === "flex" ? "none" : "flex";
 }
 
 function add(text,type){
@@ -296,6 +249,38 @@ let div=document.createElement("div");
 div.className="msg "+type;
 div.innerText=text;
 chat.appendChild(div);
+chat.scrollTop = chat.scrollHeight;
+}
+
+async function send(){
+let text=document.getElementById("msg").value;
+if(!text)return;
+
+add(text,"user");
+document.getElementById("msg").value="";
+
+let typing=document.createElement("div");
+typing.innerText="Typing...";
+typing.className="msg bot";
+chat.appendChild(typing);
+
+try{
+let res=await fetch("https://db-backend-hiye.onrender.com/api/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
+
+let data=await res.json();
+
+chat.removeChild(typing);
+
+add(data.reply || "No response","bot");
+
+}catch{
+chat.removeChild(typing);
+add("Server waking up... try again ⏳","bot");
+}
 }
 
 </script>
