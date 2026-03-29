@@ -4,31 +4,39 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// Node 18+ में fetch built-in होता है
-// अगर error आए तो: npm install node-fetch
-
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// 🔍 DEBUG
-console.log("MONGO URI:", process.env.MONGO_URI);
+// 🔍 DEBUG (IMPORTANT)
+console.log("MONGO URI:", process.env.MONGO_URI ? "Loaded ✅" : "Missing ❌");
 
-// ✅ MongoDB Connect
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log("Mongo Error ❌:", err.message));
+// ✅ MongoDB Connect (Strong Version)
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 5000
+})
+.then(() => {
+  console.log("MongoDB Connected ✅");
+})
+.catch((err) => {
+  console.log("Mongo Error ❌:", err.message);
+});
 
 // ✅ TEST ROUTE
 app.get("/", (req, res) => {
   res.send("DB Backend Running 🚀");
 });
 
-// 🤖 CHAT API (SMART FRIEND STYLE)
+// 🤖 CHAT API (Optimized + Safe)
 app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
+
+    if (!userMessage) {
+      return res.json({ reply: "Message required ❗" });
+    }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -41,7 +49,7 @@ app.post("/api/chat", async (req, res) => {
         messages: [
           {
             role: "system",
-            content: "You are DB Hire GPT, a smart friendly job assistant. Talk like a helpful friend, give short clear answers, guide users for jobs, resumes and interviews."
+            content: "You are DB Hire GPT, a friendly job assistant. Keep answers short, helpful, and guide users for jobs, resumes, and interviews."
           },
           {
             role: "user",
@@ -54,7 +62,8 @@ app.post("/api/chat", async (req, res) => {
     const data = await response.json();
 
     if (!data.choices) {
-      return res.json({ reply: "AI error: " + JSON.stringify(data) });
+      console.log("AI ERROR:", data);
+      return res.json({ reply: "AI error, try again later ⚠️" });
     }
 
     res.json({
@@ -62,8 +71,8 @@ app.post("/api/chat", async (req, res) => {
     });
 
   } catch (err) {
-    console.log("ERROR:", err);
-    res.json({ reply: "Server error, try again ⏳" });
+    console.log("CHAT ERROR:", err.message);
+    res.json({ reply: "Server error ⏳" });
   }
 });
 
