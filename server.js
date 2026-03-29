@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: "./.env" });
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -6,39 +6,32 @@ const cors = require("cors");
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// 🔍 DEBUG (IMPORTANT)
-console.log("MONGO URI:", process.env.MONGO_URI ? "Loaded ✅" : "Missing ❌");
+// 🔥 DEBUG (IMPORTANT)
+console.log("ENV CHECK:", process.env.MONGO_URI);
 
-// ✅ MongoDB Connect (Strong Version)
-mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
-})
-.then(() => {
-  console.log("✅ MongoDB Connected Successfully");
-})
-.catch((err) => {
-  console.log("❌ MongoDB ERROR:");
-  console.log(err);
-});
+// ❌ अगर undefined आया तो env problem
+if (!process.env.MONGO_URI) {
+  console.log("❌ MONGO_URI NOT FOUND");
+  process.exit(1);
+}
+
+// ✅ MongoDB Connect
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("✅ MongoDB Connected Successfully"))
+.catch(err => console.log("❌ Mongo Error:", err.message));
 
 // ✅ TEST ROUTE
 app.get("/", (req, res) => {
   res.send("DB Backend Running 🚀");
 });
 
-// 🤖 CHAT API (Optimized + Safe)
+// 🤖 CHAT API
 app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
-
-    if (!userMessage) {
-      return res.json({ reply: "Message required ❗" });
-    }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -51,7 +44,7 @@ app.post("/api/chat", async (req, res) => {
         messages: [
           {
             role: "system",
-            content: "You are DB Hire GPT, a friendly job assistant. Keep answers short, helpful, and guide users for jobs, resumes, and interviews."
+            content: "You are DB Hire GPT, a smart friendly job assistant."
           },
           {
             role: "user",
@@ -63,23 +56,18 @@ app.post("/api/chat", async (req, res) => {
 
     const data = await response.json();
 
-    if (!data.choices) {
-      console.log("AI ERROR:", data);
-      return res.json({ reply: "AI error, try again later ⚠️" });
-    }
-
     res.json({
-      reply: data.choices[0].message.content
+      reply: data?.choices?.[0]?.message?.content || "AI error"
     });
 
   } catch (err) {
-    console.log("CHAT ERROR:", err.message);
+    console.log("ERROR:", err);
     res.json({ reply: "Server error ⏳" });
   }
 });
 
-// ✅ SERVER START
-const PORT = process.env.PORT || 3000;
+// ✅ START SERVER
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log("Server running on http://localhost:" + PORT);
+  console.log("🚀 Server running on http://localhost:" + PORT);
 });
