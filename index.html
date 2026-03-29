@@ -9,19 +9,25 @@
 
 body{background:#f5f7fa;color:#111}
 
-/* NAVBAR */
+/* NAV */
 nav{
 display:flex;
 justify-content:space-between;
+align-items:center;
 padding:15px 40px;
 background:white;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+position:sticky;
+top:0;
+z-index:1000;
 }
 
-.logo{
-font-size:22px;
-font-weight:bold;
-color:#2563eb;
+.logo{font-size:22px;font-weight:bold;color:#2563eb}
+
+nav .menu span{
+margin:0 15px;
+cursor:pointer;
+color:#555;
 }
 
 nav button{
@@ -36,20 +42,14 @@ cursor:pointer;
 /* HERO */
 .hero{
 text-align:center;
-padding:80px 20px;
+padding:70px 20px;
 background:white;
 }
 
-.hero h1{
-font-size:40px;
-}
+.hero h1{font-size:42px}
+.hero p{color:#666;margin-top:10px}
 
-.hero p{
-color:#555;
-margin-top:10px;
-}
-
-/* SEARCH BAR */
+/* SEARCH */
 .search-box{
 margin-top:30px;
 display:flex;
@@ -60,13 +60,13 @@ gap:10px;
 
 .search-box input{
 padding:12px;
-width:200px;
+width:220px;
 border:1px solid #ddd;
 border-radius:8px;
 }
 
 .search-box button{
-padding:12px 20px;
+padding:12px 25px;
 background:#2563eb;
 color:white;
 border:none;
@@ -74,51 +74,76 @@ border-radius:8px;
 cursor:pointer;
 }
 
-/* CATEGORY */
-.categories{
+/* QUICK FILTERS */
+.filters{
 display:flex;
 flex-wrap:wrap;
-gap:15px;
+gap:10px;
 justify-content:center;
-padding:30px;
+padding:20px;
 }
 
-.cat{
+.filter{
 background:white;
-padding:15px 20px;
-border-radius:10px;
-box-shadow:0 2px 8px rgba(0,0,0,0.05);
+padding:10px 15px;
+border-radius:20px;
+border:1px solid #ddd;
 cursor:pointer;
 }
 
-/* COMPANIES */
+/* JOB CARDS */
 .section{
 padding:40px 20px;
-text-align:center;
 }
 
-.cards{
+.jobs{
 display:flex;
 flex-wrap:wrap;
 gap:20px;
 justify-content:center;
-margin-top:20px;
 }
 
-.card{
+.job{
 background:white;
+width:300px;
 padding:20px;
 border-radius:12px;
-width:200px;
 box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.job h3{font-size:18px}
+.job p{font-size:14px;color:#666;margin-top:5px}
+.job button{
+margin-top:10px;
+padding:8px 12px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* COMPANIES */
+.companies{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+justify-content:center;
+}
+
+.company{
+background:white;
+padding:15px 25px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
 
 /* AI SECTION */
 .ai{
 background:#111;
 color:white;
-padding:50px 20px;
 text-align:center;
+padding:50px 20px;
 }
 
 .ai button{
@@ -136,7 +161,7 @@ position:fixed;
 bottom:20px;
 right:20px;
 background:#22c55e;
-padding:15px;
+padding:16px;
 border-radius:50%;
 cursor:pointer;
 }
@@ -152,19 +177,25 @@ border-radius:10px;
 display:none;
 flex-direction:column;
 overflow:hidden;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
 .chat-body{flex:1;padding:10px;overflow:auto}
-.msg{margin:5px;padding:8px;border-radius:8px}
+.msg{margin:5px;padding:8px;border-radius:8px;font-size:14px}
 .user{background:#2563eb;color:white;margin-left:auto}
 .bot{background:#eee}
 
+.chat-input{display:flex}
+.chat-input input{flex:1;padding:10px;border:none}
+.chat-input button{padding:10px;background:#2563eb;color:white;border:none}
+
 /* MOBILE */
 @media(max-width:768px){
+.hero h1{font-size:28px}
 .search-box input{width:100%}
+.job{width:90%}
 }
 </style>
-
 </head>
 
 <body>
@@ -172,6 +203,13 @@ overflow:hidden;
 <!-- NAV -->
 <nav>
 <div class="logo">DB Hire GPT</div>
+
+<div class="menu">
+<span>Jobs</span>
+<span>Companies</span>
+<span>Services</span>
+</div>
+
 <div>
 <button onclick="window.location.href='login.html'">Login</button>
 <button onclick="window.location.href='signup.html'">Register</button>
@@ -181,7 +219,7 @@ overflow:hidden;
 <!-- HERO -->
 <section class="hero">
 <h1>Find your dream job now</h1>
-<p>AI powered job platform by DB Solutions</p>
+<p>AI-powered hiring platform by DB Solutions</p>
 
 <div class="search-box">
 <input placeholder="Skills / Job role">
@@ -191,33 +229,60 @@ overflow:hidden;
 </div>
 </section>
 
-<!-- CATEGORIES -->
-<div class="categories">
-<div class="cat">Work from Home</div>
-<div class="cat">IT Jobs</div>
-<div class="cat">HR Jobs</div>
-<div class="cat">Fresher Jobs</div>
-<div class="cat">Marketing</div>
+<!-- FILTERS -->
+<div class="filters">
+<div class="filter">Remote</div>
+<div class="filter">MNC</div>
+<div class="filter">Fresher</div>
+<div class="filter">IT Jobs</div>
+<div class="filter">HR Jobs</div>
 </div>
+
+<!-- JOB LIST -->
+<section class="section">
+<h2 style="text-align:center">Recommended Jobs</h2>
+
+<div class="jobs">
+
+<div class="job">
+<h3>Customer Support Executive</h3>
+<p>Work from Home • ₹25,000</p>
+<button>Apply Now</button>
+</div>
+
+<div class="job">
+<h3>HR Recruiter</h3>
+<p>Pune • ₹20,000</p>
+<button>Apply Now</button>
+</div>
+
+<div class="job">
+<h3>Chat Process Associate</h3>
+<p>Remote • ₹24,000</p>
+<button>Apply Now</button>
+</div>
+
+</div>
+</section>
 
 <!-- COMPANIES -->
 <section class="section">
-<h2>Top companies hiring</h2>
+<h2 style="text-align:center">Top Companies Hiring</h2>
 
-<div class="cards">
-<div class="card">Infosys</div>
-<div class="card">TCS</div>
-<div class="card">Wipro</div>
-<div class="card">Capgemini</div>
+<div class="companies">
+<div class="company">Infosys</div>
+<div class="company">TCS</div>
+<div class="company">Wipro</div>
+<div class="company">Capgemini</div>
 </div>
 
 </section>
 
-<!-- AI SECTION -->
+<!-- AI -->
 <section class="ai">
 <h2>Talk to DB Hire GPT 🤖</h2>
-<p>Get job suggestions instantly using AI</p>
-<button onclick="toggleChat()">Start AI Chat</button>
+<p>Get instant job suggestions using AI</p>
+<button onclick="toggleChat()">Start Chat</button>
 </section>
 
 <!-- CHAT -->
@@ -225,7 +290,11 @@ overflow:hidden;
 
 <div id="chatBox">
 <div class="chat-body" id="chat"></div>
-<input id="msg" placeholder="Ask..." onkeydown="if(event.key==='Enter')send()">
+
+<div class="chat-input">
+<input id="msg" placeholder="Ask about jobs..." onkeydown="if(event.key==='Enter')send()">
+<button onclick="send()">➤</button>
+</div>
 </div>
 
 <script>
@@ -240,6 +309,7 @@ let div=document.createElement("div");
 div.className="msg "+type;
 div.innerText=text;
 chat.appendChild(div);
+chat.scrollTop=chat.scrollHeight;
 }
 
 async function send(){
