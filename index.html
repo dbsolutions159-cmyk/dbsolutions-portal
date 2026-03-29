@@ -254,12 +254,22 @@ chat.appendChild(typing);
 try{
 
 let res = await fetch("https://db-backend-hiye.onrender.com/api/chat", {
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({message:text})
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ message: text })
 });
+
+if (!res.ok) {
+  throw new Error("Server slow");
+}
+
+let data = await res.json();
+
+chat.removeChild(typing);
+
+addMessage(data.reply, "bot");
 
 // अगर response सही नहीं है
 if(!res.ok){
