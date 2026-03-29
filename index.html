@@ -18,10 +18,10 @@ color:white;
 nav{
 display:flex;
 justify-content:space-between;
-padding:20px;
-background:rgba(0,0,0,0.6);
+padding:20px 30px;
 position:fixed;
 width:100%;
+background:rgba(0,0,0,0.4);
 backdrop-filter:blur(10px);
 z-index:1000;
 }
@@ -37,10 +37,10 @@ color:#22c55e;
 
 nav button{
 margin-left:10px;
-padding:10px 15px;
+padding:10px 16px;
 border:none;
 border-radius:8px;
-background:#22c55e;
+background:linear-gradient(45deg,#22c55e,#4ade80);
 cursor:pointer;
 }
 
@@ -48,44 +48,65 @@ cursor:pointer;
 .hero{
 height:100vh;
 display:flex;
-flex-direction:column;
-justify-content:center;
 align-items:center;
+justify-content:center;
 text-align:center;
+position:relative;
+overflow:hidden;
+}
+
+.hero-bg{
+position:absolute;
+width:600px;
+height:600px;
+background:#22c55e;
+filter:blur(150px);
+opacity:0.2;
+top:20%;
+left:50%;
+transform:translateX(-50%);
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+max-width:800px;
 padding:20px;
 }
 
 .hero h1{
-font-size:45px;
+font-size:60px;
+font-weight:700;
 }
 
-.hero span{color:#22c55e}
+.hero span{
+color:#22c55e;
+}
 
 .hero p{
-margin:20px 0;
+margin-top:20px;
 color:#aaa;
-max-width:700px;
+font-size:18px;
+line-height:1.6;
 }
 
-.btn{
-padding:15px 25px;
+.hero-buttons{
+margin-top:30px;
+}
+
+.hero-buttons button{
+margin:10px;
+padding:15px 30px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 background:linear-gradient(45deg,#22c55e,#4ade80);
 cursor:pointer;
+font-size:16px;
+transition:0.3s;
 }
 
-/* SECTION */
-.section{
-padding:80px 20px;
-text-align:center;
-}
-
-.card{
-background:#111827;
-padding:25px;
-border-radius:15px;
-margin:15px 0;
+.hero-buttons button:hover{
+transform:scale(1.05);
 }
 
 /* CHAT BUTTON */
@@ -94,9 +115,10 @@ position:fixed;
 bottom:20px;
 right:20px;
 background:#22c55e;
-padding:15px;
+padding:16px;
 border-radius:50%;
 cursor:pointer;
+box-shadow:0 0 20px #22c55e;
 }
 
 /* WHATSAPP */
@@ -105,7 +127,7 @@ position:fixed;
 bottom:20px;
 left:20px;
 background:#25D366;
-padding:15px;
+padding:16px;
 border-radius:50%;
 cursor:pointer;
 }
@@ -113,10 +135,10 @@ cursor:pointer;
 /* CHAT BOX */
 #chatBox{
 position:fixed;
-bottom:80px;
+bottom:90px;
 right:20px;
-width:320px;
-height:450px;
+width:340px;
+height:480px;
 background:#111827;
 border-radius:20px;
 display:none;
@@ -124,24 +146,20 @@ flex-direction:column;
 overflow:hidden;
 }
 
-/* CHAT HEADER */
 .chat-header{
 padding:15px;
 background:#1f2937;
-font-weight:bold;
 }
 
-/* CHAT BODY */
 .chat-body{
 flex:1;
 padding:10px;
 overflow:auto;
 }
 
-/* BUBBLE STYLE */
 .msg{
 margin:8px;
-padding:10px 15px;
+padding:10px 14px;
 border-radius:20px;
 max-width:80%;
 }
@@ -155,7 +173,6 @@ margin-left:auto;
 background:#374151;
 }
 
-/* INPUT */
 .chat-input{
 display:flex;
 }
@@ -164,7 +181,6 @@ display:flex;
 flex:1;
 padding:10px;
 border:none;
-outline:none;
 }
 
 .chat-input button{
@@ -175,17 +191,16 @@ padding:10px;
 
 /* MOBILE */
 @media(max-width:768px){
-.hero h1{font-size:28px;}
-#chatBox{
-width:90%;
-right:5%;
-}
+.hero h1{font-size:32px;}
+.hero p{font-size:14px;}
+#chatBox{width:90%;right:5%;}
 }
 </style>
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <nav>
 <div class="logo">DB Solutions <span>AI</span></div>
 
@@ -197,49 +212,33 @@ right:5%;
 
 <!-- HERO -->
 <section class="hero">
-<h1>AI Powered <span>Hiring Platform</span></h1>
+
+<div class="hero-bg"></div>
+
+<div class="hero-content">
+
+<h1>
+AI Powered <span>Hiring Platform</span>
+</h1>
+
 <p>
-DB Solutions is a next-generation manpower outsourcing and AI-based hiring platform 
-designed to connect candidates with the right opportunities faster than ever.
+DB Solutions is redefining hiring using AI.  
+Connect with the right opportunities faster using DB Hire GPT.
 </p>
 
-<button class="btn" onclick="toggleChat()">Talk to DB Hire GPT</button>
-</section>
+<div class="hero-buttons">
+<button onclick="toggleChat()">Talk to AI</button>
+<button onclick="window.location.href='signup.html'">Get Started</button>
+</div>
 
-<!-- ABOUT -->
-<section class="section">
-
-<h2>About DB Solutions</h2>
-
-<div class="card">
-<p>
-DB Solutions is a modern recruitment and manpower outsourcing company powered by Artificial Intelligence. 
-We help businesses hire the right talent efficiently while providing candidates with real-time job recommendations.
-
-Our AI assistant, DB Hire GPT, interacts with users, understands their skills, experience, and preferences, 
-and suggests the best job opportunities instantly.
-
-We aim to automate hiring processes, reduce manual effort, and create a seamless connection between recruiters 
-and job seekers.
-</p>
 </div>
 
 </section>
 
-<!-- FEATURES -->
-<section class="section">
-<h2>What We Offer</h2>
-
-<div class="card">AI Job Recommendations</div>
-<div class="card">Smart Candidate Screening</div>
-<div class="card">Resume & Career Guidance</div>
-<div class="card">Instant Hiring Automation</div>
-
-</section>
-
-<!-- CHAT -->
+<!-- CHAT BUTTON -->
 <div id="chatBtn" onclick="toggleChat()">💬</div>
 
+<!-- CHAT BOX -->
 <div id="chatBox">
 <div class="chat-header">DB Hire GPT 🤖</div>
 <div class="chat-body" id="chat"></div>
@@ -251,7 +250,7 @@ and job seekers.
 </div>
 
 <!-- WHATSAPP -->
-<div id="whatsapp" onclick="openWhatsApp()">📞</div>
+<div id="whatsapp" onclick="window.open('https://wa.me/9171449936')">📞</div>
 
 <script>
 
@@ -260,12 +259,6 @@ let box=document.getElementById("chatBox");
 box.style.display=box.style.display==="flex"?"none":"flex";
 }
 
-/* WhatsApp */
-function openWhatsApp(){
-window.open("https://wa.me/9171449936","_blank");
-}
-
-/* CHAT */
 function add(text,type){
 let div=document.createElement("div");
 div.className="msg "+type;
@@ -274,7 +267,7 @@ chat.appendChild(div);
 chat.scrollTop=chat.scrollHeight;
 }
 
-window.onload = ()=>{
+window.onload=()=>{
 add("Hi 👋 I am DB Hire GPT. Ask me about jobs!", "bot");
 };
 
@@ -294,13 +287,15 @@ try{
 let res=await fetch("https://db-backend-hiye.onrender.com/api/chat",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:text})
+body:JSON.stringify({
+message:"Answer in 3-5 lines professionally. "+text
+})
 });
 
 let data=await res.json();
 
 chat.removeChild(typing);
-add(data.reply || "No response","bot");
+add(data.reply,"bot");
 
 }catch{
 chat.removeChild(typing);
