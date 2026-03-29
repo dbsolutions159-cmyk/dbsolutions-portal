@@ -4,12 +4,42 @@ const mongoose = require("mongoose");
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log(err));
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected ✅"))
-.catch(err => console.log(err));
-require("dotenv").config();
+.catch(err => console.log("Mongo Error:", err));
+const express = require("express");
+const cors = require("cors");
 
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// test route
+app.get("/", (req, res) => {
+  res.send("DB Backend Running 🚀");
+});
+
+// server start
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});
+
+
+
+
+
+
+
+
+
+
+
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
 const express = require("express");
 const cors = require("cors");
 
