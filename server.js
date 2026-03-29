@@ -15,13 +15,15 @@ console.log("MONGO URI:", process.env.MONGO_URI ? "Loaded ✅" : "Missing ❌");
 
 // ✅ MongoDB Connect (Strong Version)
 mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 5000
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
 })
 .then(() => {
-  console.log("MongoDB Connected ✅");
+  console.log("✅ MongoDB Connected Successfully");
 })
 .catch((err) => {
-  console.log("Mongo Error ❌:", err.message);
+  console.log("❌ MongoDB ERROR:");
+  console.log(err);
 });
 
 // ✅ TEST ROUTE
