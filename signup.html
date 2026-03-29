@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Signup</title>
+<style>
+body{
+background:#020617;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:sans-serif;
+}
+.box{
+background:#111827;
+padding:30px;
+border-radius:15px;
+width:300px;
+}
+input,select{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+button{
+width:100%;
+padding:10px;
+background:#22c55e;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Create Account</h2>
+
+<input placeholder="Full Name">
+<input placeholder="Email">
+<input placeholder="Password">
+
+<select>
+<option>Candidate</option>
+<option>Recruiter</option>
+</select>
+
+<button onclick="signup()">Create Account</button>
+
+</div>
+
+<script>
+function signup(){
+alert("Account created ✔");
+window.location.href="login.html";
+}
+</script>
+
+</body>
+</html>

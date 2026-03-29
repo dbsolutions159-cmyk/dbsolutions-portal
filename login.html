@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<style>
+body{
+background:#020617;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:sans-serif;
+}
+.box{
+background:#111827;
+padding:30px;
+border-radius:15px;
+width:300px;
+}
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+button{
+width:100%;
+padding:10px;
+background:#22c55e;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Login</h2>
+<input type="email" placeholder="Email">
+<input type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<script>
+function login(){
+alert("Login API connect karenge next step me");
+window.location.href="dashboard.html";
+}
+</script>
+
+</body>
+</html>
