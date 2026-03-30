@@ -29,17 +29,6 @@ text-align:center;
 padding:60px 20px;
 }
 
-.hero h1{
-font-size:28px;
-}
-
-.hero span{color:#22c55e}
-
-.hero p{
-color:#aaa;
-margin-top:10px;
-}
-
 /* CHAT BUTTON */
 #chatBtn{
 position:fixed;
@@ -109,6 +98,7 @@ border:none;
 background:#22c55e;
 border:none;
 padding:10px;
+cursor:pointer;
 }
 
 /* JOB CARD */
@@ -136,7 +126,7 @@ cursor:pointer;
 </nav>
 
 <section class="hero">
-<h1>AI Powered <span>Hiring Platform</span></h1>
+<h1>AI Hiring Platform</h1>
 <p>Talk with AI and get jobs instantly</p>
 </section>
 
@@ -148,88 +138,99 @@ cursor:pointer;
 <div class="chat-body" id="chat"></div>
 
 <div class="chat-input">
-<input id="msg" placeholder="Type here...">
+<input id="msg" placeholder="Type here..." onkeypress="if(event.key==='Enter') send()">
 <button onclick="send()">➤</button>
 </div>
 </div>
 
 <script>
 
+// ELEMENTS
+const chat = document.getElementById("chat");
+const msg = document.getElementById("msg");
+
+// TOGGLE CHAT (FIXED)
 function toggleChat(){
-let box=document.getElementById("chatBox");
-box.style.display=box.style.display==="flex"?"none":"flex";
-box.style.flexDirection="column";
+  const box = document.getElementById("chatBox");
+
+  if (box.style.display === "flex") {
+    box.style.display = "none";
+  } else {
+    box.style.display = "flex";
+    box.style.flexDirection = "column";
+  }
 }
 
 // SEND MESSAGE
 async function send(){
-let text=msg.value.trim();
-if(!text)return;
+  const text = msg.value.trim();
+  if(!text) return;
 
-addMessage(text,"user");
-msg.value="";
+  addMessage(text,"user");
+  msg.value="";
 
-let typing=addMessage("Typing...","bot");
+  const typing = addMessage("Typing...","bot");
 
-try{
+  try{
 
-let res=await fetch("https://db-backend-hiye.onrender.com/api/chat"{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-message:text,
-userId:"user1"
-})
-});
+    const res = await fetch("https://db-backend-hiye.onrender.com/api/chat",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        message:text,
+        userId:"user1"
+      })
+    });
 
-let data=await res.json();
+    const data = await res.json();
 
-typing.remove();
+    typing.remove();
 
-addMessage(data.reply,"bot");
+    addMessage(data.reply,"bot");
 
-// JOB SHOW
-if(data.jobs && data.jobs.length>0){
-data.jobs.forEach(job=>{
-let div=document.createElement("div");
-div.className="job-card";
+    // JOB CARDS
+    if(data.jobs && data.jobs.length>0){
+      data.jobs.forEach(job=>{
+        const div=document.createElement("div");
+        div.className="job-card";
 
-div.innerHTML=`
-<b>${job.title}</b><br>
-${job.company}<br>
-${job.location}<br>
-<button onclick="apply('${job.link}')">Apply</button>
-`;
+        div.innerHTML=`
+        <b>${job.title}</b><br>
+        ${job.company || ""}<br>
+        ${job.location || ""}<br>
+        <button onclick="apply('${job.link || ""}')">Apply</button>
+        `;
 
-chat.appendChild(div);
-});
-}
+        chat.appendChild(div);
+      });
+    }
 
-}catch{
-typing.remove();
-addMessage("Server slow hai ⏳","bot");
-}
+  }catch(e){
+    typing.remove();
+    addMessage("Server issue hai ⏳","bot");
+    console.log(e);
+  }
 }
 
 // ADD MESSAGE
 function addMessage(text,type){
-let div=document.createElement("div");
-div.className="msg "+type;
-div.innerText=text;
-chat.appendChild(div);
-chat.scrollTop=chat.scrollHeight;
-return div;
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.innerText=text;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+  return div;
 }
 
 // APPLY
 function apply(link){
-if(link){
-window.open(link,"_blank");
-}else{
-alert("Link not available");
-}
+  if(link){
+    window.open(link,"_blank");
+  }else{
+    alert("Link not available");
+  }
 }
 
 </script>
