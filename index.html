@@ -10,7 +10,7 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family:'Segoe UI',sans-serif;
 }
 
 body{
@@ -28,7 +28,7 @@ body{
   max-width:420px;
   height:95vh;
   background:rgba(2,6,23,0.9);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px);
   border-radius:20px;
   display:flex;
   flex-direction:column;
@@ -59,31 +59,29 @@ body{
   display:flex;
   flex-direction:column;
   gap:10px;
+  scroll-behavior:smooth;
 }
 
-/* MESSAGES */
+/* BOT MESSAGE */
 .bot-message{
-  background:#1e293b;
+  background:rgba(30,41,59,0.9);
+  border:1px solid rgba(255,255,255,0.05);
   padding:12px 16px;
-  border-radius:14px;
+  border-radius:16px;
+  color:#e2e8f0;
   max-width:75%;
   align-self:flex-start;
-  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
 
+/* USER MESSAGE */
 .user-message{
   background:linear-gradient(135deg,#22c55e,#16a34a);
   padding:12px 16px;
-  border-radius:14px;
+  border-radius:16px;
   max-width:75%;
   align-self:flex-end;
-  box-shadow:0 4px 12px rgba(0,0,0,0.25);
-}
-
-/* TYPING */
-.typing{
-  font-size:13px;
-  opacity:0.7;
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
 
 /* INPUT */
@@ -114,18 +112,31 @@ body{
   font-weight:600;
 }
 
-/* WHATSAPP BUTTON */
+/* WHATSAPP */
 .whatsapp{
   position:absolute;
   bottom:20px;
   right:20px;
   background:#25D366;
-  color:white;
   padding:12px 16px;
   border-radius:50px;
-  font-size:14px;
+  color:white;
   text-decoration:none;
+  font-size:14px;
   box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* TYPING DOTS */
+.dots::after {
+  content: '';
+  animation: dots 1.5s steps(3,end) infinite;
+}
+
+@keyframes dots {
+  0% { content:''; }
+  33% { content:'.'; }
+  66% { content:'..'; }
+  100% { content:'...'; }
 }
 </style>
 
@@ -141,9 +152,15 @@ body{
   </div>
 
   <div class="chat-container" id="chat">
+
     <div class="bot-message">
-      👋 Welcome to DB Solutions! Aap kis type ki job dhund rahe ho?
+      👋 Welcome to DB Solutions Hiring Desk.<br><br>
+      Please share your job preference:<br>
+      • Customer Support<br>
+      • Work From Home<br>
+      • Back Office
     </div>
+
   </div>
 
   <div class="input-area">
@@ -161,7 +178,7 @@ body{
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 
-// ENTER KEY SUPPORT
+// ENTER KEY
 input.addEventListener("keypress", function(e){
   if(e.key === "Enter"){
     sendMessage();
@@ -171,21 +188,21 @@ input.addEventListener("keypress", function(e){
 function sendMessage(){
   if(input.value.trim() === "") return;
 
-  // USER MESSAGE
+  const userText = input.value.toLowerCase();
+
+  // USER MSG
   const userMsg = document.createElement("div");
   userMsg.className = "user-message";
   userMsg.innerText = input.value;
   chat.appendChild(userMsg);
-
-  const userText = input.value.toLowerCase();
 
   input.value = "";
   scrollDown();
 
   // TYPING
   const typing = document.createElement("div");
-  typing.className = "bot-message typing";
-  typing.innerText = "Typing...";
+  typing.className = "bot-message";
+  typing.innerHTML = "Typing<span class='dots'></span>";
   chat.appendChild(typing);
   scrollDown();
 
@@ -195,18 +212,24 @@ function sendMessage(){
     const botMsg = document.createElement("div");
     botMsg.className = "bot-message";
 
-    // SMART REPLY
-    if(userText.includes("job")){
-      botMsg.innerText = "💼 Humare paas customer support, chat process aur work from home jobs available hain. Resume bheje WhatsApp par.";
+    // PROFESSIONAL FLOW
+    if(userText.includes("bhopal")){
+      botMsg.innerText = "📍 We have openings in Bhopal for Customer Support roles.\n\nPlease confirm:\n• Experience (Fresher / Experienced)\n• Availability";
     }
-    else if(userText.includes("salary")){
-      botMsg.innerText = "💰 Salary 22k - 30k in-hand depending on experience.";
+    else if(userText.includes("fresher")){
+      botMsg.innerText = "✅ Fresher positions available.\n\nSalary: ₹18,000 – ₹22,000 in-hand.\n\nPlease share your resume on WhatsApp for further process.";
     }
-    else if(userText.includes("apply")){
-      botMsg.innerText = "📩 Apply karne ke liye apna resume WhatsApp par bheje.";
+    else if(userText.includes("experience")){
+      botMsg.innerText = "💼 Experienced candidates preferred.\n\nSalary up to ₹30,000 in-hand.\n\nKindly share your resume on WhatsApp.";
+    }
+    else if(userText.includes("resume") || userText.includes("bheja")){
+      botMsg.innerText = "📩 Resume received.\n\nOur HR team will contact you within 24 hours.";
+    }
+    else if(userText.includes("kab")){
+      botMsg.innerText = "⏳ You will receive a response within 12–24 working hours.\n\nPlease keep your phone active.";
     }
     else{
-      botMsg.innerText = "🤖 Thanks! Hum aapki query check kar rahe hain.";
+      botMsg.innerText = "📋 Please share:\n• Preferred job role\n• Location\n• Experience\n\nSo we can assist you better.";
     }
 
     chat.appendChild(botMsg);
