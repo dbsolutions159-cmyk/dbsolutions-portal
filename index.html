@@ -1,238 +1,223 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DB Hire GPT</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
 
 body{
-font-family:-apple-system,Segoe UI;
-background:#0f172a;
-color:white;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
 }
 
-/* NAV */
-nav{
-display:flex;
-justify-content:space-between;
-padding:15px 20px;
-background:#020617;
-}
-
-nav h2{color:#22c55e}
-
-/* HERO */
-.hero{
-text-align:center;
-padding:60px 20px;
-}
-
-/* CHAT BUTTON */
-#chatBtn{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#22c55e;
-padding:15px;
-border-radius:50%;
-cursor:pointer;
-}
-
-/* CHAT BOX */
-#chatBox{
-position:fixed;
-bottom:80px;
-right:10px;
-left:10px;
-height:70vh;
-background:#020617;
-border-radius:15px;
-display:none;
-flex-direction:column;
+/* APP */
+.chat-app{
+  width:100%;
+  max-width:420px;
+  height:95vh;
+  background:rgba(2,6,23,0.9);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,0.6);
 }
 
 /* HEADER */
-.chat-header{
-padding:12px;
-background:#111827;
+.header{
+  padding:15px;
+  border-bottom:1px solid #1e293b;
 }
 
-/* BODY */
-.chat-body{
-flex:1;
-padding:10px;
-overflow:auto;
+.header h2{
+  font-size:16px;
 }
 
-/* MSG */
-.msg{
-padding:10px;
-margin:5px;
-border-radius:10px;
-max-width:80%;
+.status{
+  font-size:12px;
+  color:#22c55e;
 }
 
-.user{
-background:#22c55e;
-margin-left:auto;
+/* CHAT */
+.chat-container{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
-.bot{
-background:#374151;
+/* MESSAGES */
+.bot-message{
+  background:#1e293b;
+  padding:12px 16px;
+  border-radius:14px;
+  max-width:75%;
+  align-self:flex-start;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+
+.user-message{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  padding:12px 16px;
+  border-radius:14px;
+  max-width:75%;
+  align-self:flex-end;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* TYPING */
+.typing{
+  font-size:13px;
+  opacity:0.7;
 }
 
 /* INPUT */
-.chat-input{
-display:flex;
+.input-area{
+  display:flex;
+  padding:10px;
+  border-top:1px solid #1e293b;
 }
 
-.chat-input input{
-flex:1;
-padding:10px;
-border:none;
+.input-area input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#1e293b;
+  color:white;
+  outline:none;
 }
 
-.chat-input button{
-background:#22c55e;
-border:none;
-padding:10px;
-cursor:pointer;
+.input-area button{
+  margin-left:10px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
 }
 
-/* JOB CARD */
-.job-card{
-background:#111827;
-margin:8px;
-padding:10px;
-border-radius:10px;
-}
-
-.job-card button{
-margin-top:5px;
-background:#22c55e;
-border:none;
-padding:5px 10px;
-cursor:pointer;
+/* WHATSAPP BUTTON */
+.whatsapp{
+  position:absolute;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:white;
+  padding:12px 16px;
+  border-radius:50px;
+  font-size:14px;
+  text-decoration:none;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
 }
 </style>
+
 </head>
 
 <body>
 
-<nav>
-<h2>DB Hire GPT</h2>
-</nav>
+<div class="chat-app">
 
-<section class="hero">
-<h1>AI Hiring Platform</h1>
-<p>Talk with AI and get jobs instantly</p>
-</section>
+  <div class="header">
+    <h2>DB Hire GPT</h2>
+    <div class="status">● Online Hiring Assistant</div>
+  </div>
 
-<!-- CHAT -->
-<div id="chatBtn" onclick="toggleChat()">💬</div>
+  <div class="chat-container" id="chat">
+    <div class="bot-message">
+      👋 Welcome to DB Solutions! Aap kis type ki job dhund rahe ho?
+    </div>
+  </div>
 
-<div id="chatBox">
-<div class="chat-header">DB Hire GPT</div>
-<div class="chat-body" id="chat"></div>
+  <div class="input-area">
+    <input type="text" id="input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
-<div class="chat-input">
-<input id="msg" placeholder="Type here..." onkeypress="if(event.key==='Enter') send()">
-<button onclick="send()">➤</button>
 </div>
-</div>
+
+<a href="https://wa.me/919302186887" target="_blank" class="whatsapp">
+  WhatsApp
+</a>
 
 <script>
-
-// ELEMENTS
 const chat = document.getElementById("chat");
-const msg = document.getElementById("msg");
+const input = document.getElementById("input");
 
-// TOGGLE CHAT (FIXED)
-function toggleChat(){
-  const box = document.getElementById("chatBox");
-
-  if (box.style.display === "flex") {
-    box.style.display = "none";
-  } else {
-    box.style.display = "flex";
-    box.style.flexDirection = "column";
+// ENTER KEY SUPPORT
+input.addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    sendMessage();
   }
-}
+});
 
-// SEND MESSAGE
-async function send(){
-  const text = msg.value.trim();
-  if(!text) return;
+function sendMessage(){
+  if(input.value.trim() === "") return;
 
-  addMessage(text,"user");
-  msg.value="";
+  // USER MESSAGE
+  const userMsg = document.createElement("div");
+  userMsg.className = "user-message";
+  userMsg.innerText = input.value;
+  chat.appendChild(userMsg);
 
-  const typing = addMessage("Typing...","bot");
+  const userText = input.value.toLowerCase();
 
-  try{
+  input.value = "";
+  scrollDown();
 
-    const res = await fetch("https://db-backend-hiye.onrender.com/api/chat",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        message:text,
-        userId:"user1"
-      })
-    });
+  // TYPING
+  const typing = document.createElement("div");
+  typing.className = "bot-message typing";
+  typing.innerText = "Typing...";
+  chat.appendChild(typing);
+  scrollDown();
 
-    const data = await res.json();
-
+  setTimeout(()=>{
     typing.remove();
 
-    addMessage(data.reply,"bot");
+    const botMsg = document.createElement("div");
+    botMsg.className = "bot-message";
 
-    // JOB CARDS
-    if(data.jobs && data.jobs.length>0){
-      data.jobs.forEach(job=>{
-        const div=document.createElement("div");
-        div.className="job-card";
-
-        div.innerHTML=`
-        <b>${job.title}</b><br>
-        ${job.company || ""}<br>
-        ${job.location || ""}<br>
-        <button onclick="apply('${job.link || ""}')">Apply</button>
-        `;
-
-        chat.appendChild(div);
-      });
+    // SMART REPLY
+    if(userText.includes("job")){
+      botMsg.innerText = "💼 Humare paas customer support, chat process aur work from home jobs available hain. Resume bheje WhatsApp par.";
+    }
+    else if(userText.includes("salary")){
+      botMsg.innerText = "💰 Salary 22k - 30k in-hand depending on experience.";
+    }
+    else if(userText.includes("apply")){
+      botMsg.innerText = "📩 Apply karne ke liye apna resume WhatsApp par bheje.";
+    }
+    else{
+      botMsg.innerText = "🤖 Thanks! Hum aapki query check kar rahe hain.";
     }
 
-  }catch(e){
-    typing.remove();
-    addMessage("Server issue hai ⏳","bot");
-    console.log(e);
-  }
+    chat.appendChild(botMsg);
+    scrollDown();
+
+  },1000);
 }
 
-// ADD MESSAGE
-function addMessage(text,type){
-  const div=document.createElement("div");
-  div.className="msg "+type;
-  div.innerText=text;
-  chat.appendChild(div);
-  chat.scrollTop=chat.scrollHeight;
-  return div;
+function scrollDown(){
+  chat.scrollTop = chat.scrollHeight;
 }
-
-// APPLY
-function apply(link){
-  if(link){
-    window.open(link,"_blank");
-  }else{
-    alert("Link not available");
-  }
-}
-
 </script>
 
 </body>
