@@ -12,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 
 // ✅ IMPORT JOB MODEL
-const Job = require("./models/job");
 
 // 🔥 ENV CHECK
 console.log("ENV CHECK:", process.env.MONGO_URI);
