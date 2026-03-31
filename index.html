@@ -1,70 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DB Job GPT</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+}
+.header{
+  padding:15px;
+  background:#020617;
+}
+.chat{
+  height:75vh;
+  overflow-y:auto;
+  padding:15px;
+}
+.input-box{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  gap:10px;
+  padding:10px;
+  background:#020617;
+}
+input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#1e293b;
+  color:white;
+}
+button{
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#22c55e;
+  color:white;
+}
+.job{
+  background:#1e293b;
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">DB Job GPT 🚀</div>
+
+<div id="chat" class="chat"></div>
+
+<div class="input-box">
+  <input id="msg" placeholder="Type message..." onkeydown="if(event.key==='Enter') send()">
+  <button onclick="send()">Send</button>
+</div>
+
 <script>
 
 function send(){
   let text = document.getElementById("msg").value.trim();
-
-  if(!text){
-    alert("Enter message");
-    return;
-  }
+  if(!text) return;
 
   addMsg(text, true);
   bot(text);
 
-  document.getElementById("msg").value = "";
+  document.getElementById("msg").value="";
 }
 
 function addMsg(text, user){
-  const chat = document.getElementById("chat");
+  let chat = document.getElementById("chat");
 
-  chat.innerHTML += `
-    <div style="margin:10px; text-align:${user?'right':'left'}">
-      <span style="background:${user?'#22c55e':'#1e293b'};
-      padding:10px 15px; border-radius:10px; display:inline-block;">
-        ${text}
-      </span>
-    </div>
-  `;
+  chat.innerHTML += '<div style="margin:10px;text-align:'+(user?'right':'left')+'">'+
+  '<span style="background:'+(user?'#22c55e':'#1e293b')+';padding:10px;border-radius:10px;">'+
+  text+
+  '</span></div>';
 
   chat.scrollTop = chat.scrollHeight;
 }
 
 function bot(text){
 
-  const chat = document.getElementById("chat");
+  let chat = document.getElementById("chat");
+  let id = "t"+Date.now();
 
-  let id = "typing" + Date.now();
+  chat.innerHTML += '<div id="'+id+'">Typing...</div>';
 
-  chat.innerHTML += `
-    <div id="${id}" style="margin:10px;">
-      <span style="background:#1e293b; padding:10px 15px; border-radius:10px;">
-        Typing...
-      </span>
-    </div>
-  `;
-
-  fetch("fetch("https://your-backend-url/api/chat")", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
+  fetch("https://db-backend-hjye.onrender.com/api/chat", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
     },
     body: JSON.stringify({
       message: text
     })
   })
-  .then(res => res.json())
-  .then(data => {
+  .then(function(res){ return res.json(); })
+  .then(function(data){
 
     document.getElementById(id).remove();
 
     addMsg(data.reply, false);
 
+    if(data.jobs && data.jobs.length > 0){
+      data.jobs.forEach(function(job){
+        chat.innerHTML += '<div class="job">'+
+        '<b>'+job.title+'</b><br>'+
+        job.company+' - '+job.location+'<br>'+
+        '💰 '+(job.salary || "Not disclosed")+
+        '</div>';
+      });
+    }
+
   })
-  .catch(err => {
+  .catch(function(err){
     console.log(err);
     document.getElementById(id).remove();
-    addMsg("❌ Server error", false);
+    addMsg("Server error ❌", false);
   });
+
 }
 
 </script>
+
+</body>
+</html>
