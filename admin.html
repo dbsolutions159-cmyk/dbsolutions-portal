@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Inter;
+padding:20px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+}
+
+input, button{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:10px;
+}
+
+input{
+background:#1e293b;
+color:white;
+}
+
+button{
+background:#22c55e;
+color:white;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>➕ Add Job</h2>
+
+<input id="title" placeholder="Job Title">
+<input id="company" placeholder="Company Name">
+<input id="location" placeholder="Location">
+<input id="salary" placeholder="Salary">
+
+<button onclick="addJob()">Add Job</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+
+function addJob(){
+
+const data = {
+title: document.getElementById("title").value,
+company: document.getElementById("company").value,
+location: document.getElementById("location").value,
+salary: document.getElementById("salary").value
+};
+
+fetch("https://db-backend-hiye.onrender.com/api/add-job", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify(data)
+})
+.then(res => res.json())
+.then(d => {
+document.getElementById("msg").innerText = d.msg;
+})
+.catch(()=>{
+document.getElementById("msg").innerText = "Error ❌";
+});
+
+}
+
+</script>
+
+</body>
+</html>
