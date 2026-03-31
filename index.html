@@ -26,9 +26,14 @@ transition:0.3s;
 border-right:1px solid #1e293b;
 }
 
-.sidebar.active{left:0}
+.sidebar.collapsed{
+width:70px;
+}
 
-.logo{font-weight:600;margin-bottom:20px}
+.logo{
+font-weight:600;
+margin-bottom:20px;
+}
 
 .menu div{
 padding:12px;
@@ -36,7 +41,10 @@ border-radius:10px;
 cursor:pointer;
 margin-bottom:6px;
 }
+
 .menu div:hover{background:#1e293b}
+
+.active{background:#22c55e;color:black}
 
 /* MAIN */
 .main{
@@ -54,6 +62,11 @@ border-bottom:1px solid #1e293b;
 align-items:center;
 }
 
+.menu-btn{
+cursor:pointer;
+font-size:18px;
+}
+
 /* CHAT */
 .chat{
 flex:1;
@@ -64,22 +77,19 @@ flex-direction:column;
 gap:12px;
 }
 
-.bot,.user{
+.bot{
+background:#1e293b;
 padding:14px;
 border-radius:14px;
-max-width:70%;
-animation:fadeIn 0.3s ease;
+max-width:60%;
 }
 
-.bot{background:#1e293b}
 .user{
 background:linear-gradient(135deg,#22c55e,#16a34a);
+padding:14px;
+border-radius:14px;
 align-self:flex-end;
-}
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1;transform:translateY(0)}
+max-width:60%;
 }
 
 /* INPUT */
@@ -109,9 +119,24 @@ color:white;
 cursor:pointer;
 }
 
-/* PAGE */
+/* PAGES */
 .page{display:none}
 .activePage{display:block}
+
+/* SETTINGS */
+.card{
+background:#1e293b;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
+}
+
+/* BACK BUTTON */
+.back{
+margin-bottom:15px;
+cursor:pointer;
+color:#22c55e;
+}
 
 /* MOBILE */
 @media(max-width:768px){
@@ -123,6 +148,11 @@ height:100%;
 z-index:1000;
 }
 .sidebar.active{left:0}
+}
+
+/* TABLET */
+@media(max-width:1024px){
+.sidebar{width:200px}
 }
 </style>
 </head>
@@ -137,10 +167,11 @@ z-index:1000;
 <div onclick="goHome()">🏠 Home</div>
 <div onclick="openPage('profile')">👤 Profile</div>
 <div onclick="openPage('settings')">⚙️ Settings</div>
+<div onclick="openPage('subscription')">💳 Subscription</div>
 </div>
 
 <div style="margin-top:auto;font-size:11px;color:#64748b;">
-DB Solutions
+DB Job GPT by DB Solutions
 </div>
 </div>
 
@@ -148,18 +179,22 @@ DB Solutions
 <div class="main">
 
 <div class="header">
-<div onclick="toggleMenu()">☰</div>
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
 <div>DB Job GPT ✔</div>
 <div>● AI Online</div>
 </div>
 
 <!-- CHAT -->
-<div id="chat" class="chat page activePage"></div>
+<div id="chat" class="chat page activePage">
+<div class="bot">👋 Welcome, how can I help you?</div>
+</div>
 
 <!-- PROFILE -->
 <div id="profile" class="page">
-<div onclick="goHome()">← Back</div><br>
+<div class="back" onclick="goHome()">← Back</div>
 
+<div class="card">
+<h3>Profile</h3><br>
 <input placeholder="Full Name"><br><br>
 <input placeholder="Phone"><br><br>
 <input placeholder="Email"><br><br>
@@ -167,13 +202,37 @@ DB Solutions
 <input placeholder="Skills"><br><br>
 <button>Save</button>
 </div>
+</div>
 
 <!-- SETTINGS -->
 <div id="settings" class="page">
-<div onclick="goHome()">← Back</div><br>
+<div class="back" onclick="goHome()">← Back</div>
 
+<div class="card">
+<h3>Account</h3><br>
 <input placeholder="Username"><br><br>
-<input type="password" placeholder="Password"><br><br>
+<input placeholder="Password"><br><br>
+</div>
+
+<div class="card">
+<h3>Preferences</h3><br>
+Dark Mode <button onclick="toggleDark()">Toggle</button><br><br>
+Notifications <button>ON</button>
+</div>
+</div>
+
+<!-- SUB -->
+<div id="subscription" class="page">
+<div class="back" onclick="goHome()">← Back</div>
+
+<div class="card">
+FREE PLAN<br><br>✔ Basic access
+</div>
+
+<div class="card">
+PRO ₹199<br><br>✔ Premium jobs<br><br>
+<button>Upgrade</button>
+</div>
 </div>
 
 </div>
@@ -187,11 +246,11 @@ DB Solutions
 
 <script>
 
-// NAV
+// NAVIGATION FIX
 function openPage(id){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("activePage"));
 document.getElementById(id).classList.add("activePage");
-setTimeout(()=>closeSidebar(),200);
+closeSidebar();
 }
 
 function goHome(){
@@ -207,68 +266,61 @@ function closeSidebar(){
 document.getElementById("sidebar").classList.remove("active");
 }
 
-// ENTER
+// ENTER FIX
 function enterSend(e){
 if(e.key==="Enter") send();
 }
 
-// CHAT LOAD
-let chat=document.getElementById("chat");
-chat.innerHTML = localStorage.getItem("chat") || 
-`<div class="bot">👋 Welcome to DB Job GPT</div>`;
-
-// SEND MESSAGE (REAL API)
-async function send(){
+// CHAT
+function send(){
 let input=document.getElementById("msg");
+let chat=document.getElementById("chat");
+
 if(!input.value) return;
 
-let text=input.value;
+let text=input.value.toLowerCase();
 
-// USER MSG
-chat.insertAdjacentHTML("beforeend", `<div class="user">${text}</div>`);
+let u=document.createElement("div");
+u.className="user";
+u.innerText=input.value;
+chat.appendChild(u);
 
-// BOT LOADING
-let bot = document.createElement("div");
-bot.className="bot";
-bot.innerText="Typing...";
-chat.appendChild(bot);
+let b=document.createElement("div");
+b.className="bot";
+b.innerText="Typing...";
+chat.appendChild(b);
 
-input.value="";
-chat.scrollTop=chat.scrollHeight;
-
-try{
-const res = await fetch("http://localhost:3000/api/chat",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:text})
-});
-
-const data = await res.json();
-bot.innerText = data.reply || "No response";
-
-}catch(err){
-bot.innerText="Server error ❌";
+setTimeout(()=>{
+if(
+text.includes("who invented") ||
+text.includes("kisne banaya") ||
+text.includes("creator")
+){
+b.innerText="I was developed by Dharmesh Band, founder of DB Solutions Manpower Outsourcing & Placement Agency.";
+}else{
+b.innerText="Tell me your job preference (role, location, experience).";
 }
 
-// SAVE CHAT
-localStorage.setItem("chat", chat.innerHTML);
 chat.scrollTop=chat.scrollHeight;
+},500);
+
+input.value="";
 }
 
 // VOICE
 function voice(){
-try{
 let rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
 rec.onresult=e=>{
 document.getElementById("msg").value=e.results[0][0].transcript;
 };
-rec.onerror=()=>alert("Voice error");
 rec.start();
-}catch{
-alert("Voice not supported");
-}
 }
 
+// DARK MODE
+function toggleDark(){
+document.body.style.background =
+document.body.style.background=="black"?"#0b1220":"black";
+}
 </script>
 
 </body>
