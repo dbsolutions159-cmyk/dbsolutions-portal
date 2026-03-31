@@ -10,22 +10,57 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 
 body{
-background: radial-gradient(circle at top, #0f172a, #020617);
-color:#e2e8f0;
+background:#020617;
+color:white;
 height:100vh;
 display:flex;
 flex-direction:column;
+overflow:hidden;
 }
 
+/* HEADER */
 .header{
 display:flex;
 justify-content:space-between;
-padding:16px 20px;
+align-items:center;
+padding:12px 16px;
 border-bottom:1px solid #1e293b;
 }
 
-.status{color:#22c55e;font-size:13px}
+.header span{
+cursor:pointer;
+}
 
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+left:-260px;
+top:0;
+width:260px;
+height:100%;
+background:#0f172a;
+padding:20px;
+transition:0.3s;
+z-index:100;
+}
+
+.sidebar.active{
+left:0;
+}
+
+.sidebar div{
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+color:#94a3b8;
+}
+
+.sidebar div:hover{
+background:#1e293b;
+color:white;
+}
+
+/* HOME */
 .home{
 flex:1;
 display:flex;
@@ -36,49 +71,54 @@ text-align:center;
 padding:20px;
 }
 
-.title{font-size:32px;font-weight:600}
-.subtitle{color:#94a3b8;margin:10px 0 30px}
+.title{font-size:26px;margin-bottom:10px}
+.subtitle{color:#94a3b8;margin-bottom:20px}
 
+/* SUGGESTIONS */
+.suggestions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+justify-content:center;
+margin-bottom:20px;
+}
+
+.suggestions button{
+background:#1e293b;
+border:none;
+padding:8px 12px;
+border-radius:20px;
+color:white;
+cursor:pointer;
+}
+
+/* INPUT */
 .input-box{
 width:100%;
-max-width:650px;
-background:#0f172a;
-border:1px solid #1e293b;
-border-radius:20px;
-padding:12px;
+max-width:600px;
 display:flex;
 gap:10px;
 }
 
 input{
 flex:1;
-background:none;
+padding:12px;
+border-radius:10px;
 border:none;
+background:#1e293b;
 color:white;
-font-size:16px;
-outline:none;
 }
 
-button{
-background:#22c55e;
-border:none;
-padding:10px 16px;
-border-radius:12px;
-color:white;
-cursor:pointer;
-}
-
+/* CHAT */
 .chat{
 flex:1;
 display:none;
 padding:20px;
-max-width:850px;
-margin:auto;
 overflow-y:auto;
 }
 
 .message{
-margin-bottom:18px;
+margin-bottom:15px;
 display:flex;
 }
 
@@ -91,44 +131,63 @@ max-width:75%;
 background:#1e293b;
 }
 
-.user .bubble{background:#22c55e}
+.user .bubble{
+background:#22c55e;
+}
 
-.typing{color:#94a3b8;font-size:13px}
-
-.bottom{
-position:fixed;
-bottom:0;
-width:100%;
+/* JOB CARD */
+.job{
 background:#020617;
-padding:10px;
-display:none;
-}
-
-.bottom-box{
-max-width:850px;
-margin:auto;
-display:flex;
-gap:10px;
-}
-
-.bottom input{
-background:#1e293b;
+border:1px solid #1e293b;
 padding:12px;
-border-radius:10px;
+border-radius:12px;
+margin-top:8px;
+}
+
+.job a{
+display:inline-block;
+margin-top:8px;
+background:#22c55e;
+padding:6px 10px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.title{font-size:22px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<div><b>DB Job GPT</b> ✔</div>
-<div class="status">● Online</div>
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+<div onclick="navigate('home')">🏠 Home</div>
+<div onclick="navigate('chat')">💬 Chat</div>
+<div onclick="navigate('profile')">👤 Profile</div>
+<div onclick="navigate('settings')">⚙ Settings</div>
 </div>
 
+<!-- HEADER -->
+<div class="header">
+<span onclick="goBack()">←</span>
+<span>DB Job GPT</span>
+<span onclick="toggleMenu()">☰</span>
+</div>
+
+<!-- HOME -->
 <div class="home" id="home">
 <div class="title">Hi 👋 Dharmesh</div>
-<div class="subtitle">Ask me anything about jobs</div>
+<div class="subtitle">Find jobs instantly</div>
+
+<div class="suggestions">
+<button onclick="sendQuick('job in bhopal')">Bhopal Jobs</button>
+<button onclick="sendQuick('remote jobs')">Remote</button>
+<button onclick="sendQuick('customer support')">Support</button>
+</div>
 
 <div class="input-box">
 <input id="msg" placeholder="Search jobs..." onkeydown="enterSend(event)">
@@ -136,47 +195,64 @@ border-radius:10px;
 </div>
 </div>
 
+<!-- CHAT -->
 <div class="chat" id="chat"></div>
-
-<div class="bottom" id="bottom">
-<div class="bottom-box">
-<input id="msg2" placeholder="Type..." onkeydown="enterSend2(event)">
-<button onclick="send2()">Send</button>
-</div>
-</div>
 
 <script>
 
-function enterSend(e){ if(e.key==="Enter") send(); }
-function enterSend2(e){ if(e.key==="Enter") send2(); }
+// NAVIGATION
+let currentPage = "home";
+let historyStack = [];
+
+function navigate(page){
+document.getElementById("sidebar").classList.remove("active");
+historyStack.push(currentPage);
+currentPage = page;
+renderPage();
+}
+
+function goBack(){
+if(historyStack.length === 0) return;
+currentPage = historyStack.pop();
+renderPage();
+}
+
+function renderPage(){
+home.style.display="none";
+chat.style.display="none";
+
+if(currentPage==="home") home.style.display="flex";
+if(currentPage==="chat") chat.style.display="block";
+}
+
+// MENU
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("active");
+}
+
+// INPUT
+function enterSend(e){
+if(e.key==="Enter") send();
+}
 
 function send(){
 let text = msg.value.trim();
 if(!text) return;
 
-startChat();
+navigate("chat");
 addMsg(text,true);
 bot(text);
 
 msg.value="";
 }
 
-function send2(){
-let text = msg2.value.trim();
-if(!text) return;
-
+function sendQuick(text){
+navigate("chat");
 addMsg(text,true);
 bot(text);
-
-msg2.value="";
 }
 
-function startChat(){
-home.style.display="none";
-chat.style.display="block";
-bottom.style.display="block";
-}
-
+// ADD MESSAGE
 function addMsg(text,user){
 chat.innerHTML += `
 <div class="message ${user?'user':''}">
@@ -185,45 +261,45 @@ chat.innerHTML += `
 chat.scrollTop = chat.scrollHeight;
 }
 
-/* 🔥 FINAL BOT FUNCTION (LIVE API CONNECTED) */
+// BOT
 function bot(text){
 
-let typingId = "typing-"+Date.now();
+let id="typing"+Date.now();
 
 chat.innerHTML += `
-<div class="message" id="${typingId}">
-<div class="bubble typing">Typing...</div>
+<div class="message" id="${id}">
+<div class="bubble">Typing...</div>
 </div>`;
 
-chat.scrollTop = chat.scrollHeight;
-
 fetch("https://db-backend-hiye.onrender.com/api/chat", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({ message: text })
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ message:text })
 })
-.then(res => res.json())
-.then(data => {
+.then(res=>res.json())
+.then(data=>{
 
-document.getElementById(typingId).remove();
+document.getElementById(id).remove();
 
 addMsg(data.reply,false);
 
-// 🔥 JOBS SHOW
-if(data.jobs && data.jobs.length > 0){
-data.jobs.forEach(job => {
-addMsg(`💼 ${job.title}
-🏢 ${job.company}
-📍 ${job.location}`, false);
+// JOB CARDS
+if(data.jobs){
+data.jobs.forEach(job=>{
+chat.innerHTML += `
+<div class="job">
+<b>${job.title}</b><br>
+${job.company || ""}<br>
+${job.location || ""}<br>
+<a href="${job.link || "#"}" target="_blank">Apply 🚀</a>
+</div>`;
 });
 }
 
 })
 .catch(()=>{
-document.getElementById(typingId).remove();
-addMsg("Server error ❌", false);
+document.getElementById(id).remove();
+addMsg("Server error ❌",false);
 });
 
 }
