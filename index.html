@@ -8,153 +8,147 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-  font-family:-apple-system,Segoe UI;
-  background:#0f172a;
-  color:white;
-  padding:20px;
+font-family:-apple-system,Segoe UI;
+background:#0f172a;
+color:white;
+display:flex;
+flex-direction:column;
+height:100vh;
 }
 
-.container{
-  max-width:500px;
-  margin:auto;
+/* HEADER */
+.header{
+padding:15px;
+border-bottom:1px solid #1e293b;
+display:flex;
+justify-content:space-between;
 }
 
-h2{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-button{
-  padding:10px;
-  margin:5px;
-  border:none;
-  border-radius:8px;
-  background:#3b82f6;
-  color:white;
-  cursor:pointer;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-  border:none;
-}
-
-#chatBox{
-  background:#1e293b;
-  padding:10px;
-  height:300px;
-  overflow:auto;
-  margin-top:15px;
-  border-radius:10px;
+/* CHAT */
+.chat{
+flex:1;
+overflow-y:auto;
+padding:15px;
 }
 
 .msg{
-  margin:5px 0;
+margin:10px 0;
+max-width:75%;
+padding:10px 14px;
+border-radius:12px;
 }
 
-.user{color:#38bdf8}
-.bot{color:#22c55e}
+.user{
+background:#22c55e;
+margin-left:auto;
+}
 
+.bot{
+background:#1e293b;
+}
+
+/* INPUT */
+.bottom{
+display:flex;
+padding:10px;
+border-top:1px solid #1e293b;
+}
+
+input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#1e293b;
+color:white;
+}
+
+button{
+margin-left:10px;
+padding:12px;
+background:#22c55e;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="header">
+<div>DB GPT 🚀</div>
+<div>● Online</div>
+</div>
 
-<h2>DB GPT 🚀</h2>
+<div class="chat" id="chat"></div>
 
-<!-- AUTH -->
-<button onclick="registerUser()">Register</button>
-<button onclick="loginUser()">Login</button>
-<button onclick="getJobs()">Get Jobs</button>
-
-<!-- CHAT -->
-<div id="chatBox"></div>
-
-<input type="text" id="msg" placeholder="Ask something...">
+<div class="bottom">
+<input id="msg" placeholder="Ask jobs, salary, role...">
 <button onclick="sendMsg()">Send</button>
-
 </div>
 
 <script>
 
 const API = "https://db-ai-backend.onrender.com";
 
-// Register
-async function registerUser() {
-  const res = await fetch(`${API}/api/auth/register`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      name: "Test User",
-      email: "test@gmail.com",
-      password: "123456"
-    })
-  });
+// UI add message
+function addMsg(text, user){
+  const chat = document.getElementById("chat");
 
-  const data = await res.json();
-  alert(JSON.stringify(data));
+  chat.innerHTML += `
+  <div class="msg ${user ? 'user' : 'bot'}">
+    ${text}
+  </div>`;
+
+  chat.scrollTop = chat.scrollHeight;
 }
 
-// Login
-async function loginUser() {
-  const res = await fetch(`${API}/api/auth/login`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      email: "test@gmail.com",
-      password: "123456"
-    })
-  });
-
-  const data = await res.json();
-  alert(JSON.stringify(data));
-}
-
-// Jobs
-async function getJobs() {
-  const res = await fetch(`${API}/api/jobs`);
-  const data = await res.json();
-
-  addMessage("bot", JSON.stringify(data));
-}
-
-// Chat
-async function sendMsg() {
+// MAIN CHAT
+async function sendMsg(){
   const input = document.getElementById("msg");
-  const message = input.value;
+  const text = input.value.trim();
 
-  if(!message) return;
+  if(!text) return;
 
-  addMessage("user", message);
+  addMsg(text, true);
   input.value = "";
 
-  const res = await fetch(`${API}/api/chat`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ message })
-  });
+  try{
 
-  const data = await res.json();
+    const res = await fetch(`${API}/api/chat`, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ message: text })
+    });
 
-  addMessage("bot", data.reply || "No response");
+    const data = await res.json();
+
+    // JOBS SHOW
+    let jobsHTML = "";
+
+    if(data.jobs && data.jobs.length){
+      jobsHTML += "<br><b>Jobs:</b><br>";
+
+      data.jobs.forEach(j=>{
+        jobsHTML += `
+        🔹 ${j.title} - ${j.location || ""}
+        <br>`;
+      });
+    }
+
+    addMsg((data.reply || "No response") + jobsHTML, false);
+
+  }catch(err){
+    addMsg("Server error ❌", false);
+  }
 }
 
-// UI message add
-function addMessage(type, text){
-  const box = document.getElementById("chatBox");
-
-  const div = document.createElement("div");
-  div.className = `msg ${type}`;
-  div.innerText = (type === "user" ? "You: " : "Bot: ") + text;
-
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
-}
+// ENTER KEY
+document.getElementById("msg").addEventListener("keypress", function(e){
+  if(e.key === "Enter") sendMsg();
+});
 
 </script>
 
