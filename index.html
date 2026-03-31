@@ -7,14 +7,26 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 
-/* BACKGROUND */
+/* BODY */
 body{
-height:100vh;
-display:grid;
-grid-template-columns:260px 1fr;
-background:linear-gradient(135deg,#020617,#0f172a,#020617);
+background:#020617;
 color:#e2e8f0;
+height:100vh;
+display:flex;
+flex-direction:column;
 }
+
+/* HEADER */
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
+border-bottom:1px solid #1e293b;
+}
+
+.logo{font-weight:600}
+.menu{cursor:pointer}
 
 /* SIDEBAR */
 .sidebar{
@@ -23,32 +35,22 @@ left:-260px;
 top:0;
 width:260px;
 height:100%;
-background:rgba(15,23,42,0.7);
-backdrop-filter:blur(20px);
+background:#020617;
 padding:20px;
 transition:0.3s;
 z-index:1001;
+border-right:1px solid #1e293b;
 }
 
 .sidebar.active{left:0}
 
-.menu div{
+.menu-item{
 padding:12px;
 border-radius:10px;
 cursor:pointer;
 margin-bottom:8px;
 }
-.menu div:hover{background:#1e293b}
-
-/* BACK BUTTON */
-.back-btn{
-padding:10px;
-margin-bottom:15px;
-border-radius:10px;
-background:rgba(255,255,255,0.05);
-cursor:pointer;
-}
-.back-btn:hover{background:#22c55e;color:black}
+.menu-item:hover{background:#1e293b}
 
 /* OVERLAY */
 #overlay{
@@ -57,131 +59,115 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.6);
+background:rgba(0,0,0,0.5);
 display:none;
 z-index:1000;
 }
 #overlay.active{display:block}
 
-/* MAIN */
-.main{
-display:flex;
-flex-direction:column;
-width:100%;
-}
-
-/* HEADER */
-.header{
-padding:15px;
-display:flex;
-justify-content:space-between;
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-.online::before{
-content:'';
-width:8px;height:8px;
-background:#22c55e;
-border-radius:50%;
-display:inline-block;
-margin-right:6px;
-animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-0%,100%{opacity:1}
-50%{opacity:0.4}
-}
-
-/* CHAT */
-.chat{
+/* HOME SCREEN */
+.home{
 flex:1;
-overflow-y:auto;
-padding:20px;
 display:flex;
 flex-direction:column;
-gap:12px;
-max-width:700px;
-margin:auto;
-}
-
-/* MESSAGE */
-.message{
-display:flex;
-gap:10px;
-animation:fade 0.3s ease;
-}
-@keyframes fade{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1}
-}
-
-.user{flex-direction:row-reverse}
-
-.avatar{
-width:30px;height:30px;
-border-radius:50%;
-background:#334155;
-display:flex;
-align-items:center;
 justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
 }
 
-.bubble{
-padding:12px;
-border-radius:14px;
-background:#1e293b;
+.title{
+font-size:26px;
+font-weight:600;
+margin-bottom:10px;
 }
-.user .bubble{
-background:linear-gradient(135deg,#22c55e,#16a34a);
+
+.subtitle{
+color:#94a3b8;
+margin-bottom:25px;
 }
 
 /* INPUT */
-.input{
-display:flex;
-gap:8px;
-padding:10px;
+.input-box{
+width:100%;
 max-width:700px;
-margin:auto;
-background:rgba(255,255,255,0.05);
+display:flex;
+gap:10px;
+background:#0f172a;
+padding:10px;
 border-radius:16px;
 }
 
 input{
 flex:1;
-padding:12px;
 border:none;
-border-radius:12px;
-background:#1e293b;
+background:transparent;
 color:white;
+font-size:16px;
+outline:none;
 }
 
 button{
-padding:10px 12px;
+background:#22c55e;
 border:none;
+padding:10px 14px;
 border-radius:10px;
-background:linear-gradient(135deg,#22c55e,#16a34a);
 color:white;
 cursor:pointer;
 }
 
-/* typing */
-.typing span{
-display:inline-block;
-width:6px;height:6px;
-background:#aaa;
-margin:2px;
-border-radius:50%;
-animation:blink 1.2s infinite;
+/* CHAT */
+.chat{
+flex:1;
+display:none;
+flex-direction:column;
+padding:15px;
+overflow-y:auto;
+max-width:800px;
+margin:auto;
+gap:10px;
+padding-bottom:80px;
 }
-@keyframes blink{
-0%,100%{opacity:0}
-50%{opacity:1}
+
+.message{
+display:flex;
+gap:8px;
+}
+
+.user{flex-direction:row-reverse}
+
+.bubble{
+background:#1e293b;
+padding:12px;
+border-radius:12px;
+max-width:75%;
+}
+
+.user .bubble{
+background:#22c55e;
+}
+
+/* BOTTOM INPUT */
+.bottom-input{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#020617;
+padding:10px;
+display:none;
+gap:8px;
+}
+
+.bottom-input input{
+background:#1e293b;
+border-radius:10px;
+padding:10px;
 }
 
 /* MOBILE */
 @media(max-width:768px){
-body{grid-template-columns:1fr}
+.title{font-size:22px}
 }
 </style>
 </head>
@@ -192,41 +178,40 @@ body{grid-template-columns:1fr}
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-
-<div class="back-btn" onclick="closeMenu()">⬅ Back</div>
-
-<div class="menu">
-<div>🏠 Home</div>
-<div>👤 Profile</div>
-<div>⚙️ Settings</div>
+<div class="menu-item" onclick="closeMenu()">⬅ Back</div>
+<div class="menu-item">🏠 Home</div>
+<div class="menu-item">👤 Profile</div>
+<div class="menu-item">⚙️ Settings</div>
 </div>
 
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
+<!-- HEADER -->
 <div class="header">
-<div onclick="openMenu()">☰</div>
-<div>DB Job GPT ✔</div>
-<div class="online">Online</div>
+<div class="menu" onclick="openMenu()">☰</div>
+<div class="logo">DB Job GPT ✔</div>
+<div>● Online</div>
 </div>
 
-<div class="chat" id="chat">
-<div class="message">
-<div class="avatar">🤖</div>
-<div class="bubble">Hi 👋 kaunsi job chahiye?</div>
-</div>
-</div>
+<!-- HOME -->
+<div class="home" id="home">
+<div class="title">Hi 👋 Dharmesh</div>
+<div class="subtitle">Where should we start?</div>
 
-<div class="input">
-<input id="msg" placeholder="Type..." onkeydown="enterSend(event)">
+<div class="input-box">
+<input id="msg" placeholder="Ask about jobs..." onkeydown="enterSend(event)">
 <button onclick="send()">Send</button>
+</div>
+</div>
+
+<!-- CHAT -->
+<div class="chat" id="chat"></div>
+
+<!-- BOTTOM INPUT -->
+<div class="bottom-input" id="bottomInput">
+<input id="msg2" placeholder="Type..." onkeydown="enterSend2(event)">
+<button onclick="send2()">Send</button>
 <button onclick="voice()">🎤</button>
 <button onclick="upload()">📎</button>
 <input type="file" id="fileInput" hidden>
-</div>
-
 </div>
 
 <script>
@@ -242,83 +227,93 @@ document.getElementById("overlay").classList.remove("active");
 }
 
 /* ENTER */
-function enterSend(e){
-if(e.key==="Enter") send();
+function enterSend(e){if(e.key==="Enter") send();}
+function enterSend2(e){if(e.key==="Enter") send2();}
+
+/* FIRST SEND */
+function send(){
+let text=document.getElementById("msg").value;
+if(!text) return;
+
+document.getElementById("home").style.display="none";
+document.getElementById("chat").style.display="flex";
+document.getElementById("bottomInput").style.display="flex";
+
+addMessage(text,true);
+botReply(text);
+
+document.getElementById("msg").value="";
 }
 
-/* CHAT */
-function send(){
+/* CHAT SEND */
+function send2(){
+let text=document.getElementById("msg2").value;
+if(!text) return;
 
-let input=document.getElementById("msg");
+addMessage(text,true);
+botReply(text);
+
+document.getElementById("msg2").value="";
+}
+
+/* ADD MESSAGE */
+function addMessage(text,isUser){
 let chat=document.getElementById("chat");
 
-if(!input.value) return;
-
-let text=input.value;
-
-// USER
 chat.innerHTML+=`
-<div class="message user">
-<div class="avatar">👤</div>
+<div class="message ${isUser?'user':''}">
 <div class="bubble">${text}</div>
 </div>
 `;
 
-// typing
-chat.innerHTML+=`
-<div class="message">
-<div class="avatar">🤖</div>
-<div class="bubble typing"><span></span><span></span><span></span></div>
-</div>
-`;
+chat.scrollTop=chat.scrollHeight;
+}
+
+/* BOT REPLY */
+function botReply(text){
+
+let reply="";
+
+let msg=text.toLowerCase();
+
+if(msg.includes("work from home")){
+reply="Great 👍 Work from home jobs available hain. Kis role me chahiye?";
+}
+else if(msg.includes("job")){
+reply="Nice 🙂 location aur experience batao, best match dunga";
+}
+else if(msg.length<4){
+reply="Thoda detail me batao 🙂";
+}
+else{
+reply="Samajh gaya 👍 thoda aur detail do";
+}
 
 setTimeout(()=>{
-chat.lastElementChild.remove();
+addMessage(reply,false);
+},500);
 
-chat.innerHTML+=`
-<div class="message">
-<div class="avatar">🤖</div>
-<div class="bubble">Got it 👍 ${text} ke liye best jobs dikhata hoon...</div>
-</div>
-`;
-
-chat.scrollTop=chat.scrollHeight;
-
-},800);
-
-input.value="";
 }
 
 /* VOICE */
 function voice(){
-
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-if(!SpeechRecognition){
-alert("Voice not supported");
-return;
-}
-
+if(!SpeechRecognition){alert("Voice not supported");return;}
 let rec=new SpeechRecognition();
 rec.lang="en-IN";
 rec.start();
-
-rec.onresult=function(e){
-document.getElementById("msg").value=e.results[0][0].transcript;
+rec.onresult=e=>{
+document.getElementById("msg2").value=e.results[0][0].transcript;
 };
-
 }
 
 /* UPLOAD */
 function upload(){
 document.getElementById("fileInput").click();
 }
-
 document.getElementById("fileInput").addEventListener("change",function(){
 let file=this.files[0];
-if(file){
-alert("Uploaded: "+file.name);
-}
+if(file) alert("Uploaded: "+file.name);
 });
 
 </script>
