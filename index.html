@@ -12,30 +12,62 @@ body{
 height:100vh;
 display:grid;
 grid-template-columns:260px 1fr;
-background: radial-gradient(circle at top,#0f172a,#020617);
+background:linear-gradient(135deg,#020617,#0f172a,#020617);
 color:#e2e8f0;
 }
 
 /* SIDEBAR */
 .sidebar{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(12px);
+position:fixed;
+left:-260px;
+top:0;
+width:260px;
+height:100%;
+background:rgba(15,23,42,0.7);
+backdrop-filter:blur(20px);
 padding:20px;
-border-right:1px solid rgba(255,255,255,0.1);
 transition:0.3s;
+z-index:1001;
 }
 
-.logo{font-weight:600;margin-bottom:20px}
+.sidebar.active{left:0}
 
 .menu div{
 padding:12px;
 border-radius:10px;
 cursor:pointer;
-transition:0.2s;
+margin-bottom:8px;
 }
-.menu div:hover{
-background:#1e293b;
-transform:translateX(5px);
+.menu div:hover{background:#1e293b}
+
+/* BACK BUTTON */
+.back-btn{
+padding:10px;
+margin-bottom:15px;
+border-radius:10px;
+background:rgba(255,255,255,0.05);
+cursor:pointer;
+}
+.back-btn:hover{background:#22c55e;color:black}
+
+/* OVERLAY */
+#overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:none;
+z-index:1000;
+}
+#overlay.active{display:block}
+
+/* MAIN */
+.main{
+display:flex;
+flex-direction:column;
+width:100%;
 }
 
 /* HEADER */
@@ -46,10 +78,16 @@ justify-content:space-between;
 border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
-.online{
-color:#22c55e;
+.online::before{
+content:'';
+width:8px;height:8px;
+background:#22c55e;
+border-radius:50%;
+display:inline-block;
+margin-right:6px;
 animation:pulse 1.5s infinite;
 }
+
 @keyframes pulse{
 0%,100%{opacity:1}
 50%{opacity:0.4}
@@ -59,10 +97,10 @@ animation:pulse 1.5s infinite;
 .chat{
 flex:1;
 overflow-y:auto;
-padding:30px;
+padding:20px;
 display:flex;
 flex-direction:column;
-gap:14px;
+gap:12px;
 max-width:700px;
 margin:auto;
 }
@@ -78,13 +116,16 @@ from{opacity:0;transform:translateY(10px)}
 to{opacity:1}
 }
 
-.avatar{
-width:30px;height:30px;border-radius:50%;
-background:#334155;
-display:flex;align-items:center;justify-content:center;
-}
-
 .user{flex-direction:row-reverse}
+
+.avatar{
+width:30px;height:30px;
+border-radius:50%;
+background:#334155;
+display:flex;
+align-items:center;
+justify-content:center;
+}
 
 .bubble{
 padding:12px;
@@ -97,15 +138,13 @@ background:linear-gradient(135deg,#22c55e,#16a34a);
 
 /* INPUT */
 .input{
-position:sticky;
-bottom:10px;
 display:flex;
-gap:10px;
+gap:8px;
+padding:10px;
 max-width:700px;
 margin:auto;
-padding:10px;
 background:rgba(255,255,255,0.05);
-border-radius:20px;
+border-radius:16px;
 }
 
 input{
@@ -118,170 +157,169 @@ color:white;
 }
 
 button{
-padding:10px 14px;
+padding:10px 12px;
 border:none;
 border-radius:10px;
-background:#22c55e;
+background:linear-gradient(135deg,#22c55e,#16a34a);
 color:white;
 cursor:pointer;
-transition:0.2s;
-}
-button:active{transform:scale(0.95)}
-
-/* JOB CARD */
-.job{
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:14px;
-margin-top:8px;
-transition:0.3s;
-border:1px solid rgba(255,255,255,0.1);
-}
-.job:hover{
-transform:translateY(-3px);
-box-shadow:0 0 15px rgba(34,197,94,0.3);
 }
 
-.apply{
-margin-top:10px;
+/* typing */
+.typing span{
 display:inline-block;
-padding:8px 12px;
-background:#25D366;
-border-radius:8px;
-text-decoration:none;
-color:white;
+width:6px;height:6px;
+background:#aaa;
+margin:2px;
+border-radius:50%;
+animation:blink 1.2s infinite;
+}
+@keyframes blink{
+0%,100%{opacity:0}
+50%{opacity:1}
 }
 
 /* MOBILE */
 @media(max-width:768px){
 body{grid-template-columns:1fr}
-.sidebar{
-position:fixed;
-left:-100%;
-top:0;
-height:100%;
-width:240px;
-}
-.sidebar.active{left:0}
 }
 </style>
 </head>
 
 <body>
 
+<div id="overlay" onclick="closeMenu()"></div>
+
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<div class="logo">DB Job GPT ✔</div>
+
+<div class="back-btn" onclick="closeMenu()">⬅ Back</div>
+
 <div class="menu">
 <div>🏠 Home</div>
 <div>👤 Profile</div>
 <div>⚙️ Settings</div>
 </div>
+
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
 <div class="header">
-<div onclick="toggleMenu()">☰</div>
+<div onclick="openMenu()">☰</div>
 <div>DB Job GPT ✔</div>
-<div class="online">● Online</div>
+<div class="online">Online</div>
 </div>
 
 <div class="chat" id="chat">
-
 <div class="message">
 <div class="avatar">🤖</div>
-<div class="bubble">Hi 👋 Ask me for jobs</div>
+<div class="bubble">Hi 👋 kaunsi job chahiye?</div>
 </div>
-
 </div>
 
 <div class="input">
-<input id="msg" onkeydown="enterSend(event)">
+<input id="msg" placeholder="Type..." onkeydown="enterSend(event)">
 <button onclick="send()">Send</button>
 <button onclick="voice()">🎤</button>
+<button onclick="upload()">📎</button>
+<input type="file" id="fileInput" hidden>
 </div>
 
 </div>
 
 <script>
 
-// MENU
-function toggleMenu(){
-document.getElementById("sidebar").classList.toggle("active");
+/* MENU */
+function openMenu(){
+document.getElementById("sidebar").classList.add("active");
+document.getElementById("overlay").classList.add("active");
+}
+function closeMenu(){
+document.getElementById("sidebar").classList.remove("active");
+document.getElementById("overlay").classList.remove("active");
 }
 
-// ENTER
+/* ENTER */
 function enterSend(e){
 if(e.key==="Enter") send();
 }
 
-// CHAT
+/* CHAT */
 function send(){
+
 let input=document.getElementById("msg");
 let chat=document.getElementById("chat");
 
 if(!input.value) return;
 
-// user
+let text=input.value;
+
+// USER
 chat.innerHTML+=`
 <div class="message user">
 <div class="avatar">👤</div>
-<div class="bubble">${input.value}</div>
+<div class="bubble">${text}</div>
 </div>
 `;
 
-// fake loading
+// typing
 chat.innerHTML+=`
 <div class="message">
 <div class="avatar">🤖</div>
-<div class="bubble">...</div>
+<div class="bubble typing"><span></span><span></span><span></span></div>
 </div>
 `;
 
 setTimeout(()=>{
-
 chat.lastElementChild.remove();
 
-// job cards
 chat.innerHTML+=`
 <div class="message">
 <div class="avatar">🤖</div>
-<div class="bubble">
-Here are best matches 👇
-
-<div class="job">
-<b>Customer Support</b><br>
-Salary: ₹26k<br>
-Match: 85%<br>
-<a class="apply" href="#">Apply</a>
-</div>
-
-<div class="job">
-<b>Backend Executive</b><br>
-Salary: ₹30k<br>
-Match: 78%<br>
-<a class="apply" href="#">Apply</a>
-</div>
-
-</div>
+<div class="bubble">Got it 👍 ${text} ke liye best jobs dikhata hoon...</div>
 </div>
 `;
 
 chat.scrollTop=chat.scrollHeight;
 
-},1000);
+},800);
 
 input.value="";
 }
 
-// VOICE
+/* VOICE */
 function voice(){
-let rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
-rec.onresult=e=>{
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if(!SpeechRecognition){
+alert("Voice not supported");
+return;
+}
+
+let rec=new SpeechRecognition();
+rec.lang="en-IN";
+rec.start();
+
+rec.onresult=function(e){
 document.getElementById("msg").value=e.results[0][0].transcript;
 };
-rec.start();
+
 }
+
+/* UPLOAD */
+function upload(){
+document.getElementById("fileInput").click();
+}
+
+document.getElementById("fileInput").addEventListener("change",function(){
+let file=this.files[0];
+if(file){
+alert("Uploaded: "+file.name);
+}
+});
 
 </script>
 
