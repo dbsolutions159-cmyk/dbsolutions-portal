@@ -274,7 +274,9 @@ chat.innerHTML += `
 fetch("https://db-backend-hiye.onrender.com/api/chat", {
 method:"POST",
 headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({ message:text })
+body: JSON.stringify({
+  message: text,
+  userId: "user1"
 })
 .then(res=>res.json())
 .then(data=>{
