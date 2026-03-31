@@ -1,14 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DB Job GPT</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
+
+body{
+background: radial-gradient(circle at top, #0f172a, #020617);
+color:#e2e8f0;
+height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+padding:16px 20px;
+border-bottom:1px solid #1e293b;
+}
+
+.status{color:#22c55e;font-size:13px}
+
+.home{
+flex:1;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.title{font-size:32px;font-weight:600}
+.subtitle{color:#94a3b8;margin:10px 0 30px}
+
+.input-box{
+width:100%;
+max-width:650px;
+background:#0f172a;
+border:1px solid #1e293b;
+border-radius:20px;
+padding:12px;
+display:flex;
+gap:10px;
+}
+
+input{
+flex:1;
+background:none;
+border:none;
+color:white;
+font-size:16px;
+outline:none;
+}
+
+button{
+background:#22c55e;
+border:none;
+padding:10px 16px;
+border-radius:12px;
+color:white;
+cursor:pointer;
+}
+
+.chat{
+flex:1;
+display:none;
+padding:20px;
+max-width:850px;
+margin:auto;
+overflow-y:auto;
+}
+
+.message{
+margin-bottom:18px;
+display:flex;
+}
+
+.user{justify-content:flex-end}
+
+.bubble{
+padding:12px 16px;
+border-radius:16px;
+max-width:75%;
+background:#1e293b;
+}
+
+.user .bubble{background:#22c55e}
+
+.typing{color:#94a3b8;font-size:13px}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:#020617;
+padding:10px;
+display:none;
+}
+
+.bottom-box{
+max-width:850px;
+margin:auto;
+display:flex;
+gap:10px;
+}
+
+.bottom input{
+background:#1e293b;
+padding:12px;
+border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<div><b>DB Job GPT</b> ✔</div>
+<div class="status">● Online</div>
+</div>
+
+<div class="home" id="home">
+<div class="title">Hi 👋 Dharmesh</div>
+<div class="subtitle">Ask me anything about jobs</div>
+
+<div class="input-box">
+<input id="msg" placeholder="Search jobs..." onkeydown="enterSend(event)">
+<button onclick="send()">Send</button>
+</div>
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="bottom" id="bottom">
+<div class="bottom-box">
+<input id="msg2" placeholder="Type..." onkeydown="enterSend2(event)">
+<button onclick="send2()">Send</button>
+</div>
+</div>
+
 <script>
 
-function enterSend(e){
-if(e.key==="Enter") send();
-}
+function enterSend(e){ if(e.key==="Enter") send(); }
+function enterSend2(e){ if(e.key==="Enter") send2(); }
 
-function enterSend2(e){
-if(e.key==="Enter") send2();
-}
-
-/* SEND FROM HOME */
 function send(){
 let text = msg.value.trim();
 if(!text) return;
@@ -20,7 +161,6 @@ bot(text);
 msg.value="";
 }
 
-/* SEND FROM CHAT */
 function send2(){
 let text = msg2.value.trim();
 if(!text) return;
@@ -31,14 +171,12 @@ bot(text);
 msg2.value="";
 }
 
-/* START CHAT UI */
 function startChat(){
 home.style.display="none";
 chat.style.display="block";
 bottom.style.display="block";
 }
 
-/* ADD MESSAGE */
 function addMsg(text,user){
 chat.innerHTML += `
 <div class="message ${user?'user':''}">
@@ -47,11 +185,11 @@ chat.innerHTML += `
 chat.scrollTop = chat.scrollHeight;
 }
 
-/* BOT RESPONSE (API CONNECTED) */
+/* 🔥 FINAL BOT FUNCTION (LIVE API CONNECTED) */
 function bot(text){
 
-// typing indicator
 let typingId = "typing-"+Date.now();
+
 chat.innerHTML += `
 <div class="message" id="${typingId}">
 <div class="bubble typing">Typing...</div>
@@ -59,8 +197,7 @@ chat.innerHTML += `
 
 chat.scrollTop = chat.scrollHeight;
 
-// 🔥 API CALL
-fetch("http://localhost:3000/api/chat", {
+fetch("https://db-backend-hiye.onrender.com/api/chat", {
 method: "POST",
 headers: {
 "Content-Type": "application/json"
@@ -70,32 +207,21 @@ body: JSON.stringify({ message: text })
 .then(res => res.json())
 .then(data => {
 
-// remove typing
 document.getElementById(typingId).remove();
 
-// 🤖 AI reply
 addMsg(data.reply,false);
 
-// 💼 Show jobs
+// 🔥 JOBS SHOW
 if(data.jobs && data.jobs.length > 0){
-
 data.jobs.forEach(job => {
-
-addMsg(`
-💼 <b>${job.title}</b><br>
-🏢 ${job.company || "Company"}<br>
-📍 ${job.location || "Location"}<br>
-${job.salary ? "💰 " + job.salary : ""}
-<br><br>
-<a href="${job.link || "#"}" target="_blank" style="color:#22c55e">Apply Now →</a>
-`, false);
-
+addMsg(`💼 ${job.title}
+🏢 ${job.company}
+📍 ${job.location}`, false);
 });
-
 }
 
 })
-.catch(err=>{
+.catch(()=>{
 document.getElementById(typingId).remove();
 addMsg("Server error ❌", false);
 });
@@ -103,3 +229,6 @@ addMsg("Server error ❌", false);
 }
 
 </script>
+
+</body>
+</html>
