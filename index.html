@@ -1,32 +1,70 @@
+<script>
+
+function send(){
+  let text = document.getElementById("msg").value.trim();
+
+  if(!text){
+    alert("Enter message");
+    return;
+  }
+
+  addMsg(text, true);
+  bot(text);
+
+  document.getElementById("msg").value = "";
+}
+
+function addMsg(text, user){
+  const chat = document.getElementById("chat");
+
+  chat.innerHTML += `
+    <div style="margin:10px; text-align:${user?'right':'left'}">
+      <span style="background:${user?'#22c55e':'#1e293b'};
+      padding:10px 15px; border-radius:10px; display:inline-block;">
+        ${text}
+      </span>
+    </div>
+  `;
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
 function bot(text){
 
-let id="typing"+Date.now();
+  const chat = document.getElementById("chat");
 
-chat.innerHTML += `
-<div class="message" id="${id}">
-<div class="bubble">Typing...</div>
-</div>`;
+  let id = "typing" + Date.now();
 
-fetch("http://localhost:3000/api/chat", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    message: text
+  chat.innerHTML += `
+    <div id="${id}" style="margin:10px;">
+      <span style="background:#1e293b; padding:10px 15px; border-radius:10px;">
+        Typing...
+      </span>
+    </div>
+  `;
+
+  fetch("http://localhost:3000/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: text
+    })
   })
-})
-.then(res => res.json())
-.then(data => {
+  .then(res => res.json())
+  .then(data => {
 
-  document.getElementById(id).remove();
+    document.getElementById(id).remove();
 
-  addMsg(data.reply, false);
+    addMsg(data.reply, false);
 
-})
-.catch(err => {
-  console.log(err);
-  document.getElementById(id).remove();
-  addMsg("❌ Server error", false);
-});
+  })
+  .catch(err => {
+    console.log(err);
+    document.getElementById(id).remove();
+    addMsg("❌ Server error", false);
+  });
 }
+
+</script>
