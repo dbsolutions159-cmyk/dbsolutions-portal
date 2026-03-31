@@ -5,53 +5,53 @@
 <title>DB Job GPT</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Segoe UI}
 
 body{
-background:#0f172a;
-color:white;
+background:#0b1220;
+color:#e2e8f0;
 display:flex;
 height:100vh;
+overflow:hidden;
 }
 
 /* SIDEBAR */
 .sidebar{
-width:230px;
+width:240px;
 background:#020617;
 padding:20px;
 display:flex;
 flex-direction:column;
 border-right:1px solid #1e293b;
+transition:0.3s;
+}
+
+.logo{
+font-size:18px;
+font-weight:600;
 }
 
 .menu{
 margin-top:20px;
 display:flex;
 flex-direction:column;
-gap:10px;
+gap:8px;
 }
 
 .menu div{
-padding:10px;
+padding:12px;
 border-radius:10px;
 cursor:pointer;
-transition:0.2s;
 }
 
-.menu div:hover{
-background:#1e293b;
-}
+.menu div:hover{background:#1e293b}
 
-.active{
-background:#22c55e;
-color:black;
-}
+.active{background:#22c55e;color:black}
 
-/* BRAND */
 .brand{
 margin-top:auto;
-font-size:12px;
-color:#94a3b8;
+font-size:11px;
+color:#64748b;
 }
 
 /* MAIN */
@@ -63,12 +63,14 @@ flex-direction:column;
 
 /* HEADER */
 .header{
-padding:15px;
+padding:14px;
 border-bottom:1px solid #1e293b;
 display:flex;
 justify-content:space-between;
 align-items:center;
 }
+
+.menu-btn{display:none;cursor:pointer}
 
 /* CHAT */
 .chat{
@@ -80,20 +82,19 @@ flex-direction:column;
 gap:12px;
 }
 
-/* MESSAGES */
 .bot{
 background:#1e293b;
-padding:12px 16px;
+padding:14px;
 border-radius:14px;
-max-width:70%;
+max-width:65%;
 }
 
 .user{
 background:linear-gradient(135deg,#22c55e,#16a34a);
-padding:12px 16px;
+padding:14px;
 border-radius:14px;
 align-self:flex-end;
-max-width:70%;
+max-width:65%;
 }
 
 /* INPUT */
@@ -102,11 +103,12 @@ display:flex;
 padding:15px;
 border-top:1px solid #1e293b;
 gap:10px;
+background:#020617;
 }
 
 input{
 flex:1;
-padding:12px;
+padding:14px;
 border:none;
 border-radius:12px;
 background:#1e293b;
@@ -114,7 +116,7 @@ color:white;
 }
 
 button{
-padding:12px 18px;
+padding:12px;
 border:none;
 border-radius:12px;
 background:#22c55e;
@@ -123,31 +125,42 @@ cursor:pointer;
 }
 
 /* PAGES */
-.page{
-display:none;
-padding:20px;
-}
+.page{display:none}
+.activePage{display:block}
 
-.activePage{
-display:block;
-}
-
-/* CARD */
 .card{
 background:#1e293b;
 padding:15px;
 border-radius:12px;
 margin-bottom:10px;
 }
-</style>
 
+/* MOBILE */
+@media(max-width:768px){
+.sidebar{
+position:fixed;
+left:-100%;
+top:0;
+height:100%;
+z-index:1000;
+}
+.sidebar.active{left:0}
+.menu-btn{display:block}
+
+.input{
+position:fixed;
+bottom:0;
+width:100%;
+}
+}
+</style>
 </head>
 
 <body>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-<h3>DB Job GPT <span style="color:#3b82f6;">✔</span></h3>
+<div class="logo">DB Job GPT ✔</div>
 
 <div class="menu">
 <div class="active" onclick="showPage('chat')">🏠 Home</div>
@@ -164,38 +177,38 @@ DB Job GPT by DB Solutions Manpower Outsourcing & Placement Agency
 <!-- MAIN -->
 <div class="main">
 
-<!-- HEADER -->
 <div class="header">
-<div>DB Job GPT <span style="color:#3b82f6;">✔</span></div>
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+<div>DB Job GPT ✔</div>
 <div>● AI Online</div>
 </div>
 
 <!-- CHAT -->
 <div id="chat" class="chat page activePage">
-<div class="bot">👋 Welcome to DB Job GPT. How can I help you today?</div>
+<div class="bot">👋 Hi, how can I help you today?</div>
 </div>
 
 <!-- PROFILE -->
 <div id="profile" class="page">
-<h2>👤 Profile</h2>
+<h2>Profile</h2>
 
 <div class="card">
-<input placeholder="Name"><br><br>
-<input placeholder="Phone"><br><br>
+<input placeholder="Full Name"><br><br>
+<input placeholder="Phone Number"><br><br>
 <input placeholder="Email"><br><br>
-<input placeholder="Experience"><br><br>
+<input placeholder="Experience (years)"><br><br>
 <input placeholder="Skills"><br><br>
+<input placeholder="Preferred Role"><br><br>
+<input placeholder="Preferred Location"><br><br>
 <button>Save Profile</button>
 </div>
 
-<div class="card">
-<b>Profile Strength: 70%</b>
-</div>
+<div class="card">Profile Strength: 75%</div>
 </div>
 
 <!-- SETTINGS -->
 <div id="settings" class="page">
-<h2>⚙️ Settings</h2>
+<h2>Settings</h2>
 
 <div class="card">
 Preferred Location<br><br>
@@ -204,7 +217,7 @@ Preferred Location<br><br>
 
 <div class="card">
 Job Type<br><br>
-<input placeholder="Full Time">
+<input placeholder="Full Time / Remote">
 </div>
 
 <div class="card">
@@ -213,21 +226,19 @@ Notifications<br><br>
 </div>
 </div>
 
-<!-- SUBSCRIPTION -->
+<!-- SUB -->
 <div id="subscription" class="page">
-<h2>💳 Subscription</h2>
+<h2>Subscription</h2>
 
 <div class="card">
-<b>FREE PLAN</b><br><br>
-✔ Basic Jobs<br>
-✔ Chat Access
+FREE PLAN<br><br>
+✔ Basic jobs
 </div>
 
 <div class="card">
-<b>PRO PLAN ₹199/month</b><br><br>
-✔ Premium Jobs<br>
-✔ Priority Matching<br>
-✔ Faster Hiring<br><br>
+PRO ₹199/month<br><br>
+✔ Premium jobs<br>
+✔ Faster hiring<br><br>
 <button>Upgrade</button>
 </div>
 </div>
@@ -236,46 +247,85 @@ Notifications<br><br>
 
 <!-- INPUT -->
 <div class="input">
-<input id="msg" placeholder="Type your message...">
+<input id="msg" placeholder="Type message..." onkeydown="enterSend(event)">
 <button onclick="send()">Send</button>
+<button onclick="startVoice()">🎤</button>
 </div>
 
 <script>
+
+// SIDEBAR
+function toggleMenu(){
+document.querySelector(".sidebar").classList.toggle("active");
+}
 
 // PAGE SWITCH
 function showPage(page){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("activePage"));
 document.getElementById(page).classList.add("activePage");
-
-document.querySelectorAll(".menu div").forEach(m=>m.classList.remove("active"));
-event.target.classList.add("active");
+document.querySelector(".sidebar").classList.remove("active");
 }
 
-// CHAT
+// ENTER KEY
+function enterSend(e){
+if(e.key==="Enter") send();
+}
+
+// CHAT FUNCTION
 function send(){
 let input=document.getElementById("msg");
 let chat=document.getElementById("chat");
 
 if(!input.value) return;
 
-// user
+let text=input.value.toLowerCase();
+
+// USER MSG
 let u=document.createElement("div");
 u.className="user";
 u.innerText=input.value;
 chat.appendChild(u);
 
-// bot typing
+// BOT MSG
 let b=document.createElement("div");
 b.className="bot";
 b.innerText="Typing...";
 chat.appendChild(b);
 
+// 🔥 INTELLIGENCE
 setTimeout(()=>{
+
+if(
+text.includes("who invented you") ||
+text.includes("who created you") ||
+text.includes("tumhe kisne banaya") ||
+text.includes("kisne banaya") ||
+text.includes("creator") ||
+text.includes("founder")
+){
+b.innerText="I was developed by Dharmesh Band, founder of DB Solutions Manpower Outsourcing & Placement Agency.";
+}
+else{
 b.innerText="Got it 👍 Tell me your role, location and experience.";
+}
+
 chat.scrollTop=chat.scrollHeight;
-},800);
+
+},600);
 
 input.value="";
+}
+
+// 🎤 VOICE
+function startVoice(){
+const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang="en-IN";
+
+recognition.onresult=function(e){
+document.getElementById("msg").value=e.results[0][0].transcript;
+};
+
+recognition.start();
 }
 
 </script>
