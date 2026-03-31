@@ -2,161 +2,174 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DB Job GPT</title>
+<title>DB AI</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 
+/* BODY */
 body{
 background:#020617;
 color:white;
+display:flex;
 height:100vh;
-display:flex;
-flex-direction:column;
 overflow:hidden;
-}
-
-/* HEADER */
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px 16px;
-border-bottom:1px solid #1e293b;
-}
-
-.header span{
-cursor:pointer;
 }
 
 /* SIDEBAR */
 .sidebar{
-position:fixed;
-left:-260px;
-top:0;
 width:260px;
-height:100%;
-background:#0f172a;
-padding:20px;
+background:#020617;
+border-right:1px solid #1e293b;
+padding:10px;
+display:flex;
+flex-direction:column;
 transition:0.3s;
-z-index:100;
 }
 
-.sidebar.active{
-left:0;
+.sidebar.hidden{
+width:0;
+padding:0;
+overflow:hidden;
 }
 
-.sidebar div{
+.logo{
+font-weight:600;
 padding:12px;
+}
+
+.new-chat{
+background:#1e293b;
+padding:10px;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:10px;
+text-align:center;
+}
+
+.history{
+flex:1;
+overflow:auto;
+}
+
+.history div{
+padding:10px;
 border-radius:8px;
 cursor:pointer;
 color:#94a3b8;
 }
 
-.sidebar div:hover{
+.history div:hover{
 background:#1e293b;
 color:white;
 }
 
-/* HOME */
-.home{
+/* MAIN */
+.main{
 flex:1;
 display:flex;
 flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
 }
 
-.title{font-size:26px;margin-bottom:10px}
-.subtitle{color:#94a3b8;margin-bottom:20px}
-
-/* SUGGESTIONS */
-.suggestions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-justify-content:center;
-margin-bottom:20px;
-}
-
-.suggestions button{
-background:#1e293b;
-border:none;
-padding:8px 12px;
-border-radius:20px;
-color:white;
-cursor:pointer;
-}
-
-/* INPUT */
-.input-box{
-width:100%;
-max-width:600px;
-display:flex;
-gap:10px;
-}
-
-input{
-flex:1;
+/* HEADER */
+.header{
 padding:12px;
-border-radius:10px;
-border:none;
-background:#1e293b;
-color:white;
+border-bottom:1px solid #1e293b;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.menu-btn{
+cursor:pointer;
 }
 
 /* CHAT */
 .chat{
 flex:1;
-display:none;
-padding:20px;
 overflow-y:auto;
-}
-
-.message{
-margin-bottom:15px;
+padding:20px;
 display:flex;
+flex-direction:column;
+gap:20px;
 }
 
-.user{justify-content:flex-end}
+/* MESSAGE */
+.msg{
+display:flex;
+gap:10px;
+max-width:800px;
+}
+
+.msg.user{
+align-self:flex-end;
+flex-direction:row-reverse;
+}
+
+.avatar{
+width:30px;
+height:30px;
+border-radius:50%;
+background:#1e293b;
+display:flex;
+align-items:center;
+justify-content:center;
+}
 
 .bubble{
-padding:12px 16px;
+padding:12px 14px;
 border-radius:16px;
-max-width:75%;
 background:#1e293b;
 }
 
 .user .bubble{
-background:#22c55e;
+background:#2563eb;
 }
 
-/* JOB CARD */
-.job{
-background:#020617;
-border:1px solid #1e293b;
+/* INPUT */
+.input-box{
 padding:12px;
-border-radius:12px;
-margin-top:8px;
+border-top:1px solid #1e293b;
 }
 
-.job a{
-display:inline-block;
-margin-top:8px;
-background:#22c55e;
-padding:6px 10px;
-border-radius:8px;
+.input-inner{
+display:flex;
+background:#1e293b;
+border-radius:20px;
+padding:6px;
+}
+
+input{
+flex:1;
+background:none;
+border:none;
 color:white;
-text-decoration:none;
+padding:10px;
+outline:none;
+}
+
+button{
+background:#2563eb;
+border:none;
+color:white;
+padding:10px 14px;
+border-radius:14px;
+cursor:pointer;
 }
 
 /* MOBILE */
 @media(max-width:768px){
-.title{font-size:22px}
+.sidebar{
+position:absolute;
+z-index:100;
+height:100%;
+left:-260px;
+}
+.sidebar.active{
+left:0;
+}
 }
 </style>
 </head>
@@ -165,109 +178,96 @@ text-decoration:none;
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<div onclick="navigate('home')">🏠 Home</div>
-<div onclick="navigate('chat')">💬 Chat</div>
-<div onclick="navigate('profile')">👤 Profile</div>
-<div onclick="navigate('settings')">⚙ Settings</div>
+<div class="logo">DB AI</div>
+
+<div class="new-chat" onclick="newChat()">+ New Chat</div>
+
+<div class="history" id="history"></div>
 </div>
 
-<!-- HEADER -->
+<!-- MAIN -->
+<div class="main">
+
 <div class="header">
-<span onclick="goBack()">←</span>
-<span>DB Job GPT</span>
-<span onclick="toggleMenu()">☰</span>
+<div class="menu-btn" onclick="toggleSidebar()">☰</div>
+<div>DB AI • GPT</div>
+<div>⚡</div>
 </div>
 
-<!-- HOME -->
-<div class="home" id="home">
-<div class="title">Hi 👋 Dharmesh</div>
-<div class="subtitle">Find jobs instantly</div>
-
-<div class="suggestions">
-<button onclick="sendQuick('job in bhopal')">Bhopal Jobs</button>
-<button onclick="sendQuick('remote jobs')">Remote</button>
-<button onclick="sendQuick('customer support')">Support</button>
-</div>
+<div class="chat" id="chat"></div>
 
 <div class="input-box">
-<input id="msg" placeholder="Search jobs..." onkeydown="enterSend(event)">
-<button onclick="send()">Send</button>
+<div class="input-inner">
+<input id="msg" placeholder="Message DB AI..." onkeydown="enterSend(event)">
+<button onclick="send()">➤</button>
 </div>
 </div>
 
-<!-- CHAT -->
-<div class="chat" id="chat"></div>
+</div>
 
 <script>
 
-// NAVIGATION
-let currentPage = "home";
-let historyStack = [];
+// STATE
+let chats = JSON.parse(localStorage.getItem("chats")||"[]");
+let currentChat = [];
 
-function navigate(page){
-document.getElementById("sidebar").classList.remove("active");
-historyStack.push(currentPage);
-currentPage = page;
-renderPage();
+// SIDEBAR
+function toggleSidebar(){
+sidebar.classList.toggle("active");
 }
 
-function goBack(){
-if(historyStack.length === 0) return;
-currentPage = historyStack.pop();
-renderPage();
+// HISTORY RENDER
+function renderHistory(){
+history.innerHTML="";
+chats.forEach((c,i)=>{
+let div=document.createElement("div");
+div.innerText=c[0]?.text || "New Chat";
+div.onclick=()=>loadChat(i);
+history.appendChild(div);
+});
 }
 
-function renderPage(){
-home.style.display="none";
-chat.style.display="none";
-
-if(currentPage==="home") home.style.display="flex";
-if(currentPage==="chat") chat.style.display="block";
+// LOAD CHAT
+function loadChat(i){
+currentChat = chats[i];
+chat.innerHTML="";
+currentChat.forEach(m=>addMsg(m.text,m.user,false));
 }
 
-// MENU
-function toggleMenu(){
-document.getElementById("sidebar").classList.toggle("active");
+// NEW CHAT
+function newChat(){
+currentChat=[];
+chat.innerHTML="";
 }
 
-// INPUT
-function enterSend(e){
-if(e.key==="Enter") send();
+// ADD MESSAGE
+function addMsg(text,user,save=true){
+chat.innerHTML += `
+<div class="msg ${user?'user':''}">
+<div class="avatar">${user?'U':'AI'}</div>
+<div class="bubble">${text}</div>
+</div>`;
+
+chat.scrollTop = chat.scrollHeight;
+
+if(save){
+currentChat.push({text,user});
+}
 }
 
+// SEND
 function send(){
 let text = msg.value.trim();
 if(!text) return;
 
-navigate("chat");
 addMsg(text,true);
-bot(text);
-
 msg.value="";
-}
-
-function sendQuick(text){
-navigate("chat");
-addMsg(text,true);
-bot(text);
-}
-
-// ADD MESSAGE
-function addMsg(text,user){
-chat.innerHTML += `
-<div class="message ${user?'user':''}">
-<div class="bubble">${text}</div>
-</div>`;
-chat.scrollTop = chat.scrollHeight;
-}
-
-// BOT
-function bot(text){
 
 let id="typing"+Date.now();
 
 chat.innerHTML += `
-<div class="message" id="${id}">
+<div class="msg" id="${id}">
+<div class="avatar">AI</div>
 <div class="bubble">Typing...</div>
 </div>`;
 
@@ -278,31 +278,33 @@ body:JSON.stringify({ message:text })
 })
 .then(res=>res.json())
 .then(data=>{
-
 document.getElementById(id).remove();
-
 addMsg(data.reply,false);
 
-// JOB CARDS
-if(data.jobs){
-data.jobs.forEach(job=>{
-chat.innerHTML += `
-<div class="job">
-<b>${job.title}</b><br>
-${job.company || ""}<br>
-${job.location || ""}<br>
-<a href="${job.link || "#"}" target="_blank">Apply 🚀</a>
-</div>`;
-});
-}
-
+saveChat();
 })
 .catch(()=>{
 document.getElementById(id).remove();
 addMsg("Server error ❌",false);
 });
-
 }
+
+// SAVE CHAT
+function saveChat(){
+if(currentChat.length){
+chats.push(currentChat);
+localStorage.setItem("chats",JSON.stringify(chats));
+renderHistory();
+}
+}
+
+// ENTER
+function enterSend(e){
+if(e.key==="Enter") send();
+}
+
+// INIT
+renderHistory();
 
 </script>
 
