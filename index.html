@@ -94,6 +94,11 @@ cursor:pointer;
 const API = "https://db-ai-backend.onrender.com";
 
 // UI add message
+<script>
+
+const API = "https://db-ai-backend.onrender.com";
+
+// UI add message
 function addMsg(text, user){
   const chat = document.getElementById("chat");
 
@@ -105,8 +110,9 @@ function addMsg(text, user){
   chat.scrollTop = chat.scrollHeight;
 }
 
-// MAIN CHAT
+// SEND MESSAGE (REAL AI)
 async function sendMsg(){
+
   const input = document.getElementById("msg");
   const text = input.value.trim();
 
@@ -119,38 +125,30 @@ async function sendMsg(){
 
     const res = await fetch(`${API}/api/chat`, {
       method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ message: text })
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        message: text,
+        userId: "user123"
+      })
     });
 
     const data = await res.json();
 
-    // JOBS SHOW
-    let jobsHTML = "";
+    console.log("AI:", data);
 
-    if(data.jobs && data.jobs.length){
-      jobsHTML += "<br><b>Jobs:</b><br>";
-
-      data.jobs.forEach(j=>{
-        jobsHTML += `
-        🔹 ${j.title} - ${j.location || ""}
-        <br>`;
-      });
-    }
-
-    addMsg((data.reply || "No response") + jobsHTML, false);
+    addMsg(data.reply || "No response ❌", false);
 
   }catch(err){
+    console.log(err);
     addMsg("Server error ❌", false);
   }
 }
 
-// ENTER KEY
+// ENTER KEY SUPPORT
 document.getElementById("msg").addEventListener("keypress", function(e){
   if(e.key === "Enter") sendMsg();
 });
 
 </script>
-
-</body>
-</html>
