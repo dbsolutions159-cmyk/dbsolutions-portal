@@ -2,14 +2,15 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>DB Job GPT</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 
-/* BODY */
+/* BACKGROUND */
 body{
-background:#020617;
+background: radial-gradient(circle at top, #0f172a, #020617);
 color:#e2e8f0;
 height:100vh;
 display:flex;
@@ -20,52 +21,13 @@ flex-direction:column;
 .header{
 display:flex;
 justify-content:space-between;
-align-items:center;
-padding:14px 18px;
+padding:16px 20px;
 border-bottom:1px solid #1e293b;
 }
 
 .logo{font-weight:600}
-.menu{cursor:pointer}
 
-/* SIDEBAR */
-.sidebar{
-position:fixed;
-left:-260px;
-top:0;
-width:260px;
-height:100%;
-background:#020617;
-padding:20px;
-transition:0.3s;
-z-index:1001;
-border-right:1px solid #1e293b;
-}
-
-.sidebar.active{left:0}
-
-.menu-item{
-padding:12px;
-border-radius:10px;
-cursor:pointer;
-margin-bottom:8px;
-}
-.menu-item:hover{background:#1e293b}
-
-/* OVERLAY */
-#overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.5);
-display:none;
-z-index:1000;
-}
-#overlay.active{display:block}
-
-/* HOME SCREEN */
+/* CENTER HOME */
 .home{
 flex:1;
 display:flex;
@@ -77,31 +39,34 @@ padding:20px;
 }
 
 .title{
-font-size:26px;
+font-size:30px;
 font-weight:600;
 margin-bottom:10px;
 }
 
 .subtitle{
 color:#94a3b8;
-margin-bottom:25px;
+margin-bottom:30px;
 }
 
 /* INPUT */
 .input-box{
 width:100%;
-max-width:700px;
-display:flex;
-gap:10px;
+max-width:650px;
 background:#0f172a;
-padding:10px;
-border-radius:16px;
+border:1px solid #1e293b;
+border-radius:20px;
+padding:12px;
+display:flex;
+align-items:center;
+gap:10px;
+box-shadow:0 0 40px rgba(34,197,94,0.1);
 }
 
 input{
 flex:1;
+background:none;
 border:none;
-background:transparent;
 color:white;
 font-size:16px;
 outline:none;
@@ -111,7 +76,7 @@ button{
 background:#22c55e;
 border:none;
 padding:10px 14px;
-border-radius:10px;
+border-radius:12px;
 color:white;
 cursor:pointer;
 }
@@ -120,27 +85,26 @@ cursor:pointer;
 .chat{
 flex:1;
 display:none;
-flex-direction:column;
-padding:15px;
-overflow-y:auto;
+padding:20px;
 max-width:800px;
 margin:auto;
-gap:10px;
-padding-bottom:80px;
+overflow-y:auto;
 }
 
 .message{
+margin-bottom:15px;
 display:flex;
-gap:8px;
 }
 
-.user{flex-direction:row-reverse}
+.user{
+justify-content:flex-end;
+}
 
 .bubble{
+padding:12px 14px;
+border-radius:14px;
+max-width:70%;
 background:#1e293b;
-padding:12px;
-border-radius:12px;
-max-width:75%;
 }
 
 .user .bubble{
@@ -148,21 +112,26 @@ background:#22c55e;
 }
 
 /* BOTTOM INPUT */
-.bottom-input{
+.bottom{
 position:fixed;
 bottom:0;
-left:0;
 width:100%;
 background:#020617;
 padding:10px;
 display:none;
-gap:8px;
 }
 
-.bottom-input input{
+.bottom-box{
+max-width:800px;
+margin:auto;
+display:flex;
+gap:10px;
+}
+
+.bottom input{
 background:#1e293b;
-border-radius:10px;
 padding:10px;
+border-radius:10px;
 }
 
 /* MOBILE */
@@ -174,25 +143,14 @@ padding:10px;
 
 <body>
 
-<div id="overlay" onclick="closeMenu()"></div>
-
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-<div class="menu-item" onclick="closeMenu()">⬅ Back</div>
-<div class="menu-item">🏠 Home</div>
-<div class="menu-item">👤 Profile</div>
-<div class="menu-item">⚙️ Settings</div>
-</div>
-
-<!-- HEADER -->
 <div class="header">
-<div class="menu" onclick="openMenu()">☰</div>
-<div class="logo">DB Job GPT ✔</div>
+<div>DB Job GPT ✔</div>
 <div>● Online</div>
 </div>
 
 <!-- HOME -->
 <div class="home" id="home">
+
 <div class="title">Hi 👋 Dharmesh</div>
 <div class="subtitle">Where should we start?</div>
 
@@ -200,121 +158,68 @@ padding:10px;
 <input id="msg" placeholder="Ask about jobs..." onkeydown="enterSend(event)">
 <button onclick="send()">Send</button>
 </div>
+
 </div>
 
 <!-- CHAT -->
 <div class="chat" id="chat"></div>
 
-<!-- BOTTOM INPUT -->
-<div class="bottom-input" id="bottomInput">
+<!-- BOTTOM -->
+<div class="bottom" id="bottom">
+<div class="bottom-box">
 <input id="msg2" placeholder="Type..." onkeydown="enterSend2(event)">
 <button onclick="send2()">Send</button>
-<button onclick="voice()">🎤</button>
-<button onclick="upload()">📎</button>
-<input type="file" id="fileInput" hidden>
+</div>
 </div>
 
 <script>
 
-/* MENU */
-function openMenu(){
-document.getElementById("sidebar").classList.add("active");
-document.getElementById("overlay").classList.add("active");
-}
-function closeMenu(){
-document.getElementById("sidebar").classList.remove("active");
-document.getElementById("overlay").classList.remove("active");
+function enterSend(e){
+if(e.key==="Enter") send();
 }
 
-/* ENTER */
-function enterSend(e){if(e.key==="Enter") send();}
-function enterSend2(e){if(e.key==="Enter") send2();}
+function enterSend2(e){
+if(e.key==="Enter") send2();
+}
 
-/* FIRST SEND */
 function send(){
-let text=document.getElementById("msg").value;
+let text=msg.value;
 if(!text) return;
 
-document.getElementById("home").style.display="none";
-document.getElementById("chat").style.display="flex";
-document.getElementById("bottomInput").style.display="flex";
+home.style.display="none";
+chat.style.display="block";
+bottom.style.display="block";
 
-addMessage(text,true);
-botReply(text);
+addMsg(text,true);
+bot(text);
 
-document.getElementById("msg").value="";
+msg.value="";
 }
 
-/* CHAT SEND */
 function send2(){
-let text=document.getElementById("msg2").value;
+let text=msg2.value;
 if(!text) return;
 
-addMessage(text,true);
-botReply(text);
+addMsg(text,true);
+bot(text);
 
-document.getElementById("msg2").value="";
+msg2.value="";
 }
 
-/* ADD MESSAGE */
-function addMessage(text,isUser){
-let chat=document.getElementById("chat");
-
+function addMsg(text,user){
 chat.innerHTML+=`
-<div class="message ${isUser?'user':''}">
+<div class="message ${user?'user':''}">
 <div class="bubble">${text}</div>
 </div>
 `;
-
 chat.scrollTop=chat.scrollHeight;
 }
 
-/* BOT REPLY */
-function botReply(text){
-
-let reply="";
-
-let msg=text.toLowerCase();
-
-if(msg.includes("work from home")){
-reply="Great 👍 Work from home jobs available hain. Kis role me chahiye?";
-}
-else if(msg.includes("job")){
-reply="Nice 🙂 location aur experience batao, best match dunga";
-}
-else if(msg.length<4){
-reply="Thoda detail me batao 🙂";
-}
-else{
-reply="Samajh gaya 👍 thoda aur detail do";
-}
-
+function bot(text){
 setTimeout(()=>{
-addMessage(reply,false);
+addMsg("Nice 👍 thoda aur detail do (role, location, experience)",false);
 },500);
-
 }
-
-/* VOICE */
-function voice(){
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if(!SpeechRecognition){alert("Voice not supported");return;}
-let rec=new SpeechRecognition();
-rec.lang="en-IN";
-rec.start();
-rec.onresult=e=>{
-document.getElementById("msg2").value=e.results[0][0].transcript;
-};
-}
-
-/* UPLOAD */
-function upload(){
-document.getElementById("fileInput").click();
-}
-document.getElementById("fileInput").addEventListener("change",function(){
-let file=this.files[0];
-if(file) alert("Uploaded: "+file.name);
-});
 
 </script>
 
