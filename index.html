@@ -5,54 +5,38 @@
 <title>DB Job GPT</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Segoe UI}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 
 body{
-background:#0b1220;
-color:#e2e8f0;
 display:flex;
 height:100vh;
+background:#0b1220;
+color:#e2e8f0;
 overflow:hidden;
 }
 
 /* SIDEBAR */
 .sidebar{
-width:240px;
+width:260px;
 background:#020617;
 padding:20px;
 display:flex;
 flex-direction:column;
-border-right:1px solid #1e293b;
 transition:0.3s;
+border-right:1px solid #1e293b;
 }
 
-.logo{
-font-size:18px;
-font-weight:600;
-}
+.sidebar.active{left:0}
 
-.menu{
-margin-top:20px;
-display:flex;
-flex-direction:column;
-gap:8px;
-}
+.logo{font-weight:600;margin-bottom:20px}
 
 .menu div{
 padding:12px;
 border-radius:10px;
 cursor:pointer;
+margin-bottom:6px;
 }
-
 .menu div:hover{background:#1e293b}
-
-.active{background:#22c55e;color:black}
-
-.brand{
-margin-top:auto;
-font-size:11px;
-color:#64748b;
-}
 
 /* MAIN */
 .main{
@@ -63,14 +47,12 @@ flex-direction:column;
 
 /* HEADER */
 .header{
-padding:14px;
-border-bottom:1px solid #1e293b;
 display:flex;
 justify-content:space-between;
+padding:15px;
+border-bottom:1px solid #1e293b;
 align-items:center;
 }
-
-.menu-btn{display:none;cursor:pointer}
 
 /* CHAT */
 .chat{
@@ -82,58 +64,54 @@ flex-direction:column;
 gap:12px;
 }
 
-.bot{
-background:#1e293b;
+.bot,.user{
 padding:14px;
 border-radius:14px;
-max-width:65%;
+max-width:70%;
+animation:fadeIn 0.3s ease;
 }
 
+.bot{background:#1e293b}
 .user{
 background:linear-gradient(135deg,#22c55e,#16a34a);
-padding:14px;
-border-radius:14px;
 align-self:flex-end;
-max-width:65%;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}
 }
 
 /* INPUT */
 .input{
 display:flex;
 padding:15px;
-border-top:1px solid #1e293b;
 gap:10px;
+border-top:1px solid #1e293b;
 background:#020617;
 }
 
 input{
 flex:1;
 padding:14px;
+background:#1e293b;
 border:none;
 border-radius:12px;
-background:#1e293b;
 color:white;
 }
 
 button{
 padding:12px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#22c55e;
 color:white;
 cursor:pointer;
 }
 
-/* PAGES */
+/* PAGE */
 .page{display:none}
 .activePage{display:block}
-
-.card{
-background:#1e293b;
-padding:15px;
-border-radius:12px;
-margin-bottom:10px;
-}
 
 /* MOBILE */
 @media(max-width:768px){
@@ -145,13 +123,6 @@ height:100%;
 z-index:1000;
 }
 .sidebar.active{left:0}
-.menu-btn{display:block}
-
-.input{
-position:fixed;
-bottom:0;
-width:100%;
-}
 }
 </style>
 </head>
@@ -159,18 +130,17 @@ width:100%;
 <body>
 
 <!-- SIDEBAR -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
 <div class="logo">DB Job GPT ✔</div>
 
 <div class="menu">
-<div class="active" onclick="showPage('chat')">🏠 Home</div>
-<div onclick="showPage('profile')">👤 Profile</div>
-<div onclick="showPage('settings')">⚙️ Settings</div>
-<div onclick="showPage('subscription')">💳 Subscription</div>
+<div onclick="goHome()">🏠 Home</div>
+<div onclick="openPage('profile')">👤 Profile</div>
+<div onclick="openPage('settings')">⚙️ Settings</div>
 </div>
 
-<div class="brand">
-DB Job GPT by DB Solutions Manpower Outsourcing & Placement Agency
+<div style="margin-top:auto;font-size:11px;color:#64748b;">
+DB Solutions
 </div>
 </div>
 
@@ -178,154 +148,125 @@ DB Job GPT by DB Solutions Manpower Outsourcing & Placement Agency
 <div class="main">
 
 <div class="header">
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
+<div onclick="toggleMenu()">☰</div>
 <div>DB Job GPT ✔</div>
 <div>● AI Online</div>
 </div>
 
 <!-- CHAT -->
-<div id="chat" class="chat page activePage">
-<div class="bot">👋 Hi, how can I help you today?</div>
-</div>
+<div id="chat" class="chat page activePage"></div>
 
 <!-- PROFILE -->
 <div id="profile" class="page">
-<h2>Profile</h2>
+<div onclick="goHome()">← Back</div><br>
 
-<div class="card">
 <input placeholder="Full Name"><br><br>
-<input placeholder="Phone Number"><br><br>
+<input placeholder="Phone"><br><br>
 <input placeholder="Email"><br><br>
-<input placeholder="Experience (years)"><br><br>
+<input placeholder="Experience"><br><br>
 <input placeholder="Skills"><br><br>
-<input placeholder="Preferred Role"><br><br>
-<input placeholder="Preferred Location"><br><br>
-<button>Save Profile</button>
-</div>
-
-<div class="card">Profile Strength: 75%</div>
+<button>Save</button>
 </div>
 
 <!-- SETTINGS -->
 <div id="settings" class="page">
-<h2>Settings</h2>
+<div onclick="goHome()">← Back</div><br>
 
-<div class="card">
-Preferred Location<br><br>
-<input placeholder="Bhopal">
-</div>
-
-<div class="card">
-Job Type<br><br>
-<input placeholder="Full Time / Remote">
-</div>
-
-<div class="card">
-Notifications<br><br>
-<button>ON</button>
-</div>
-</div>
-
-<!-- SUB -->
-<div id="subscription" class="page">
-<h2>Subscription</h2>
-
-<div class="card">
-FREE PLAN<br><br>
-✔ Basic jobs
-</div>
-
-<div class="card">
-PRO ₹199/month<br><br>
-✔ Premium jobs<br>
-✔ Faster hiring<br><br>
-<button>Upgrade</button>
-</div>
+<input placeholder="Username"><br><br>
+<input type="password" placeholder="Password"><br><br>
 </div>
 
 </div>
 
 <!-- INPUT -->
 <div class="input">
-<input id="msg" placeholder="Type message..." onkeydown="enterSend(event)">
+<input id="msg" placeholder="Type..." onkeydown="enterSend(event)">
 <button onclick="send()">Send</button>
-<button onclick="startVoice()">🎤</button>
+<button onclick="voice()">🎤</button>
 </div>
 
 <script>
 
-// SIDEBAR
-function toggleMenu(){
-document.querySelector(".sidebar").classList.toggle("active");
-}
-
-// PAGE SWITCH
-function showPage(page){
+// NAV
+function openPage(id){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("activePage"));
-document.getElementById(page).classList.add("activePage");
-document.querySelector(".sidebar").classList.remove("active");
+document.getElementById(id).classList.add("activePage");
+setTimeout(()=>closeSidebar(),200);
 }
 
-// ENTER KEY
+function goHome(){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("activePage"));
+document.getElementById("chat").classList.add("activePage");
+}
+
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("active");
+}
+
+function closeSidebar(){
+document.getElementById("sidebar").classList.remove("active");
+}
+
+// ENTER
 function enterSend(e){
 if(e.key==="Enter") send();
 }
 
-// CHAT FUNCTION
-function send(){
-let input=document.getElementById("msg");
+// CHAT LOAD
 let chat=document.getElementById("chat");
+chat.innerHTML = localStorage.getItem("chat") || 
+`<div class="bot">👋 Welcome to DB Job GPT</div>`;
 
+// SEND MESSAGE (REAL API)
+async function send(){
+let input=document.getElementById("msg");
 if(!input.value) return;
 
-let text=input.value.toLowerCase();
+let text=input.value;
 
 // USER MSG
-let u=document.createElement("div");
-u.className="user";
-u.innerText=input.value;
-chat.appendChild(u);
+chat.insertAdjacentHTML("beforeend", `<div class="user">${text}</div>`);
 
-// BOT MSG
-let b=document.createElement("div");
-b.className="bot";
-b.innerText="Typing...";
-chat.appendChild(b);
-
-// 🔥 INTELLIGENCE
-setTimeout(()=>{
-
-if(
-text.includes("who invented you") ||
-text.includes("who created you") ||
-text.includes("tumhe kisne banaya") ||
-text.includes("kisne banaya") ||
-text.includes("creator") ||
-text.includes("founder")
-){
-b.innerText="I was developed by Dharmesh Band, founder of DB Solutions Manpower Outsourcing & Placement Agency.";
-}
-else{
-b.innerText="Got it 👍 Tell me your role, location and experience.";
-}
-
-chat.scrollTop=chat.scrollHeight;
-
-},600);
+// BOT LOADING
+let bot = document.createElement("div");
+bot.className="bot";
+bot.innerText="Typing...";
+chat.appendChild(bot);
 
 input.value="";
+chat.scrollTop=chat.scrollHeight;
+
+try{
+const res = await fetch("http://localhost:3000/api/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
+
+const data = await res.json();
+bot.innerText = data.reply || "No response";
+
+}catch(err){
+bot.innerText="Server error ❌";
 }
 
-// 🎤 VOICE
-function startVoice(){
-const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang="en-IN";
+// SAVE CHAT
+localStorage.setItem("chat", chat.innerHTML);
+chat.scrollTop=chat.scrollHeight;
+}
 
-recognition.onresult=function(e){
+// VOICE
+function voice(){
+try{
+let rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
+rec.onresult=e=>{
 document.getElementById("msg").value=e.results[0][0].transcript;
 };
-
-recognition.start();
+rec.onerror=()=>alert("Voice error");
+rec.start();
+}catch{
+alert("Voice not supported");
+}
 }
 
 </script>
