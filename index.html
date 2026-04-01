@@ -5,309 +5,128 @@
 <title>DB GPT</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
 body{
-font-family:Inter,Segoe UI;
+font-family:sans-serif;
 background:#0f172a;
 color:white;
+margin:0;
 display:flex;
+flex-direction:column;
 height:100vh;
 }
 
-/* SIDEBAR */
-.sidebar{
-width:260px;
-background:#020617;
-padding:15px;
-display:flex;
-flex-direction:column;
-}
-
-.sidebar h2{
-margin-bottom:20px;
-}
-
-.newChat{
-background:#22c55e;
-padding:10px;
-border-radius:8px;
-text-align:center;
-cursor:pointer;
-}
-
-/* MAIN */
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
-}
-
-/* HEADER */
-.header{
-padding:10px;
-border-bottom:1px solid #1e293b;
-display:flex;
-gap:5px;
-}
-
-.header input{
-padding:6px;
-border-radius:6px;
-border:none;
-}
-
-/* CHAT */
 .chat{
 flex:1;
-overflow-y:auto;
 padding:20px;
+overflow:auto;
 }
 
-.msg{
-margin:10px 0;
-max-width:70%;
+.bubble{
+background:#1e293b;
 padding:12px;
 border-radius:12px;
+margin:10px 0;
+max-width:80%;
 }
 
 .user{
 background:#22c55e;
-margin-left:auto;
+align-self:flex-end;
 }
 
-.bot{
-background:#1e293b;
-}
-
-/* JOB CARD */
-.job{
-background:#1e293b;
-padding:10px;
-margin:10px 0;
-border-radius:10px;
-}
-
-/* INPUT */
-.bottom{
+.input{
 display:flex;
 padding:10px;
-border-top:1px solid #1e293b;
+background:#020617;
 }
 
-input#msg{
+input{
 flex:1;
-padding:12px;
-border:none;
+padding:10px;
 border-radius:10px;
-background:#1e293b;
-color:white;
+border:none;
 }
 
 button{
-margin-left:5px;
-padding:12px;
+margin-left:10px;
+padding:10px;
 background:#22c55e;
 border:none;
-border-radius:10px;
 color:white;
-cursor:pointer;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-.sidebar{display:none}
-.msg{max-width:90%}
+border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-<h2>DB GPT 🚀</h2>
-<div class="newChat" onclick="clearChat()">+ New Chat</div>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-<!-- LOGIN -->
-<div class="header">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-</div>
-
-<!-- CHAT -->
 <div class="chat" id="chat"></div>
 
-<!-- INPUT -->
-<div class="bottom">
-<input id="msg" placeholder="Ask jobs, salary, role...">
-<button onclick="sendMsg()">Send</button>
-<button onclick="startVoice()">🎤</button>
-</div>
-
+<div class="input">
+<input id="msg" placeholder="Ask anything...">
+<button onclick="send()">Send</button>
 </div>
 
 <script>
 
-const API = "https://db-ai-backend.onrender.com";
-let chatHistory = [];
-let currentUser = null;
+async function send(){
 
-/* LOAD CHAT */
-function loadChat(){
-  const data = localStorage.getItem("chat");
-  if(data){
-    chatHistory = JSON.parse(data);
-    chatHistory.forEach(m => addMsg(m.text, m.user));
-  }
-}
+let text = msg.value;
+if(!text) return;
 
-/* SAVE CHAT */
-function saveChat(){
-  localStorage.setItem("chat", JSON.stringify(chatHistory));
-}
+addMsg(text,true);
 
-/* ADD MESSAGE */
-function addMsg(text, user){
-  const chat = document.getElementById("chat");
+msg.value="";
 
-  chat.innerHTML += `
-  <div class="msg ${user ? 'user' : 'bot'}">${text}</div>`;
-
-  chat.scrollTop = chat.scrollHeight;
-}
-
-/* LOADING */
-function addLoading(){
-  const chat = document.getElementById("chat");
-  const div = document.createElement("div");
-  div.className = "msg bot";
-  div.id = "loading";
-  div.innerText = "Typing...";
-  chat.appendChild(div);
-}
-
-function removeLoading(){
-  const el = document.getElementById("loading");
-  if(el) el.remove();
-}
-
-/* LOGIN */
-async function login(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const res = await fetch(`${API}/api/auth/login`, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ email, password })
-  });
-
-  const data = await res.json();
-
-  if(data.token){
-    currentUser = data.user;
-    alert("Login success ✅");
-  }else{
-    alert("Login failed ❌");
-  }
-}
-
-/* JOB CARDS */
-function renderJobs(jobs){
-  let html = "";
-
-  jobs.forEach(j=>{
-    html += `
-    <div class="job">
-      <b>${j.title}</b><br>
-      ${j.location || ""}<br><br>
-      <button onclick="applyJob('${j._id}')">Apply</button>
-    </div>`;
-  });
-
-  addMsg(html, false);
-}
-
-/* APPLY */
-function applyJob(id){
-  alert("Applied to job: " + id);
-}
-
-/* SEND MESSAGE */
-async function sendMsg(){
-
-  const input = document.getElementById("msg");
-  const text = input.value.trim();
-
-  if(!text) return;
-
-  addMsg(text, true);
-  chatHistory.push({text, user:true});
-  saveChat();
-
-  input.value = "";
-  addLoading();
-
-  try{
-
-    const res = await fetch(`${API}/api/chat`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-        message: text,
-        userId: currentUser?._id || "guest"
-      })
-    });
-
-    const data = await res.json();
-
-    removeLoading();
-
-    addMsg(data.reply || "No response ❌", false);
-    chatHistory.push({text:data.reply, user:false});
-    saveChat();
-
-    if(data.jobs){
-      renderJobs(data.jobs);
-    }
-
-  }catch(err){
-    removeLoading();
-    addMsg("Server error ❌", false);
-  }
-}
-
-/* VOICE */
-function startVoice(){
-  const rec = new webkitSpeechRecognition();
-
-  rec.onresult = function(e){
-    document.getElementById("msg").value = e.results[0][0].transcript;
-    sendMsg();
-  };
-
-  rec.start();
-}
-
-/* CLEAR */
-function clearChat(){
-  document.getElementById("chat").innerHTML = "";
-  localStorage.removeItem("chat");
-}
-
-/* ENTER KEY */
-document.getElementById("msg").addEventListener("keypress", function(e){
-  if(e.key === "Enter") sendMsg();
+let res = await fetch("https://your-backend-url/api/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text,userId:"user1"})
 });
 
-/* INIT */
-loadChat();
+let data = await res.json();
+
+addMsg(data.reply,false);
+
+// resume UI
+if(data.resume){
+addMsg(data.resume,false,true);
+}
+}
+
+function addMsg(text,user,isResume=false){
+
+let div = document.createElement("div");
+div.className="bubble"+(user?" user":"");
+
+if(isResume){
+div.innerHTML = `<pre>${text}</pre>
+<button onclick='downloadResume(${JSON.stringify(text)})'>Download PDF</button>`;
+}else{
+div.innerText=text;
+}
+
+chat.appendChild(div);
+chat.scrollTop=chat.scrollHeight;
+}
+
+async function downloadResume(text){
+
+await fetch("https://your-backend-url/api/download-resume",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({resume:text})
+})
+.then(res=>res.blob())
+.then(blob=>{
+let url=window.URL.createObjectURL(blob);
+let a=document.createElement("a");
+a.href=url;
+a.download="resume.pdf";
+a.click();
+});
+
+}
 
 </script>
 
