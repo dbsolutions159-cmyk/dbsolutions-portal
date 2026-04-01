@@ -302,7 +302,7 @@ addMsg(text,true);
 msg.value="";
 
 try{
-let res=await fetch("https://db-backend-hiye.onrender.com/api/chat",{
+let res = await fetch("https://db-ai-backend.onrender.com/api/chat", {
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({message:text})
