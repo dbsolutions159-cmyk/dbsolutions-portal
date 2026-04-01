@@ -4,296 +4,323 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DB AI</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 
 /* BODY */
 body{
-background:linear-gradient(135deg,#020617,#0f172a);
-color:white;
+background:#f5f5f5;
 height:100vh;
 display:flex;
-overflow:hidden;
-}
-
-/* SIDEBAR */
-.sidebar{
-position:fixed;
-left:-260px;
-top:0;
-width:260px;
-height:100%;
-background:#020617;
-border-right:1px solid #1e293b;
-padding:15px;
-transition:0.3s;
-z-index:100;
-}
-
-.sidebar.active{left:0}
-
-.menu{
-padding:12px;
-border-radius:10px;
-cursor:pointer;
-color:#94a3b8;
-margin-bottom:5px;
-}
-
-.menu:hover{
-background:#1e293b;
-color:white;
-}
-
-/* MAIN */
-.main{
-flex:1;
-display:flex;
 flex-direction:column;
-width:100%;
 }
 
 /* HEADER */
 .header{
 display:flex;
 justify-content:space-between;
-padding:12px;
-border-bottom:1px solid #1e293b;
+padding:15px;
 }
 
-.menu-btn{cursor:pointer}
-
-/* CHAT */
-.chat{
-flex:1;
-overflow-y:auto;
-padding:20px;
-display:flex;
-flex-direction:column;
-gap:15px;
-}
-
-/* MESSAGE */
-.msg{
-display:flex;
-gap:10px;
-max-width:800px;
-}
-
-.msg.user{
-align-self:flex-end;
-flex-direction:row-reverse;
-}
-
-.avatar{
-width:32px;
-height:32px;
+.circle{
+width:42px;
+height:42px;
 border-radius:50%;
-background:#1e293b;
+background:#fff;
 display:flex;
 align-items:center;
 justify-content:center;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+cursor:pointer;
 }
 
-.bubble{
+/* CENTER */
+.center{
+flex:1;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.title{
+font-size:26px;
+font-weight:600;
+margin-bottom:20px;
+}
+
+/* BUTTONS */
+.buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+width:90%;
+max-width:300px;
+}
+
+.btn{
+background:white;
 padding:12px;
-border-radius:16px;
-background:#1e293b;
+border-radius:20px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+}
+
+/* CHAT */
+.chat{
+display:none;
+flex:1;
+overflow:auto;
+padding:15px;
+}
+
+.msg{margin-bottom:12px}
+.user{text-align:right}
+
+.bubble{
+display:inline-block;
+padding:12px;
+border-radius:15px;
+background:white;
+max-width:80%;
 }
 
 .user .bubble{
 background:#2563eb;
+color:white;
 }
 
 /* INPUT */
 .input-box{
 padding:10px;
-border-top:1px solid #1e293b;
 }
 
 .input-inner{
 display:flex;
-background:#1e293b;
-border-radius:20px;
-padding:6px;
+background:white;
+border-radius:30px;
+padding:10px;
+align-items:center;
+gap:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
 
 input{
 flex:1;
 border:none;
-background:none;
-color:white;
-padding:10px;
 outline:none;
+font-size:15px;
 }
 
-button{
-background:#2563eb;
-border:none;
-color:white;
-padding:10px 15px;
-border-radius:12px;
+/* ICONS */
+.icon{
+width:35px;
+height:35px;
+border-radius:50%;
+background:#eee;
+display:flex;
+align-items:center;
+justify-content:center;
 cursor:pointer;
 }
 
-/* LOGIN */
-.login{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-background:#020617;
-flex-direction:column;
-gap:10px;
-}
-
-.login input{
-width:250px;
-padding:10px;
-border-radius:10px;
-border:none;
-background:#1e293b;
+.mic{
+background:#ff6b2c;
 color:white;
 }
 
-.hidden{display:none}
-
-/* MOBILE */
-@media(max-width:768px){
-.sidebar{width:220px}
+/* VOICE MENU */
+.voice-select{
+position:absolute;
+top:70px;
+right:15px;
+background:white;
+padding:10px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,0.2);
+display:none;
 }
+
+.voice-select div{
+padding:8px;
+cursor:pointer;
+}
+
+/* AVATAR */
+.avatar-box{
+position:fixed;
+bottom:90px;
+right:15px;
+width:60px;
+height:60px;
+border-radius:50%;
+background:#2563eb;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:22px;
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="loginPage">
-<h2>DB AI Login</h2>
-<input id="username" placeholder="Enter name">
-<button onclick="login()">Login</button>
-</div>
-
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-<div class="menu" onclick="navigate('home')">🏠 Home</div>
-<div class="menu" onclick="navigate('profile')">👤 Profile</div>
-<div class="menu" onclick="navigate('settings')">⚙ Settings</div>
-<div class="menu" onclick="logout()">🚪 Logout</div>
-</div>
-
-<!-- MAIN -->
-<div class="main hidden" id="main">
-
+<!-- HEADER -->
 <div class="header">
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
-<div>DB AI</div>
-<div id="userName"></div>
+<div class="circle">☰</div>
+<div class="circle" onclick="toggleVoice()">🎙</div>
 </div>
 
+<!-- VOICE -->
+<div class="voice-select" id="voiceBox">
+<div onclick="setVoice('male')">🧑 Sriman ji</div>
+<div onclick="setVoice('female')">👩 Shrimati ji</div>
+</div>
+
+<!-- HOME -->
+<div class="center" id="home">
+<div class="title">What can I help with?</div>
+
+<div class="buttons">
+<div class="btn" onclick="quick('Create image')">🎨 Create image</div>
+<div class="btn" onclick="quick('Surprise me')">🎁 Surprise me</div>
+<div class="btn" onclick="quick('Make a plan')">💡 Make a plan</div>
+<div class="btn" onclick="quick('Get advice')">🎓 Get advice</div>
+</div>
+</div>
+
+<!-- CHAT -->
 <div class="chat" id="chat"></div>
 
+<!-- AVATAR -->
+<div class="avatar-box">🤖</div>
+
+<!-- INPUT -->
 <div class="input-box">
 <div class="input-inner">
+<div class="icon">+</div>
 <input id="msg" placeholder="Ask anything..." onkeydown="enterSend(event)">
-<button onclick="send()">➤</button>
+<div class="icon" onclick="startVoice()">🎤</div>
+<div class="icon mic" onclick="send()">➤</div>
 </div>
-</div>
-
 </div>
 
 <script>
 
-// LOGIN SYSTEM
-function login(){
-let name = username.value.trim();
-if(!name) return alert("Enter name");
+// VOICE SELECT
+let selectedVoice="female";
 
-localStorage.setItem("user",name);
-init();
+function toggleVoice(){
+voiceBox.style.display = voiceBox.style.display=="block"?"none":"block";
 }
 
-function logout(){
-localStorage.removeItem("user");
-location.reload();
+function setVoice(v){
+selectedVoice=v;
+voiceBox.style.display="none";
 }
 
-function init(){
-let user = localStorage.getItem("user");
-if(user){
-loginPage.classList.add("hidden");
-main.classList.remove("hidden");
-userName.innerText=user;
-}
-}
-init();
+// SPEAK (Hindi tuned)
+function speak(text){
+let speech=new SpeechSynthesisUtterance(text);
 
-// MENU
-function toggleMenu(){
-sidebar.classList.toggle("active");
-}
+let voices=speechSynthesis.getVoices();
 
-// NAVIGATION
-function navigate(page){
-alert(page + " page coming soon 🚀");
+let hindi=voices.find(v=>v.lang.includes("hi"));
+
+speech.voice=hindi || voices[0];
+speech.rate=0.95;
+speech.pitch=selectedVoice==="female"?1.2:0.9;
+
+speechSynthesis.speak(speech);
 }
 
-// CHAT
-function addUser(text){
-chat.innerHTML += `
-<div class="msg user">
-<div class="avatar">U</div>
+// VOICE INPUT
+function startVoice(){
+let rec=new (window.SpeechRecognition||window.webkitSpeechRecognition)();
+rec.lang="en-IN";
+rec.onresult=e=>{
+msg.value=e.results[0][0].transcript;
+};
+rec.start();
+}
+
+// ADD MSG
+function addMsg(text,user){
+chat.style.display="block";
+home.style.display="none";
+
+chat.innerHTML+=`
+<div class="msg ${user?'user':''}">
 <div class="bubble">${text}</div>
 </div>`;
+chat.scrollTop=chat.scrollHeight;
 }
 
-function typeMsg(text){
+// STREAMING
+function streamText(text){
 let i=0;
 let id="m"+Date.now();
 
-chat.innerHTML += `
+chat.innerHTML+=`
 <div class="msg">
-<div class="avatar">AI</div>
 <div class="bubble" id="${id}"></div>
 </div>`;
 
 let el=document.getElementById(id);
 
-let inter=setInterval(()=>{
+let interval=setInterval(()=>{
 el.innerHTML+=text[i];
 i++;
-if(i>=text.length) clearInterval(inter);
+if(i>=text.length){
+clearInterval(interval);
+speak(text);
+}
 },15);
 }
 
 // SEND
-function send(){
+async function send(){
 let text=msg.value.trim();
 if(!text) return;
 
-addUser(text);
+addMsg(text,true);
 msg.value="";
 
-typeMsg("Typing...");
-
-fetch("https://db-backend-hiye.onrender.com/api/chat",{
+try{
+let res=await fetch("https://db-backend-hiye.onrender.com/api/chat",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({message:text})
-})
-.then(res=>res.json())
-.then(data=>{
-chat.lastChild.remove();
-typeMsg(data.reply);
-})
-.catch(()=>{
-chat.lastChild.remove();
-typeMsg("Server error ❌");
 });
+
+let data=await res.json();
+
+streamText(data.reply);
+
+}catch{
+streamText("Server error ❌");
+}
+}
+
+// QUICK
+function quick(t){
+msg.value=t;
+send();
 }
 
 function enterSend(e){
