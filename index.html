@@ -14,33 +14,87 @@ body{font-family:system-ui;background:#0f172a;color:white;display:flex;height:10
 
 /* CHAT */
 .chat-container{flex:1;display:flex;flex-direction:column}
-.header{padding:15px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between}
+.header{
+padding:15px;
+border-bottom:1px solid #1e293b;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
 /* AVATAR */
 .avatar{
-width:40px;height:40px;border-radius:50%;
+width:40px;
+height:40px;
+border-radius:50%;
 background:#2563eb;
-display:flex;align-items:center;justify-content:center;
+display:flex;
+align-items:center;
+justify-content:center;
 font-weight:bold;
+}
+
+/* VIDEO AVATAR */
+#avatarVideo{
+width:45px;
+height:45px;
+border-radius:50%;
+object-fit:cover;
 }
 
 /* CHAT */
 .chat-box{flex:1;overflow-y:auto;padding:20px}
 
-.message{max-width:70%;padding:12px;margin-bottom:10px;border-radius:12px}
+.message{
+max-width:70%;
+padding:12px;
+margin-bottom:10px;
+border-radius:12px;
+line-height:1.4;
+}
+
 .user{background:#2563eb;margin-left:auto}
 .bot{background:#1e293b}
 
 /* JOB CARD */
-.job-card{background:#1e293b;padding:10px;border-radius:10px;margin-top:8px}
+.job-card{
+background:#111827;
+padding:10px;
+border-radius:10px;
+margin-top:8px;
+border:1px solid #374151;
+}
 
 /* INPUT */
-.input-box{display:flex;padding:15px;border-top:1px solid #1e293b}
-input{flex:1;padding:12px;border:none;border-radius:10px}
-button{margin-left:10px;padding:12px;background:#2563eb;border:none;color:white;border-radius:10px}
+.input-box{
+display:flex;
+padding:15px;
+border-top:1px solid #1e293b;
+}
 
-/* TYPING */
-.typing{opacity:0.7}
+input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+button{
+margin-left:10px;
+padding:12px;
+background:#2563eb;
+border:none;
+color:white;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.sidebar{display:none}
+.message{max-width:85%}
+}
 </style>
 </head>
 
@@ -53,7 +107,13 @@ button{margin-left:10px;padding:12px;background:#2563eb;border:none;color:white;
 <div class="chat-container">
 
 <div class="header">
-  <div>AI Hiring Assistant</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <video id="avatarVideo" autoplay loop muted>
+      <source src="https://cdn.pixabay.com/vimeo/458093470/avatar.mp4" type="video/mp4">
+    </video>
+    <div>AI Hiring Assistant</div>
+  </div>
+
   <select id="voiceSelect">
     <option value="male">Sriman ji</option>
     <option value="female">Shrimati ji</option>
@@ -71,10 +131,11 @@ button{margin-left:10px;padding:12px;background:#2563eb;border:none;color:white;
 </div>
 
 <script>
-const API = "https://YOUR-BACKEND-URL/api/chat";
 
-// 🔥 STREAMING TYPE EFFECT
-function typeEffect(element, text, speed=20){
+const API ="https://db-ai-backend.onrender.com/api/chat";
+
+// 🔥 STREAMING TYPING
+function typeEffect(element, text, speed=15){
 let i = 0;
 function typing(){
 if(i < text.length){
@@ -86,7 +147,32 @@ setTimeout(typing, speed);
 typing();
 }
 
-// 🔥 SEND MESSAGE
+// 🔊 AI SPEAK + AVATAR
+function speak(text){
+const avatar = document.getElementById("avatarVideo");
+avatar.style.border = "3px solid #22c55e";
+
+const speech = new SpeechSynthesisUtterance(text);
+
+const selected = document.getElementById("voiceSelect").value;
+const voices = speechSynthesis.getVoices();
+
+if(selected === "female"){
+speech.voice = voices[1];
+}else{
+speech.voice = voices[0];
+}
+
+speech.lang = "en-IN";
+
+speech.onend = () => {
+avatar.style.border = "none";
+};
+
+speechSynthesis.speak(speech);
+}
+
+// 🚀 SEND MESSAGE
 async function send(){
 const input = document.getElementById("input");
 const chat = document.getElementById("chat");
@@ -97,11 +183,12 @@ if(!msg) return;
 chat.innerHTML += `<div class="message user">${msg}</div>`;
 input.value = "";
 
-// typing indicator
+// bot container
 const botDiv = document.createElement("div");
-botDiv.className = "message bot typing";
+botDiv.className = "message bot";
 chat.appendChild(botDiv);
 
+// API call
 const res = await fetch(API,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
@@ -110,35 +197,25 @@ body: JSON.stringify({message: msg})
 
 const data = await res.json();
 
-// STREAMING TEXT
-botDiv.innerHTML = "";
-typeEffect(botDiv, data.reply);
+// job card logic
+let reply = data.reply;
 
-// SPEAK
-speak(data.reply);
+if(reply.toLowerCase().includes("job")){
+reply += `
+<div class="job-card">
+<b>Customer Support Executive</b><br>
+📍 Bhopal<br>
+💰 ₹22,000
+</div>`;
+}
+
+// streaming
+typeEffect(botDiv, reply);
+
+// speak
+speak(reply);
 
 chat.scrollTop = chat.scrollHeight;
-}
-
-// 🔊 TEXT TO SPEECH (MALE / FEMALE)
-function speak(text){
-const speech = new SpeechSynthesisUtterance(text);
-
-const selected = document.getElementById("voiceSelect").value;
-
-const voices = speechSynthesis.getVoices();
-
-if(selected === "female"){
-speech.voice = voices.find(v => v.name.toLowerCase().includes("female")) || voices[1];
-}else{
-speech.voice = voices.find(v => v.name.toLowerCase().includes("male")) || voices[0];
-}
-
-speech.lang = "en-IN";
-speech.rate = 1;
-speech.pitch = 1;
-
-speechSynthesis.speak(speech);
 }
 
 // 🎤 VOICE INPUT
@@ -153,6 +230,7 @@ send();
 
 recognition.start();
 }
+
 </script>
 
 </body>
