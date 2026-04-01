@@ -2,331 +2,157 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DB AI</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<title>DB AI Hiring</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#0f172a;color:white;display:flex;height:100vh}
 
-/* BODY */
-body{
-background:#f5f5f5;
-height:100vh;
-display:flex;
-flex-direction:column;
-}
+/* SIDEBAR */
+.sidebar{width:220px;background:#020617;padding:20px}
+.logo{font-size:20px;font-weight:bold;margin-bottom:20px}
 
-/* HEADER */
-.header{
-display:flex;
-justify-content:space-between;
-padding:15px;
-}
+/* CHAT */
+.chat-container{flex:1;display:flex;flex-direction:column}
+.header{padding:15px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between}
 
-.circle{
-width:42px;
-height:42px;
-border-radius:50%;
-background:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-cursor:pointer;
-}
-
-/* CENTER */
-.center{
-flex:1;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-}
-
-.title{
-font-size:26px;
-font-weight:600;
-margin-bottom:20px;
-}
-
-/* BUTTONS */
-.buttons{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-width:90%;
-max-width:300px;
-}
-
-.btn{
-background:white;
-padding:12px;
-border-radius:20px;
-box-shadow:0 2px 10px rgba(0,0,0,0.08);
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
+/* AVATAR */
+.avatar{
+width:40px;height:40px;border-radius:50%;
+background:#2563eb;
+display:flex;align-items:center;justify-content:center;
+font-weight:bold;
 }
 
 /* CHAT */
-.chat{
-display:none;
-flex:1;
-overflow:auto;
-padding:15px;
-}
+.chat-box{flex:1;overflow-y:auto;padding:20px}
 
-.msg{margin-bottom:12px}
-.user{text-align:right}
+.message{max-width:70%;padding:12px;margin-bottom:10px;border-radius:12px}
+.user{background:#2563eb;margin-left:auto}
+.bot{background:#1e293b}
 
-.bubble{
-display:inline-block;
-padding:12px;
-border-radius:15px;
-background:white;
-max-width:80%;
-}
-
-.user .bubble{
-background:#2563eb;
-color:white;
-}
+/* JOB CARD */
+.job-card{background:#1e293b;padding:10px;border-radius:10px;margin-top:8px}
 
 /* INPUT */
-.input-box{
-padding:10px;
-}
+.input-box{display:flex;padding:15px;border-top:1px solid #1e293b}
+input{flex:1;padding:12px;border:none;border-radius:10px}
+button{margin-left:10px;padding:12px;background:#2563eb;border:none;color:white;border-radius:10px}
 
-.input-inner{
-display:flex;
-background:white;
-border-radius:30px;
-padding:10px;
-align-items:center;
-gap:10px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
-
-input{
-flex:1;
-border:none;
-outline:none;
-font-size:15px;
-}
-
-/* ICONS */
-.icon{
-width:35px;
-height:35px;
-border-radius:50%;
-background:#eee;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-}
-
-.mic{
-background:#ff6b2c;
-color:white;
-}
-
-/* VOICE MENU */
-.voice-select{
-position:absolute;
-top:70px;
-right:15px;
-background:white;
-padding:10px;
-border-radius:10px;
-box-shadow:0 2px 10px rgba(0,0,0,0.2);
-display:none;
-}
-
-.voice-select div{
-padding:8px;
-cursor:pointer;
-}
-
-/* AVATAR */
-.avatar-box{
-position:fixed;
-bottom:90px;
-right:15px;
-width:60px;
-height:60px;
-border-radius:50%;
-background:#2563eb;
-display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-font-size:22px;
-animation: pulse 2s infinite;
-}
-
-@keyframes pulse{
-0%{transform:scale(1)}
-50%{transform:scale(1.1)}
-100%{transform:scale(1)}
-}
-
+/* TYPING */
+.typing{opacity:0.7}
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
+<div class="sidebar">
+  <div class="logo">DB AI</div>
+</div>
+
+<div class="chat-container">
+
 <div class="header">
-<div class="circle">☰</div>
-<div class="circle" onclick="toggleVoice()">🎙</div>
+  <div>AI Hiring Assistant</div>
+  <select id="voiceSelect">
+    <option value="male">Sriman ji</option>
+    <option value="female">Shrimati ji</option>
+  </select>
 </div>
 
-<!-- VOICE -->
-<div class="voice-select" id="voiceBox">
-<div onclick="setVoice('male')">🧑 Sriman ji</div>
-<div onclick="setVoice('female')">👩 Shrimati ji</div>
-</div>
+<div class="chat-box" id="chat"></div>
 
-<!-- HOME -->
-<div class="center" id="home">
-<div class="title">What can I help with?</div>
-
-<div class="buttons">
-<div class="btn" onclick="quick('Create image')">🎨 Create image</div>
-<div class="btn" onclick="quick('Surprise me')">🎁 Surprise me</div>
-<div class="btn" onclick="quick('Make a plan')">💡 Make a plan</div>
-<div class="btn" onclick="quick('Get advice')">🎓 Get advice</div>
-</div>
-</div>
-
-<!-- CHAT -->
-<div class="chat" id="chat"></div>
-
-<!-- AVATAR -->
-<div class="avatar-box">🤖</div>
-
-<!-- INPUT -->
 <div class="input-box">
-<div class="input-inner">
-<div class="icon">+</div>
-<input id="msg" placeholder="Ask anything..." onkeydown="enterSend(event)">
-<div class="icon" onclick="startVoice()">🎤</div>
-<div class="icon mic" onclick="send()">➤</div>
+  <input id="input" placeholder="Ask about jobs..." />
+  <button onclick="send()">Send</button>
+  <button onclick="startVoice()">🎤</button>
 </div>
+
 </div>
 
 <script>
+const API = "https://YOUR-BACKEND-URL/api/chat";
 
-// VOICE SELECT
-let selectedVoice="female";
-
-function toggleVoice(){
-voiceBox.style.display = voiceBox.style.display=="block"?"none":"block";
+// 🔥 STREAMING TYPE EFFECT
+function typeEffect(element, text, speed=20){
+let i = 0;
+function typing(){
+if(i < text.length){
+element.innerHTML += text.charAt(i);
+i++;
+setTimeout(typing, speed);
+}
+}
+typing();
 }
 
-function setVoice(v){
-selectedVoice=v;
-voiceBox.style.display="none";
+// 🔥 SEND MESSAGE
+async function send(){
+const input = document.getElementById("input");
+const chat = document.getElementById("chat");
+
+const msg = input.value;
+if(!msg) return;
+
+chat.innerHTML += `<div class="message user">${msg}</div>`;
+input.value = "";
+
+// typing indicator
+const botDiv = document.createElement("div");
+botDiv.className = "message bot typing";
+chat.appendChild(botDiv);
+
+const res = await fetch(API,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body: JSON.stringify({message: msg})
+});
+
+const data = await res.json();
+
+// STREAMING TEXT
+botDiv.innerHTML = "";
+typeEffect(botDiv, data.reply);
+
+// SPEAK
+speak(data.reply);
+
+chat.scrollTop = chat.scrollHeight;
 }
 
-// SPEAK (Hindi tuned)
+// 🔊 TEXT TO SPEECH (MALE / FEMALE)
 function speak(text){
-let speech=new SpeechSynthesisUtterance(text);
+const speech = new SpeechSynthesisUtterance(text);
 
-let voices=speechSynthesis.getVoices();
+const selected = document.getElementById("voiceSelect").value;
 
-let hindi=voices.find(v=>v.lang.includes("hi"));
+const voices = speechSynthesis.getVoices();
 
-speech.voice=hindi || voices[0];
-speech.rate=0.95;
-speech.pitch=selectedVoice==="female"?1.2:0.9;
+if(selected === "female"){
+speech.voice = voices.find(v => v.name.toLowerCase().includes("female")) || voices[1];
+}else{
+speech.voice = voices.find(v => v.name.toLowerCase().includes("male")) || voices[0];
+}
+
+speech.lang = "en-IN";
+speech.rate = 1;
+speech.pitch = 1;
 
 speechSynthesis.speak(speech);
 }
 
-// VOICE INPUT
+// 🎤 VOICE INPUT
 function startVoice(){
-let rec=new (window.SpeechRecognition||window.webkitSpeechRecognition)();
-rec.lang="en-IN";
-rec.onresult=e=>{
-msg.value=e.results[0][0].transcript;
-};
-rec.start();
-}
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = "en-IN";
 
-// ADD MSG
-function addMsg(text,user){
-chat.style.display="block";
-home.style.display="none";
-
-chat.innerHTML+=`
-<div class="msg ${user?'user':''}">
-<div class="bubble">${text}</div>
-</div>`;
-chat.scrollTop=chat.scrollHeight;
-}
-
-// STREAMING
-function streamText(text){
-let i=0;
-let id="m"+Date.now();
-
-chat.innerHTML+=`
-<div class="msg">
-<div class="bubble" id="${id}"></div>
-</div>`;
-
-let el=document.getElementById(id);
-
-let interval=setInterval(()=>{
-el.innerHTML+=text[i];
-i++;
-if(i>=text.length){
-clearInterval(interval);
-speak(text);
-}
-},15);
-}
-
-// SEND
-async function send(){
-let text=msg.value.trim();
-if(!text) return;
-
-addMsg(text,true);
-msg.value="";
-
-try{
-let res = await fetch("https://db-ai-backend.onrender.com/api/chat", {
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:text})
-});
-
-let data=await res.json();
-
-streamText(data.reply);
-
-}catch{
-streamText("Server error ❌");
-}
-}
-
-// QUICK
-function quick(t){
-msg.value=t;
+recognition.onresult = function(event){
+document.getElementById("input").value = event.results[0][0].transcript;
 send();
 }
 
-function enterSend(e){
-if(e.key==="Enter") send();
+recognition.start();
 }
-
 </script>
 
 </body>
